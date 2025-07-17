@@ -1,15 +1,15 @@
 import { Routes, Route } from "react-router";
 import "./App.css";
-import Dashboard from "./components/Dashboard/Dashboard";
-import Login from "./components/Login/Login";
+import { DashboardPage } from "./pages/dashboard/DashboardPage";
+import { LoginPage } from "./pages/login/LoginPage";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<DashboardPage />} />
+      <Route path="/login" element={<LoginPage />} />
     </Routes>
-  )
+  );
 }
 
 export default App;
