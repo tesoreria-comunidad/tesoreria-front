@@ -2,7 +2,7 @@
 export default function Dashboard() {
     return (
         <div>
-            <h1>DASHBOARD</h1>
+            <h1>DASHBOARD IN PROGRESS...</h1>
         </div>
     )
 }
