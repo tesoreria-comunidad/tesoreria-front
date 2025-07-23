@@ -14,7 +14,9 @@ import { setAuthInterceptor } from "@/config/axios.config";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Logo from "../../../../public/logo.png";
+import Logo from "/logo.png";
+import { useAppDispatch } from "@/store/hooks";
+import { setSession } from "@/store/features";
 const formSchema = z.object({
   username: z.string().min(2).max(50),
   password: z.string(),
@@ -29,11 +31,15 @@ export function LoginForm() {
       password: "",
     },
   });
+
+  const dispatch = useAppDispatch();
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
       const res = await AuthServices.login(values);
       const accessToken = res.backendTokens.accessToken;
+      const user = res.user;
+      dispatch(setSession(user));
       await setAuthInterceptor(accessToken);
       localStorage.setItem("accessToken", accessToken);
       location.replace("/");
