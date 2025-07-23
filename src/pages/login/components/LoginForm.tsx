@@ -1,102 +1,102 @@
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { AuthServices } from "@/services/auth.service";
-import { useNavigate } from "react-router";
 import { setAuthInterceptor } from "@/config/axios.config";
-
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  const [values, setValues] = useState({
-    username: "",
-    password: "",
-  });
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Logo from "../../../../public/logo.png";
+const formSchema = z.object({
+  username: z.string().min(2).max(50),
+  password: z.string(),
+});
+export function LoginForm() {
   const [loading, setLoading] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setValues((s) => ({ ...s, [name]: value }));
-  };
-
-  const nav = useNavigate();
-
-  const hanldeSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
       const res = await AuthServices.login(values);
       const accessToken = res.backendTokens.accessToken;
       await setAuthInterceptor(accessToken);
       localStorage.setItem("accessToken", accessToken);
-      // falta actualizar redux
-      console.log("RESPUESTA DEL LOGIN", res);
-      nav("/");
+      location.replace("/");
     } catch (error) {
       console.log("err", error);
     } finally {
       setLoading(false);
     }
-    console.log("VALORES", values);
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Bienvenido a MiPelicano</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={hanldeSubmit}>
-            <div className="grid gap-6">
-              <div className="grid gap-6">
-                <div className="grid gap-3">
-                  <Label htmlFor="email">Nombre de usuario</Label>
+    <div className="w-full space-y-4 text-gray-800 ">
+      <section className="flex items-center gap-4 justify-center">
+        <p className="text-2xl ">
+          Bienvenido a <strong className="text-cyan-700">Mi Pelicano</strong>{" "}
+        </p>
+        <img src={Logo} alt="comunidad guia scout" className="size-[40px] " />
+      </section>
+      <hr className="text-cyan-700 border-2" />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 w-full flex flex-col  "
+        >
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nombre de usuario</FormLabel>
+                <FormControl>
                   <Input
-                    id="email"
-                    type="text"
-                    placeholder="user name"
-                    name="username"
-                    required
-                    onChange={handleInputChange}
+                    placeholder="Nombre de usuario"
+                    {...field}
+                    autoComplete="additional-name webauthn"
+                    autoFocus={false}
                   />
-                </div>
-                <div className="grid gap-3">
-                  <div className="flex items-center">
-                    <Label htmlFor="password">Password</Label>
-                  </div>
-                  <Input
-                    id="password"
-                    type="password"
-                    name="password"
-                    required
-                    onChange={handleInputChange}
-                  />
-                  <a
-                    href="#"
-                    className="mr-auto text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={loading}
-                  isLoading={loading}
-                >
-                  Login
-                </Button>
-              </div>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+                </FormControl>
+                {/* <FormMessage /> */}
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contraseña</FormLabel>
+                <FormControl>
+                  <Input placeholder="********" type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" isLoading={loading}>
+            Iniciar sesion
+          </Button>
+          <a rel="stylesheet" href="#" className="underline mx-auto text-sm">
+            Olvidé mi Contraseña
+          </a>
+        </form>
+      </Form>
     </div>
   );
 }
