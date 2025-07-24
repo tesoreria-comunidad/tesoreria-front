@@ -1,0 +1,35 @@
+.table {
+  table-layout: fixed;
+  width: 100%;
+  border-bottom: none;
+}
+
+
+.ReactTable {
+  position: absolute; 
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  border: none;
+
+  .rt-table {
+    height: 100%;
+    display: block;
+
+    .rt-thead {
+      height: 40px;
+    }
+
+    .rt-tbody { 
+      height: calc(100% - 40px);
+      overflow: scroll; 
+      display: block;
+
+      .rt-tr-group {
+        background: white;
+        height: 60px;
+      }
+    }
+  }
+}
