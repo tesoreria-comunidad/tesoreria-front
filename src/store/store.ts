@@ -1,10 +1,22 @@
 import { configureStore } from "@reduxjs/toolkit";
+import BalanceReducer from "./features/balance/balanceSlice";
+import CuotaReducer from "./features/cuota/cuotaSlice";
+import FamilyReducer from "./features/family/familySlice";
+import FolderReducer from "./features/folder/folderSlice";
+import PaymentReducer from "./features/payments/paymentsSlice";
 import RamaReducer from "./features/ramas/rama-slice";
 import SessionReducer from "./features/session/session-slice";
+import UserReducer from "./features/user/usersSlice";
 export const store = configureStore({
   reducer: {
-    session: SessionReducer,
+    balance: BalanceReducer,
+    cuota: CuotaReducer,
+    family: FamilyReducer,
+    folder: FolderReducer,
+    payments: PaymentReducer,
     ramas: RamaReducer,
+    session: SessionReducer,
+    users: UserReducer,
   },
 });
 

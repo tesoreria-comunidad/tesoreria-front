@@ -2,7 +2,7 @@ import type { TApiRama } from "@/adapters/api_models";
 import { axiosInstance, BASE_URL } from "@/config/axios.config";
 import type { TCreateRama } from "@/models";
 
-export class RamaService {
+export class RamaServices {
   static async getAllRamas(): Promise<TApiRama[]> {
     const res = await axiosInstance.get(`${BASE_URL}/rama`);
     return res.data;

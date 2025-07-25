@@ -1,7 +1,7 @@
 import { setAuthInterceptor } from "@/config/axios.config";
 import { useEffect, useState, type PropsWithChildren } from "react";
 import { PageLoader } from "../common/PageLoader";
-import { useRamasQueries } from "@/queries/ramas.quieries";
+import { useRamasQueries } from "@/queries/ramas.queries";
 
 export function DataProvider({ children }: PropsWithChildren) {
   const accessToken = localStorage.getItem("accessToken");

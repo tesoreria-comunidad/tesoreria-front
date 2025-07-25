@@ -21,7 +21,7 @@ export default function UserSessionCard() {
   return (
     <div>
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center  gap-2 bg-cyan-700 rounded-lg p-2 px-4 text-white">
+        <DropdownMenuTrigger className="flex items-center  gap-2 bg-primary-2 rounded-lg p-2 px-4 text-white">
           <CircleUserIcon />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
