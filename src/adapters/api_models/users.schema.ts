@@ -5,6 +5,7 @@ import { RoleSchema } from "@/constants/role.constants";
 export const UserSchema = BaseSchema.extend({
   id: z.string().uuid(),
   username: z.string(),
+  email: z.string(),
   password: z.string(),
   role: RoleSchema,
   id_folder: z.string(),
