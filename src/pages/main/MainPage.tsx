@@ -7,7 +7,7 @@ export function MainPage() {
   return (
     <div>
       <DataProvider>
-        <section className=" border rounded-lg h-[80vh] w-[80vw] place-self-center p-4 mt-10 overflow-hidden">
+        <section className=" border rounded-lg h-[80vh] w-[99vw] mx-auto p-4 mt-20 overflow-hidden">
           <Routes>
             {routes.map((route) => (
               <Route

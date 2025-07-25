@@ -17,8 +17,10 @@ export const CreateUserSchema = UserSchema.omit({
   id: true,
   id_family: true,
   id_folder: true,
+  id_rama: true,
   createdAt: true,
   updatedAt: true,
+  email: true,
 })
   .extend({
     confirmPassword: z.string(),

@@ -1,3 +1,4 @@
+import { FormatedDate } from "@/components/common/FormatedDate";
 import { RootTable } from "@/components/common/table";
 import type { TUser } from "@/models";
 import { useAppSelector } from "@/store/hooks";
@@ -10,16 +11,20 @@ export function UsersTable() {
       accessorKey: "username",
     },
     {
-      accessorKey: "email",
+      accessorKey: "createdAt",
+      cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
     },
     {
-      accessorKey: "createdAt",
+      accessorKey: "role",
     },
     {
       accessorKey: "id_rama",
     },
     {
-      accessorKey: "role",
+      accessorKey: "id_family",
+    },
+    {
+      accessorKey: "id_folder",
     },
   ];
   return <RootTable columns={columns} data={users} />;

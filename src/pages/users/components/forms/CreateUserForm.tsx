@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useAppSelector } from "@/store/hooks";
-import { ROLE_VALUES } from "@/constants/role.constants";
+import { ROLE_VALUES, type TRole } from "@/constants/role.constants";
 import {
   Select,
   SelectContent,
@@ -21,14 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUserQueries } from "@/queries/user.queries";
 export function CreateUserForm() {
   const [loading, setLoading] = useState(false);
   const { user } = useAppSelector((s) => s.session);
   const form = useForm<TCreateUser>({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
-      email: "",
-      id_rama: "",
+      // email: "",
       password: "",
       role: "DIRIGENTE",
       username: "",
@@ -36,10 +36,18 @@ export function CreateUserForm() {
     },
   });
 
-  const onSubmit = async (body: TCreateUser) => {
+  const { createUser } = useUserQueries();
+  const onSubmit = async (values: TCreateUser) => {
     try {
       setLoading(true);
-      console.log("body", body);
+      const { password, role, username } = values;
+      const body = {
+        password,
+        role,
+        username,
+      };
+      await createUser(body);
+      form.reset();
     } catch (error) {
       console.log("Error creating user", error);
     } finally {
@@ -50,7 +58,11 @@ export function CreateUserForm() {
   const userRole = user?.role;
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8"
+        autoComplete="off"
+      >
         <FormField
           control={form.control}
           name="username"
@@ -58,25 +70,33 @@ export function CreateUserForm() {
             <FormItem>
               <FormLabel>Nombre de usuario</FormLabel>
               <FormControl>
-                <Input placeholder="Nombre de usuario" {...field} />
+                <Input
+                  placeholder="Nombre de usuario"
+                  {...field}
+                  autoComplete="additional-name webauthn"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Correo electrónico</FormLabel>
               <FormControl>
-                <Input placeholder="example@mail.com" {...field} />
+                <Input
+                  placeholder="example@mail.com"
+                  {...field}
+                  autoComplete="additional-name webauthn"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="password"
@@ -111,7 +131,11 @@ export function CreateUserForm() {
               <FormItem>
                 <FormLabel>Role</FormLabel>
                 <FormControl>
-                  <Select>
+                  <Select
+                    onValueChange={(value) =>
+                      form.setValue("role", value as TRole)
+                    }
+                  >
                     <SelectTrigger className="w-[180px]" value={field.value}>
                       <SelectValue placeholder="Role" />
                     </SelectTrigger>
