@@ -58,7 +58,7 @@ export function LoginForm() {
         </p>
         <img src={Logo} alt="comunidad guia scout" className="size-[40px] " />
       </section>
-      <hr className="text-cyan-700 border-2" />
+      <hr className="text-primary border-2" />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
