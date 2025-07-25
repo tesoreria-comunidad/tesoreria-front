@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
+import RamaReducer from "./features/ramas/rama-slice";
 import SessionReducer from "./features/session/session-slice";
 export const store = configureStore({
   reducer: {
     session: SessionReducer,
+    ramas: RamaReducer,
   },
 });
 
