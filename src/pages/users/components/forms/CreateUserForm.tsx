@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-export function CreateMasterUserForm() {
+export function CreateUserForm() {
   const [loading, setLoading] = useState(false);
   const { user } = useAppSelector((s) => s.session);
   const form = useForm<TCreateUser>({

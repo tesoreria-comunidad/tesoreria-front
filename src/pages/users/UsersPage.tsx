@@ -1,13 +1,13 @@
 import { Label } from "@/components/ui/label";
 import { UsersTable } from "./components/table/UsersTable";
-import { CreateMasterUserAside } from "./components/CreateMasterUserAside";
+import { CreateUserAside } from "./components/CreateUserAside";
 
 export function UsersPage() {
   return (
     <div className="size-full  overflow-y-auto space-y-4  ">
       <section className="flex items-center justify-between">
         <Label>Usuarios</Label>
-        <CreateMasterUserAside />
+        <CreateUserAside />
       </section>
       <UsersTable />
     </div>

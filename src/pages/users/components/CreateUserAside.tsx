@@ -6,11 +6,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { CreateMasterUserForm } from "./forms/CreateMasterUserForm";
 import { Button } from "@/components/ui/button";
 import { UserRoundPlus } from "lucide-react";
+import { CreateUserForm } from "./forms/CreateUserForm";
 
-export function CreateMasterUserAside() {
+export function CreateUserAside() {
   return (
     <Sheet>
       <SheetTrigger>
@@ -26,7 +26,7 @@ export function CreateMasterUserAside() {
             Cargar los datos para crear un usuario nuevo
           </SheetDescription>
           <br />
-          <CreateMasterUserForm />
+          <CreateUserForm />
         </SheetHeader>
       </SheetContent>
     </Sheet>
