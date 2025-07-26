@@ -14,7 +14,6 @@ export function personAdapter(apiPerson: TApiPerson): TPerson {
     name,
     phone,
     updatedAt,
-    id_user,
   } = apiPerson;
   return {
     address,
@@ -28,6 +27,5 @@ export function personAdapter(apiPerson: TApiPerson): TPerson {
     name,
     phone,
     updatedAt,
-    id_user,
   };
 }
