@@ -1,5 +1,5 @@
 import { setAuthInterceptor } from "@/config/axios.config";
-import { useEffect, useState, type PropsWithChildren } from "react";
+import { Fragment, useEffect, useState, type PropsWithChildren } from "react";
 import { PageLoader } from "../common/PageLoader";
 import { useRamasQueries } from "@/queries/ramas.queries";
 import { useUserQueries } from "@/queries/user.queries";
@@ -28,5 +28,5 @@ export function DataProvider({ children }: PropsWithChildren) {
   }, []);
 
   if (loading) return <PageLoader />;
-  return <div>{children}</div>;
+  return <Fragment>{children}</Fragment>;
 }

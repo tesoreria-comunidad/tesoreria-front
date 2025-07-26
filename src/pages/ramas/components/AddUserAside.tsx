@@ -57,7 +57,6 @@ export function AddUserAside({ rama }: IAddUserAsideProps) {
       <SheetTrigger>
         <Button className="flex items-center gap-2">
           <UserRoundPlus />
-          <span>Agregar </span>
         </Button>
       </SheetTrigger>
       <SheetContent>
