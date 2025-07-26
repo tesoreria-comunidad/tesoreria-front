@@ -14,6 +14,12 @@ type TRoute = {
 
 export const routes: TRoute[] = [
   {
+    path: "/",
+    name: "",
+    icon: <LayoutDashboard className="size-4" />,
+    element: <DashboardPage />,
+  },
+  {
     path: "/dashboard",
     name: "Dashboard",
     icon: <LayoutDashboard className="size-4" />,

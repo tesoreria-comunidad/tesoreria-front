@@ -19,7 +19,7 @@ export default function UserSessionCard() {
     location.replace("/login");
   };
   return (
-    <div>
+    <div className="">
       <DropdownMenu>
         <DropdownMenuTrigger className="flex items-center  gap-2 bg-primary-2 rounded-lg p-2 px-4 text-white">
           <CircleUserIcon />
