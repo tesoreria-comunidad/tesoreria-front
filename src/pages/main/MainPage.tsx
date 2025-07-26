@@ -7,7 +7,10 @@ export function MainPage() {
   return (
     <div>
       <DataProvider>
-        <section className=" border rounded-lg h-[80vh] w-[99vw] mx-auto p-4 mt-20 overflow-hidden">
+        <div className=" m-2">
+          <UserSessionCard />
+        </div>
+        <section className=" bg-accent m-2 rounded-md p-4">
           <Routes>
             {routes.map((route) => (
               <Route
@@ -19,9 +22,6 @@ export function MainPage() {
             <Route path={"*"} element={<>NOT FOUND</>} />
           </Routes>
         </section>
-        <div className="absolute top-4 right-4">
-          <UserSessionCard />
-        </div>
       </DataProvider>
     </div>
   );

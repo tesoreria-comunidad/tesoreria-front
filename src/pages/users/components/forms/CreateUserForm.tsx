@@ -30,7 +30,7 @@ export function CreateUserForm() {
     defaultValues: {
       // email: "",
       password: "",
-      role: "DIRIGENTE",
+      role: "BENEFICIARIO",
       username: "",
       confirmPassword: "",
     },
@@ -135,6 +135,7 @@ export function CreateUserForm() {
                     onValueChange={(value) =>
                       form.setValue("role", value as TRole)
                     }
+                    value={field.value}
                   >
                     <SelectTrigger className="w-[180px]" value={field.value}>
                       <SelectValue placeholder="Role" />
