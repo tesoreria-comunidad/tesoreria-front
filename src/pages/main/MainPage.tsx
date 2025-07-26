@@ -2,12 +2,14 @@ import UserSessionCard from "@/components/common/UserSessionCard";
 import { DataProvider } from "@/components/providers/DataProvider";
 import { Route, Routes } from "react-router";
 import { routes } from "@/routes";
+import { Navbar } from "./components/Navbar";
 
 export function MainPage() {
   return (
     <div>
       <DataProvider>
         <section className=" border rounded-lg h-[80vh] w-[99vw] mx-auto p-4 mt-20 overflow-hidden">
+          <Navbar />
           <Routes>
             {routes.map((route) => (
               <Route
