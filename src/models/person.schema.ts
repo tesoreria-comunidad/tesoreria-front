@@ -10,8 +10,15 @@ export const PersonsSchema = BaseSchema.extend({
   email: z.string().email(),
   gender: GenderSchema,
   dni: z.string(),
-  id_user: z.string().optional(),
   id_family: z.string(),
 });
-
 export type TPerson = z.infer<typeof PersonsSchema>;
+
+export const CreatePersonSchema = PersonsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  id_family: true,
+});
+
+export type TCreatePerson = z.infer<typeof CreatePersonSchema>;
