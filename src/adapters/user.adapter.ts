@@ -12,6 +12,7 @@ export function userAdapter(apiUser: TApiUser): TUser {
     role,
     updatedAt,
     username,
+    email,
   } = apiUser;
 
   return {
@@ -21,6 +22,7 @@ export function userAdapter(apiUser: TApiUser): TUser {
     id_folder,
     id_rama,
     password,
+    email,
     role,
     updatedAt,
     username,

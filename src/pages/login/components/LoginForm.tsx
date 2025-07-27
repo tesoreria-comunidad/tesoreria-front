@@ -42,6 +42,10 @@ export function LoginForm() {
       dispatch(setSession(user));
       await setAuthInterceptor(accessToken);
       localStorage.setItem("accessToken", accessToken);
+      if (user.role === "BENEFICIARIO") {
+        location.replace("/beneficiario");
+        return;
+      }
       location.replace("/");
     } catch (error) {
       console.log("err", error);
@@ -54,11 +58,11 @@ export function LoginForm() {
     <div className="w-full space-y-4 text-gray-800 ">
       <section className="flex items-center gap-4 justify-center">
         <p className="text-2xl ">
-          Bienvenido a <strong className="text-cyan-700">Mi Pelicano</strong>{" "}
+          Bienvenido a <strong className="text-primary">Mi Pelicano</strong>{" "}
         </p>
         <img src={Logo} alt="comunidad guia scout" className="size-[40px] " />
       </section>
-      <hr className="text-cyan-700 border-2" />
+      <hr className="text-primary border-2" />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
