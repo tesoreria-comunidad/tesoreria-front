@@ -24,7 +24,7 @@ export const routes: TRoute[] = [
     icon: <HomeIcon className="size-4" />,
     element: <DashboardPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
-    sidebarContent: true,
+    sidebarContent: false,
   },
   {
     path: "/dashboard",

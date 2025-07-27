@@ -1,9 +1,7 @@
-import { Asidebar } from "@/components/common/Sidebar";
-
 export function DashboardPage() {
   return (
     <div>
-      <Asidebar />
+      <h1>DASHBOARD</h1>
     </div>
   );
 }
