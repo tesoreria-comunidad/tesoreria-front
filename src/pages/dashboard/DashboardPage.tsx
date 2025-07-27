@@ -1,4 +1,4 @@
-import { Asidebar } from "@/components/common/Sidebar";
+import { Asidebar } from "@/components/common/Asidebar";
 
 export function DashboardPage() {
   return (
