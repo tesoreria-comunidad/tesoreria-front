@@ -2,6 +2,29 @@
 @import "tw-animate-css";
 
 /* @custom-variant dark (&:is(.dark *)); */
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background: var(--input);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 8px;
+  border: 2px solid var(--input);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-2);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--input);
+}
+
+/* Firefox */
 
 :root {
   font-family: "Poppins", sans-serif;
