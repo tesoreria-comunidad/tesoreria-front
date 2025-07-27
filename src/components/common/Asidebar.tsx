@@ -15,7 +15,7 @@ export function Asidebar({ children }: PropsWithChildren) {
   const { user } = useAppSelector((s) => s.session);
 
   return (
-    <div className="flex h-screen bg-primary">
+    <div className="flex h-screen bg-gradient-to-br from-gray-100 to-gray-200">
       <SidebarProvider>
         <Sidebar className="flex flex-col text-primary font-bold gap-10">
           <SidebarHeader className="flex mt-10 pl-5">
@@ -39,7 +39,7 @@ export function Asidebar({ children }: PropsWithChildren) {
             <UserSessionCard />
           </SidebarFooter>
         </Sidebar>
-        <main className="flex-1 p-6 bg-primary overflow-auto">{children}</main>
+        <main className="flex-1 p-6  h-[100vh] max-h-[100vh]:">{children}</main>
       </SidebarProvider>
     </div>
   );
