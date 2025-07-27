@@ -14,6 +14,7 @@ type TRoute = {
   icon: JSX.Element;
   element: JSX.Element;
   rolesAccess?: TRole[];
+  sidebarContent: boolean;
 };
 
 export const routes: TRoute[] = [
@@ -23,6 +24,7 @@ export const routes: TRoute[] = [
     icon: <HomeIcon className="size-4" />,
     element: <DashboardPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
+    sidebarContent: true,
   },
   {
     path: "/dashboard",
@@ -30,6 +32,7 @@ export const routes: TRoute[] = [
     icon: <LayoutDashboard className="size-4" />,
     element: <DashboardPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
+    sidebarContent: true,
   },
   {
     path: "/users",
@@ -37,6 +40,7 @@ export const routes: TRoute[] = [
     icon: <Users className="size-4" />,
     element: <UsersPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
+    sidebarContent: true,
   },
   {
     path: "/ramas",
@@ -44,6 +48,7 @@ export const routes: TRoute[] = [
     icon: <Trees className="size-4" />,
     element: <RamasPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
+    sidebarContent: true,
   },
   {
     path: "/ramas/:ramaId",
@@ -51,6 +56,7 @@ export const routes: TRoute[] = [
     icon: <Trees className="size-4" />,
     element: <RamasDetailPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
+    sidebarContent: false,
   },
   {
     path: "/beneficiario",
@@ -58,5 +64,6 @@ export const routes: TRoute[] = [
     icon: <Trees className="size-4" />,
     element: <BeneficiarioPage />,
     rolesAccess: ["BENEFICIARIO"],
+    sidebarContent: true,
   },
 ];
