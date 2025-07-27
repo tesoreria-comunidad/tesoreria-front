@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@custom-variant dark (&:is(.dark *));
+
 /* @custom-variant dark (&:is(.dark *)); */
 
 :root {
@@ -51,7 +53,6 @@
   --sidebar-ring: oklch(0.708 0 0);
   --x: linear-gradient(90deg, #347474 0%, #348862 100%);
 }
-
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -126,8 +127,15 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-
-
 button:hover{
   cursor: pointer;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
