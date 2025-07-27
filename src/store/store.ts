@@ -7,6 +7,8 @@ import PaymentReducer from "./features/payments/paymentsSlice";
 import RamaReducer from "./features/ramas/rama-slice";
 import SessionReducer from "./features/session/session-slice";
 import UserReducer from "./features/user/usersSlice";
+import PersonsReducer from "./features/persons/personSlice";
+
 export const store = configureStore({
   reducer: {
     balance: BalanceReducer,
@@ -17,6 +19,7 @@ export const store = configureStore({
     ramas: RamaReducer,
     session: SessionReducer,
     users: UserReducer,
+    persons: PersonsReducer,
   },
 });
 
