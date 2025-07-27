@@ -46,7 +46,7 @@ interface DataTableProps<TData, TValue> {
 export function RootTable<TData, TValue>({
   columns,
   data,
-  pageSize = 10,
+  pageSize = 20,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
