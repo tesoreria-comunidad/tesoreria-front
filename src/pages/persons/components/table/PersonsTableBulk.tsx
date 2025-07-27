@@ -6,23 +6,16 @@ export function BulkPersonsTable({ persons }: { persons: TCreatePerson[] }) {
   const columns: ColumnDef<TCreatePerson>[] = [
     {
       accessorKey: "name",
-      size: 50,
+      size: 80,
     },
     {
       accessorKey: "last_name",
-      size: 50,
+      size: 80,
     },
-    {
-      accessorKey: "email",
-      size: 50,
-    },
-    {
-      accessorKey: "address",
-      size: 150,
-    },
+
     {
       accessorKey: "phone",
-      size: 50,
+      size: 80,
     },
     {
       accessorKey: "gender",
@@ -31,6 +24,14 @@ export function BulkPersonsTable({ persons }: { persons: TCreatePerson[] }) {
     {
       accessorKey: "dni",
       size: 50,
+    },
+    {
+      accessorKey: "email",
+      size: 80,
+    },
+    {
+      accessorKey: "address",
+      size: 80,
     },
   ];
   return <RootTable data={persons} columns={columns} />;

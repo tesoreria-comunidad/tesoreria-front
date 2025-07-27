@@ -10,8 +10,18 @@ export class PersonsServices {
     const res = await axiosInstance.post(`${BASE_URL}/person`, body);
     return res.data;
   }
-  static async bulkCreate(body: TCreatePerson[]): Promise<TApiPerson[]> {
-    const res = await axiosInstance.post(`${BASE_URL}/person/bulk`, body);
+  static async bulkCreate({
+    persons,
+    id_rama,
+  }: {
+    persons: TCreatePerson[];
+    id_rama?: string;
+  }): Promise<TApiPerson[]> {
+    let url = `${BASE_URL}/person/bulk`;
+    if (id_rama) {
+      url = `${BASE_URL}/person/bulk?id_rama=${id_rama}`;
+    }
+    const res = await axiosInstance.post(url, { persons });
     return res.data;
   }
   static async getById() {}

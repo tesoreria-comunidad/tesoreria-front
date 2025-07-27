@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { BaseSchema } from "./baseEntity.schema";
+import { UserSchema } from "./users.schema";
 
 export const RamaSchema = BaseSchema.extend({
   name: z.string(),
-  users: z.array(z.string()),
+  users: z.array(UserSchema),
 });
 
 export const CreateRamaSchema = RamaSchema.omit({
