@@ -5,7 +5,6 @@ export function userAdapter(apiUser: TApiUser): TUser {
   const {
     createdAt,
     id,
-    id_family,
     id_folder,
     id_rama,
     password,
@@ -13,12 +12,13 @@ export function userAdapter(apiUser: TApiUser): TUser {
     updatedAt,
     username,
     email,
+    person,
+    id_person,
   } = apiUser;
 
   return {
     createdAt,
     id,
-    id_family,
     id_folder,
     id_rama,
     password,
@@ -26,5 +26,7 @@ export function userAdapter(apiUser: TApiUser): TUser {
     role,
     updatedAt,
     username,
+    person,
+    id_person,
   };
 }

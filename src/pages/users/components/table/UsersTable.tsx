@@ -1,30 +1,41 @@
-import { FormatedDate } from "@/components/common/FormatedDate";
 import { RootTable } from "@/components/common/table";
 import type { TUser } from "@/models";
 import { useAppSelector } from "@/store/hooks";
 import type { ColumnDef } from "@tanstack/react-table";
+import PersonCell from "./PersonCell";
+import RamaCell from "./RamaCell";
+import { formatCurrency } from "@/utils";
 
 export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
   const { users } = useAppSelector((s) => s.users);
   const columns: ColumnDef<TUser>[] = [
     {
-      accessorKey: "username",
-    },
-    {
-      accessorKey: "createdAt",
-      cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
+      accessorKey: "id",
+      header: "Beneficiario",
+      cell: ({ getValue }) => <PersonCell userId={getValue<string>()} />,
     },
     {
       accessorKey: "role",
+      cell: ({ getValue }) => (
+        <div className="  bg-green-200 rounded-md  text-green-500 w-3/4 mx-auto p-1">
+          <p className="font-medium text-center ">{getValue<string>()}</p>
+        </div>
+      ),
     },
     {
       accessorKey: "id_rama",
-    },
-    {
-      accessorKey: "id_family",
+      cell: ({ getValue }) => <RamaCell ramaId={getValue<string>()} />,
     },
     {
       accessorKey: "id_folder",
+      header: "Deuda",
+      cell: () => (
+        <div className="bg-green-200 rounded-md  text-green-500 w-3/4 mx-auto p-1">
+          <p className="font-medium  text-primary-2 text-center">
+            {formatCurrency(19000)}
+          </p>
+        </div>
+      ),
     },
   ];
   return <RootTable columns={columns} data={usersInput ? usersInput : users} />;
