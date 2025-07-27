@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@custom-variant dark (&:is(.dark *));
+
 /* @custom-variant dark (&:is(.dark *)); */
 /* Scrollbar styles */
 ::-webkit-scrollbar {
@@ -75,7 +77,6 @@
   --x: linear-gradient(90deg, #347474 0%, #348862 100%);
 }
 
-
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -149,8 +150,15 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-
-
 button:hover{
   cursor: pointer;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
