@@ -3,6 +3,8 @@ import type { TRama, TUser } from "@/models";
 import { useAppSelector } from "@/store/hooks";
 import type { ColumnDef } from "@tanstack/react-table";
 import { AddUserAside } from "../AddUserAside";
+import { Link } from "react-router";
+import { BulkPersonUploader } from "@/pages/persons/components/BulkPersonUploader";
 
 export function RamasTable() {
   const { ramas } = useAppSelector((s) => s.ramas);
@@ -11,11 +13,13 @@ export function RamasTable() {
       accessorKey: "name",
       header: "Nombre",
       size: 50,
-      cell: ({ getValue }) => (
+      cell: ({ getValue, row }) => (
         <div className="uppercase  ">
-          <b className="space-x-4 text-lg text-primary">
-            {getValue<string>()}{" "}
-          </b>
+          <Link to={`/ramas/${row.original.id}`} className="hover:underline">
+            <b className="space-x-4 text-lg text-primary">
+              {getValue<string>()}{" "}
+            </b>
+          </Link>
         </div>
       ),
     },
@@ -37,7 +41,7 @@ export function RamasTable() {
       cell: ({ row }) => (
         <div className="flex justify-center gap-2">
           <AddUserAside rama={row.original} />
-          <AddUserAside rama={row.original} />
+          <BulkPersonUploader id_rama={row.original.id} size="sm" />
         </div>
       ),
     },

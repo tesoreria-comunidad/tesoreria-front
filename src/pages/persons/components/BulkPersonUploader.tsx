@@ -5,20 +5,41 @@ import { Input } from "@/components/ui/input";
 import { BulkPersonsTable } from "./table/PersonsTableBulk";
 import { PersonsServices } from "@/services/persons.service";
 import { Button } from "@/components/ui/button";
-import { Paperclip } from "lucide-react";
+import { CheckIcon, FileIcon, FileUp, TableIcon, Upload } from "lucide-react";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { FormatedDate } from "@/components/common/FormatedDate";
 
-export function BulkPersonUploader() {
+interface BulkPersonUploaderProps {
+  id_rama: string;
+  size?: "sm" | "lg";
+}
+export function BulkPersonUploader({
+  id_rama,
+  size = "lg",
+}: BulkPersonUploaderProps) {
   const [validPersons, setValidPersons] = useState<TCreatePerson[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showTable, setShowTable] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const handleClick = () => {
     inputRef.current?.click();
   };
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setSelectedFile(file);
 
     Papa.parse(file, {
       header: true,
@@ -56,7 +77,10 @@ export function BulkPersonUploader() {
     if (!validPersons.length) return alert("No hay datos válidos para enviar");
     setLoading(true);
     try {
-      await PersonsServices.bulkCreate(validPersons);
+      await PersonsServices.bulkCreate({
+        persons: validPersons,
+        id_rama,
+      });
       alert("Personas cargadas correctamente");
       setValidPersons([]);
     } catch (err) {
@@ -67,37 +91,123 @@ export function BulkPersonUploader() {
     }
   };
 
+  console.log("seselectedFile", selectedFile);
   return (
-    <div className="p-4 space-y-4">
-      <Button type="button" onClick={handleClick}>
-        <Paperclip /> Cargar Listado
-      </Button>
-      <Input
-        type="file"
-        accept=".csv"
-        onChange={handleFileChange}
-        ref={inputRef}
-        className="hidden"
-      />
-      {errors.length > 0 && (
-        <div className="text-red-600">
-          <h4>Errores en el archivo:</h4>
-          <ul className="list-disc pl-5">
-            {errors.map((err, i) => (
-              <li key={i}>{err}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {validPersons.length > 0 && (
-        <div>
-          <BulkPersonsTable persons={validPersons} />
-          <p>{validPersons.length} personas cargadas.</p>
-          <Button onClick={handleSubmit} isLoading={loading}>
-            Enviar al backend
+    <div className=" ">
+      <Sheet>
+        <SheetTrigger>
+          <Button type="button">
+            <Upload />
+            {size === "lg" ? "cargar csv" : null}
           </Button>
-        </div>
-      )}
+        </SheetTrigger>
+
+        <SheetContent>
+          <SheetHeader className=" h-full max-h-full ">
+            <SheetTitle>Cargar Csv</SheetTitle>
+            <SheetDescription>
+              Cargar un archivo csv para agregar al sistema. Verificar que el
+              formato de la tabla respeta los valores de las columnas
+              <span className="underline cursor-pointer"> ver template</span>
+            </SheetDescription>
+            <section className=" flex-1 flex flex-col items-center p-4 gap-4 overflow-auto max-h-[80vh] h-[80vh] ">
+              <Button
+                type="button"
+                variant={"ghost"}
+                onClick={handleClick}
+                className="flex flex-col items-center w-full h-[300px] mx-auto border border-dashed text-primary hover:text-primary-2"
+              >
+                <FileUp className="size-20" />
+                <p>Seleccionar archivo</p>
+              </Button>
+              <Input
+                type="file"
+                accept=".csv"
+                onChange={handleFileChange}
+                ref={inputRef}
+                className="hidden"
+              />
+
+              {selectedFile && (
+                <>
+                  <div className="border w-full p-4 border-border rounded-md flex justify-between items-start h-24">
+                    <div className="flex gap-2  items-start text-gray-800">
+                      <FileIcon />
+                      <div className="flex flex-col gap-1">
+                        <span className="font-medium ">
+                          {selectedFile?.name}
+                        </span>
+                        <span className="text-sm text-gray-400">
+                          {selectedFile?.size} kb
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-end gap-1 h-full justify-between">
+                      <div className="bg-primary text-white rounded-full p-1 ">
+                        <CheckIcon className="size-3" />
+                      </div>
+                      <p className="text-xs text-gray-400">
+                        <FormatedDate date={new Date().toISOString()} />
+                      </p>
+                    </div>
+                  </div>
+                  <div className=" w-full">
+                    <Button
+                      variant={"link"}
+                      onClick={() => setShowTable(!showTable)}
+                      className="text-gray-500"
+                    >
+                      <TableIcon className="" />
+                      Ver archivo
+                    </Button>
+                    <div
+                      className={`${
+                        showTable ? "visible" : "hidden"
+                      } transition-all duration-300`}
+                    >
+                      {errors.length > 0 && (
+                        <div className="text-red-600">
+                          <h4>Errores en el archivo:</h4>
+                          <ul className="list-disc pl-5">
+                            {errors.map((err, i) => (
+                              <li key={i}>{err}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {validPersons.length > 0 && (
+                        <div>
+                          <BulkPersonsTable persons={validPersons} />
+                          <p>{validPersons.length} personas cargadas.</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </section>
+          </SheetHeader>
+
+          <SheetFooter>
+            <div className="flex gap-2">
+              <SheetClose>
+                <Button disabled={loading} variant={"outline"}>
+                  Cancelar
+                </Button>
+              </SheetClose>
+
+              <Button
+                onClick={handleSubmit}
+                isLoading={loading}
+                className="flex-1"
+              >
+                <Upload /> Cargar Archivo
+              </Button>
+            </div>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
