@@ -28,7 +28,6 @@ export function CreateUserForm() {
   const form = useForm<TCreateUser>({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
-      // email: "",
       password: "",
       role: "BENEFICIARIO",
       username: "",

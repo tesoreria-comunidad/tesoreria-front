@@ -11,7 +11,7 @@ export const UserSchema = BaseSchema.extend({
   role: RoleSchema,
   id_folder: z.string(),
   id_rama: z.string().optional(),
-  id_person: z.string(),
+  id_person: z.string().optional(),
   person: PersonsSchema,
 });
 
@@ -22,6 +22,7 @@ export const CreateUserSchema = UserSchema.omit({
   createdAt: true,
   updatedAt: true,
   email: true,
+  person: true,
 })
   .extend({
     confirmPassword: z.string(),
