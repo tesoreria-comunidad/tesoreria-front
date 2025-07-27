@@ -91,7 +91,6 @@ export function BulkPersonUploader({
     }
   };
 
-  console.log("seselectedFile", selectedFile);
   return (
     <div className=" ">
       <Sheet>

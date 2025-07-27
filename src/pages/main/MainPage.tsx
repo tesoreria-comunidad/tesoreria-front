@@ -8,27 +8,29 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 export function MainPage() {
   const { user } = useAppSelector((s) => s.session);
   return (
-    <div className=" h-full flex flex-col flex-1 ">
+    <div className=" h-full flex flex-col flex-1  ">
       <DataProvider>
         <Asidebar>
-          <div className="flex flex-col text-[#fff] items-start m-2">
-            <SidebarTrigger />
-          </div>
-          <section className=" bg-accent m-2 rounded-md p-4 flex-1 ">
-            <Routes>
-              {routes.map(
-                (route) =>
-                  user &&
-                  route.rolesAccess?.includes(user?.role) && (
-                    <Route
-                      key={route.path}
-                      path={route.path}
-                      element={route.element}
-                    />
-                  )
-              )}
-              <Route path={"*"} element={<>NOT FOUND</>} />
-            </Routes>
+          <section className="  h-full">
+            <div className="flex items-center   h-[5%] ">
+              <SidebarTrigger />
+            </div>
+            <section className="  m-2 rounded-md p-4  max-h-[90%] h-[90%]  overflow-x-hidden overflow-y-auto ">
+              <Routes>
+                {routes.map(
+                  (route) =>
+                    user &&
+                    route.rolesAccess?.includes(user?.role) && (
+                      <Route
+                        key={route.path}
+                        path={route.path}
+                        element={route.element}
+                      />
+                    )
+                )}
+                <Route path={"*"} element={<>NOT FOUND</>} />
+              </Routes>
+            </section>
           </section>
         </Asidebar>
       </DataProvider>
