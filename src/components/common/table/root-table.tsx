@@ -76,13 +76,9 @@ export function RootTable<TData, TValue>({
   });
 
   return (
-    <div
-      className={
-        " h-full flex-grow  flex flex-col  gap-1 relative bg-card  text-card-foreground "
-      }
-    >
+    <div className={"  flex flex-col  gap-1  "}>
       <div
-        className={`rounded-md  border border-border    w-full  max-h-[100%] mx-auto   overflow-y-auto scrollbar-custom `}
+        className={`  border   border-border   w-full  max-h-[100%]      scrollbar-custom `}
       >
         <Table className="table ">
           <TableHeader>
@@ -91,11 +87,15 @@ export function RootTable<TData, TValue>({
                 key={headerGroup.id}
                 className="  bg-light-grey   rounded-md  "
               >
-                {headerGroup.headers.map((header) => (
+                {headerGroup.headers.map((header, index) => (
                   <TableHead
                     key={header.id}
                     style={{ width: `${header.getSize()}px` }}
-                    className={`   border-l  border-border text-center text-card-foreground    font-semibold   `}
+                    className={` ${
+                      index > 0 && index < headerGroup.headers.length - 1
+                        ? "border-x"
+                        : ""
+                    }    border-border text-center     font-semibold   `}
                   >
                     <div
                       className={`flex w-full  ${
@@ -137,7 +137,7 @@ export function RootTable<TData, TValue>({
               <Fragment key={row.id}>
                 <TableRow key={row.id} className={`  text-md    text-left  `}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-xs  ">
+                    <TableCell key={cell.id} className="text-sm  ">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

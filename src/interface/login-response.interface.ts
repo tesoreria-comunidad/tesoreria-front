@@ -1,6 +1,6 @@
 import type { TUser } from "@/models";
 
-export interface ILoginRes {
+export interface ILoginResponse {
   backendTokens: {
     accessToken: string;
   };

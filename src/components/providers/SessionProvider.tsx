@@ -2,12 +2,13 @@ import { setAuthInterceptor } from "@/config/axios.config";
 import { AuthServices } from "@/services/auth.service";
 import { setSession } from "@/store/features";
 import { useAppDispatch } from "@/store/hooks";
-import { useEffect, type PropsWithChildren } from "react";
+import { Fragment, useEffect, type PropsWithChildren } from "react";
 import { useNavigate } from "react-router";
 
 export function SessionProvider({ children }: PropsWithChildren) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     const validateUser = async () => {
       try {
@@ -22,5 +23,5 @@ export function SessionProvider({ children }: PropsWithChildren) {
     };
     validateUser();
   }, []);
-  return <div>{children}</div>;
+  return <Fragment>{children}</Fragment>;
 }
