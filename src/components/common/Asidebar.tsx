@@ -10,24 +10,37 @@ import { Link } from "react-router";
 import { routes } from "@/routes";
 import { useAppSelector } from "@/store/hooks";
 import UserSessionCard from "./UserSessionCard";
+import { useLocation } from "react-router";
 
 export function Asidebar({ children }: PropsWithChildren) {
   const { user } = useAppSelector((s) => s.session);
 
+  const { pathname } = useLocation();
   return (
     <div className="flex h-screen bg-gradient-to-br from-gray-100 to-gray-200">
       <SidebarProvider>
-        <Sidebar className="flex flex-col text-primary font-bold gap-10">
-          <SidebarHeader className="flex mt-10 pl-5">
-            <h1>Bienvenido {user?.username}</h1>
+        <Sidebar>
+          <SidebarHeader className="flex  justify-center items-center h-[10vh] ">
+            <img
+              src="/logo.png"
+              className="size-20 aspect-square object-cover"
+            />
+            <strong className="text-primary">Mi Pelicano</strong>{" "}
           </SidebarHeader>
-          <SidebarContent className="flex flex-col mt-10 gap-5">
+          <hr className="my-4 w-3/4 mx-auto" />
+          <SidebarContent className="flex flex-col gap-4  mt-4 pl-2">
             {routes.map((route) =>
               user?.role &&
               route.rolesAccess?.includes(user?.role) &&
               route.sidebarContent ? (
                 <Link to={route.path}>
-                  <div className="flex items-center gap-2 pl-5">
+                  <div
+                    className={`flex items-center gap-2 transition-all duration-300   pl-4 ${
+                      pathname === route.path
+                        ? "font-medium text-primary  py-2  bg-gradient-to-r   from-primary/10 to-transparent"
+                        : "font-medium text-gray-500 bg-transparent"
+                    }`}
+                  >
                     {route.icon}
                     {route.name}
                   </div>
