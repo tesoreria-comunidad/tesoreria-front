@@ -1,9 +1,10 @@
+import { Label } from "@radix-ui/react-label";
 import { CreatFamilyAside } from "./components/CreateFamilyAside";
 
 export function FamilyPage() {
   return (
-    <div>
-      <h1>Family</h1>
+    <div className="flex items-center justify-between">
+      <Label>Familias</Label>
       <CreatFamilyAside />
     </div>
   );
