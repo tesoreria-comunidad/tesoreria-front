@@ -1,6 +1,7 @@
 import { familyAdapter } from "@/adapters";
+import type { TFamily } from "@/models";
 import { FamilyServices } from "@/services/family.service";
-import { setFamilies } from "@/store/features/family/familySlice";
+import { addFamily, setFamilies } from "@/store/features/family/familySlice";
 import { useAppDispatch } from "@/store/hooks";
 export function useFamilyQueries() {
   const dispatch = useAppDispatch();
@@ -17,5 +18,18 @@ export function useFamilyQueries() {
       throw error;
     }
   };
-  return { fetchFamilies };
+
+  const createFamily = async (
+    body: Omit<TFamily, "id" | "createdAt" | "updatedAt" | "id_balance">
+  ) => {
+    try {
+      const apiFamily = await FamilyServices.create(body);
+      const adaptedFamily = familyAdapter(apiFamily);
+      dispatch(addFamily(adaptedFamily));
+    } catch (error) {
+      console.log("Error creating family", error);
+      throw error;
+    }
+  };
+  return { fetchFamilies, createFamily };
 }
