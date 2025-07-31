@@ -1,5 +1,5 @@
 import { familyAdapter } from "@/adapters";
-import type { TFamily } from "@/models";
+import type { TCreateFamily } from "@/models";
 import { FamilyServices } from "@/services/family.service";
 import { addFamily, setFamilies } from "@/store/features/family/familySlice";
 import { useAppDispatch } from "@/store/hooks";
@@ -19,9 +19,7 @@ export function useFamilyQueries() {
     }
   };
 
-  const createFamily = async (
-    body: Omit<TFamily, "id" | "createdAt" | "updatedAt" | "id_balance">
-  ) => {
+  const createFamily = async (body: TCreateFamily) => {
     try {
       const apiFamily = await FamilyServices.create(body);
       const adaptedFamily = familyAdapter(apiFamily);

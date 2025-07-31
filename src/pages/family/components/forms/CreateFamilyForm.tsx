@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { FamilySchema, type TFamily } from "@/models";
+import { CreateFamilySchema, type TCreateFamily } from "@/models";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,24 +20,24 @@ export function CreateFamilyForm() {
   const { users } = useAppSelector((state) => state.users);
 
   const [loading, setLoading] = useState(false);
-  const form = useForm<TFamily>({
-    resolver: zodResolver(FamilySchema),
+  const form = useForm<TCreateFamily>({
+    resolver: zodResolver(CreateFamilySchema),
     defaultValues: {
       name: "",
       phone: "",
-      persons: [],
+      users: [],
     },
   });
 
   const { createFamily } = useFamilyQueries();
-  const onSubmit = async (values: TFamily) => {
+  const onSubmit = async (values: TCreateFamily) => {
     try {
       setLoading(true);
-      const { name, phone, persons } = values;
+      const { name, phone, users } = values;
       const body = {
         name,
         phone,
-        persons,
+        users,
       };
       await createFamily(body);
       form.reset();
@@ -86,7 +86,7 @@ export function CreateFamilyForm() {
         />
         <FormField
           control={form.control}
-          name="persons"
+          name="users"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Integrantes de la familia</FormLabel>
