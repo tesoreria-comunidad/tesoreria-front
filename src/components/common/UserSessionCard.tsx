@@ -25,19 +25,14 @@ export default function UserSessionCard() {
           <div className="flex gap-1">
             <SquareUser className="size-10 " />
             <div className="flex flex-col items-start ">
-              <p className="font-semibold ">
-                {" "}
-                {user.person ? user.person.name : user.username}
-              </p>
+              <p className="font-semibold "> {user.name}</p>
               <p className="text-xs font-light">m@example.com</p>
             </div>
           </div>
           <EllipsisVertical />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>
-            {user.person ? user.person.name : user.username}
-          </DropdownMenuLabel>
+          <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Perfil</DropdownMenuItem>
           <DropdownMenuItem>Rama</DropdownMenuItem>

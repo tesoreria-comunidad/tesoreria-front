@@ -1,5 +1,4 @@
 import type { TUser } from "@/models";
-import { useAppSelector } from "@/store/hooks";
 
 interface PersonCellProps {
   user: TUser;
