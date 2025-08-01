@@ -12,8 +12,15 @@ export function userAdapter(apiUser: TApiUser): TUser {
     updatedAt,
     username,
     email,
-    person,
-    id_person,
+    address,
+    dni,
+    gender,
+    id_family,
+    last_name,
+    name,
+    phone,
+    birthdate,
+    citizenship,
   } = apiUser;
 
   return {
@@ -26,7 +33,14 @@ export function userAdapter(apiUser: TApiUser): TUser {
     role,
     updatedAt,
     username,
-    person,
-    id_person,
+    address,
+    dni,
+    gender,
+    id_family,
+    last_name,
+    name,
+    phone,
+    birthdate,
+    citizenship,
   };
 }

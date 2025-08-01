@@ -6,7 +6,7 @@ export function RamasPage() {
   return (
     <div className="size-full  overflow-y-auto space-y-4  ">
       <section className="flex items-center justify-between">
-        <Label>Ramas</Label>
+        <Label className="text-xl">Ramas</Label>
         <CreateRamaAside />
       </section>
       <RamasTable />
