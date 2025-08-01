@@ -12,13 +12,11 @@ export function RamasTable() {
     {
       accessorKey: "name",
       header: "Nombre",
-      size: 50,
+      size: 10,
       cell: ({ getValue, row }) => (
         <div className="uppercase  ">
           <Link to={`/ramas/${row.original.id}`} className="hover:underline">
-            <b className="space-x-4 text-lg text-primary">
-              {getValue<string>()}{" "}
-            </b>
+            <p className="space-x-4 text-lg ">{getValue<string>()} </p>
           </Link>
         </div>
       ),
@@ -30,6 +28,18 @@ export function RamasTable() {
       cell: ({ getValue }) => (
         <div className="uppercase text-center ">
           <b className="space-x-4">{getValue<TUser[]>().length} </b>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "users",
+      header: "Cobrabilidad",
+      size: 50,
+      cell: () => (
+        <div className="uppercase text-center ">
+          <div className="bg-orange-200 text-orange-600 font-semibold w-1/4 mx-auto p-1 rounded-md">
+            <span>89.9%</span>
+          </div>
         </div>
       ),
     },
