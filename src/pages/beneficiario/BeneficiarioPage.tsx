@@ -34,7 +34,7 @@ export function BeneficiarioPage() {
             <hr className=" border-accent" />
             <DataCard>
               <p className="text-sm font-light">Telefono celular</p>
-              <b>{"+542915275753"}</b>
+              <b>{user?.phone || "+542915275753"}</b>
               <PenIcon className="absolute right-4 top-4 text-primary" />
             </DataCard>
           </div>
@@ -43,7 +43,7 @@ export function BeneficiarioPage() {
           <Label className="text-lg">Domicilo Actual</Label>
           <div className="w-full">
             <DataCard>
-              <b>{"SANTA FE 974"}</b>
+              <b>{user?.address}</b>
               <p className="text-sm font-light">
                 Bahia Blanca, Buenos Aires (8000) Argentina
               </p>
@@ -70,27 +70,27 @@ export function BeneficiarioPage() {
               <div className="grid grid-cols-2 gap-y-8">
                 <div>
                   <p className="text-sm font-light">Nombre</p>
-                  <b>{"Francisco Javier"}</b>
+                  <b>{user?.name}</b>
                 </div>
                 <div>
                   <p className="text-sm font-light">Apellido</p>
-                  <b>{"Villanueva"}</b>
+                  <b>{user?.name}</b>
                 </div>
                 <div>
                   <p className="text-sm font-light">DNI</p>
-                  <b>{"41896328"}</b>
+                  <b>{user?.name}</b>
                 </div>
                 <div>
                   <p className="text-sm font-light">Sexo</p>
-                  <b>{"Masculino"}</b>
+                  <b>{user?.gender}</b>
                 </div>
                 <div>
                   <p className="text-sm font-light">Fecha de nacimiento</p>
-                  <b>{"05/06/1999"}</b>
+                  <b>{user?.birthdate}</b>
                 </div>
                 <div>
                   <p className="text-sm font-light">Nacionalidad</p>
-                  <b>{"Argentina"}</b>
+                  <b>{user?.citizenship}</b>
                 </div>
               </div>
             </DataCard>

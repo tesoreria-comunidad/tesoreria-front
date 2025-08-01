@@ -1,18 +1,24 @@
 import z from "zod";
 import { BaseSchema } from "./baseEntity.schema";
 import { RoleSchema } from "@/constants/role.constants";
-import { PersonsSchema } from "./person.schema";
+import { GenderSchema } from "@/constants/gender.constants";
 
 export const UserSchema = BaseSchema.extend({
-  id: z.string().uuid(),
   username: z.string(),
   email: z.string(),
   password: z.string(),
   role: RoleSchema,
+  name: z.string(),
+  last_name: z.string(),
+  address: z.string(),
+  phone: z.string(),
+  gender: GenderSchema,
+  dni: z.string(),
+  birthdate: z.string(),
+  citizenship: z.string(),
+  id_family: z.string(),
   id_folder: z.string(),
-  id_rama: z.string().optional(),
-  id_person: z.string().optional(),
-  person: PersonsSchema,
+  id_rama: z.string(),
 });
 
 export const CreateUserSchema = UserSchema.omit({
@@ -22,7 +28,6 @@ export const CreateUserSchema = UserSchema.omit({
   createdAt: true,
   updatedAt: true,
   email: true,
-  person: true,
 })
   .extend({
     confirmPassword: z.string(),
