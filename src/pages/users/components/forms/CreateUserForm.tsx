@@ -39,13 +39,8 @@ export function CreateUserForm() {
   const onSubmit = async (values: TCreateUser) => {
     try {
       setLoading(true);
-      const { password, role, username } = values;
-      const body = {
-        password,
-        role,
-        username,
-      };
-      await createUser(body);
+
+      await createUser(values);
       form.reset();
     } catch (error) {
       console.log("Error creating user", error);
