@@ -5,6 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { UserCell } from "./PersonCell";
 import RamaCell from "./RamaCell";
 import { formatCurrency } from "@/utils";
+import { FormatedDate } from "@/components/common/FormatedDate";
 
 export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
   const { users } = useAppSelector((s) => s.users);
@@ -15,28 +16,17 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
       cell: ({ row }) => <UserCell user={row.original} />,
     },
     {
-      accessorKey: "role",
-      cell: ({ getValue }) => (
-        <div className="  bg-green-200 rounded-md  text-green-500 w-3/4 mx-auto p-1">
-          <p className="font-medium text-center ">{getValue<string>()}</p>
-        </div>
-      ),
-    },
-    {
-      accessorKey: "id_rama",
-      cell: ({ getValue }) => <RamaCell ramaId={getValue<string>()} />,
-    },
-    {
       accessorKey: "id_family",
+      header: "Familia",
       cell: ({ getValue }) => <RamaCell ramaId={getValue<string>()} />,
     },
     {
       accessorKey: "address",
-      cell: ({ getValue }) => getValue<string>(),
+      cell: ({ getValue }) => <p className="truncate">{getValue<string>()}</p>,
     },
     {
       accessorKey: "birthdate",
-      cell: ({ getValue }) => getValue<string>(),
+      cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
     },
     {
       accessorKey: "id_folder",

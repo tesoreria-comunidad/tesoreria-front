@@ -17,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Logo from "/logo.png";
 import { useAppDispatch } from "@/store/hooks";
 import { setSession } from "@/store/features";
+import { useAlert } from "@/context/AlertContext";
 const formSchema = z.object({
   username: z.string().min(2).max(50),
   password: z.string(),
@@ -33,6 +34,7 @@ export function LoginForm() {
   });
 
   const dispatch = useAppDispatch();
+  const { showAlert } = useAlert();
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
@@ -48,6 +50,12 @@ export function LoginForm() {
       }
       location.replace("/");
     } catch (error) {
+      showAlert({
+        title: "Error de inicio de sesión",
+        description:
+          "Usuario o contraseña incorrectos. Por favor, verifica tus datos e intenta nuevamente.",
+        type: "error",
+      });
       console.log("err", error);
     } finally {
       setLoading(false);
