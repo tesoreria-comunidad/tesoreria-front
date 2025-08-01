@@ -1,11 +1,21 @@
 import { type ChangeEvent, useRef, useState } from "react";
 import Papa from "papaparse";
-import { CreatePersonSchema, type TCreatePerson } from "@/models";
+import {
+  BulkCreateUserSchema,
+  type TBulkCreateUser,
+  type TCreateUser,
+} from "@/models";
 import { Input } from "@/components/ui/input";
-import { BulkPersonsTable } from "./table/PersonsTableBulk";
-import { PersonsServices } from "@/services/persons.service";
+import { BulkUsersTable } from "./table/BulkUsersTable";
 import { Button } from "@/components/ui/button";
-import { CheckIcon, FileIcon, FileUp, TableIcon, Upload } from "lucide-react";
+import {
+  CheckIcon,
+  FileIcon,
+  FileUp,
+  TableIcon,
+  Upload,
+  XIcon,
+} from "lucide-react";
 import {
   Sheet,
   SheetClose,
@@ -17,16 +27,17 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { FormatedDate } from "@/components/common/FormatedDate";
-
+import { UserServices } from "@/services/user.service";
+import { useAlert } from "@/context/AlertContext";
 interface BulkPersonUploaderProps {
   id_rama: string;
   size?: "sm" | "lg";
 }
-export function BulkPersonUploader({
+export function UserBulkUploader({
   id_rama,
   size = "lg",
 }: BulkPersonUploaderProps) {
-  const [validPersons, setValidPersons] = useState<TCreatePerson[]>([]);
+  const [validPersons, setValidPersons] = useState<TBulkCreateUser[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [showTable, setShowTable] = useState(false);
@@ -35,7 +46,7 @@ export function BulkPersonUploader({
     inputRef.current?.click();
   };
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
+  const { showAlert } = useAlert();
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -46,7 +57,7 @@ export function BulkPersonUploader({
       skipEmptyLines: true,
       complete: (result) => {
         const parsed = result.data as any[];
-        const valid: TCreatePerson[] = [];
+        const valid: TBulkCreateUser[] = [];
         const errs: string[] = [];
 
         parsed.forEach((row, index) => {
@@ -55,7 +66,8 @@ export function BulkPersonUploader({
             Object.entries(row).map(([k, v]) => [k.trim(), String(v).trim()])
           );
 
-          const validation = CreatePersonSchema.safeParse(cleaned);
+          const validation = BulkCreateUserSchema.safeParse(cleaned);
+          console.log("validation", validation.error);
           if (validation.success) {
             valid.push(validation.data);
           } else {
@@ -77,15 +89,43 @@ export function BulkPersonUploader({
     if (!validPersons.length) return alert("No hay datos válidos para enviar");
     setLoading(true);
     try {
-      await PersonsServices.bulkCreate({
-        persons: validPersons,
+      const users: TCreateUser[] = validPersons.map((item) => {
+        let birthdate: string = "";
+        if (item.birthdate) {
+          const [day, month, year] = item.birthdate.split("/");
+          birthdate = new Date(
+            Number(year),
+            Number(month) - 1,
+            Number(day)
+          ).toISOString();
+        }
+        return {
+          ...item,
+          password: item.dni,
+          username: item.dni,
+          birthdate,
+          role: "BENEFICIARIO",
+          id_family: null,
+        };
+      });
+
+      await UserServices.bulkCreate({
+        users,
         id_rama,
       });
-      alert("Personas cargadas correctamente");
+      showAlert({
+        title: "Personas cargadas correctamente",
+        description: `${validPersons.length} usuarios han sido creado correctamente`,
+        type: "success",
+      });
       setValidPersons([]);
     } catch (err) {
       console.error(err);
-      alert("Error al enviar la solicitud");
+      showAlert({
+        title: "Hubo un error al cargar el archivo ",
+        description: "Por favor revisar si todos los datos son correctos",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -143,9 +183,15 @@ export function BulkPersonUploader({
                     </div>
 
                     <div className="flex flex-col items-end gap-1 h-full justify-between">
-                      <div className="bg-primary text-white rounded-full p-1 ">
-                        <CheckIcon className="size-3" />
-                      </div>
+                      {errors.length ? (
+                        <div className="bg-destructive/80 text-white rounded-full p-1 ">
+                          <XIcon className="size-3" />
+                        </div>
+                      ) : (
+                        <div className="bg-primary text-white rounded-full p-1 ">
+                          <CheckIcon className="size-3" />
+                        </div>
+                      )}
                       <p className="text-xs text-gray-400">
                         <FormatedDate date={new Date().toISOString()} />
                       </p>
@@ -165,6 +211,12 @@ export function BulkPersonUploader({
                         showTable ? "visible" : "hidden"
                       } transition-all duration-300`}
                     >
+                      {validPersons.length > 0 && (
+                        <div>
+                          <BulkUsersTable users={validPersons} />
+                          <p>{validPersons.length} personas cargadas.</p>
+                        </div>
+                      )}
                       {errors.length > 0 && (
                         <div className="text-red-600">
                           <h4>Errores en el archivo:</h4>
@@ -173,12 +225,6 @@ export function BulkPersonUploader({
                               <li key={i}>{err}</li>
                             ))}
                           </ul>
-                        </div>
-                      )}
-                      {validPersons.length > 0 && (
-                        <div>
-                          <BulkPersonsTable persons={validPersons} />
-                          <p>{validPersons.length} personas cargadas.</p>
                         </div>
                       )}
                     </div>

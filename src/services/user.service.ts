@@ -13,4 +13,19 @@ export class UserServices {
   static async getById() {}
   static async edit() {}
   static async delete() {}
+
+  static async bulkCreate({
+    users,
+    id_rama,
+  }: {
+    users: TCreateUser[];
+    id_rama?: string;
+  }): Promise<TApiUser[]> {
+    let url = `${BASE_URL}/user/bulk`;
+    if (id_rama) {
+      url = `${BASE_URL}/user/bulk?id_rama=${id_rama}`;
+    }
+    const res = await axiosInstance.post(url, { users });
+    return res.data;
+  }
 }

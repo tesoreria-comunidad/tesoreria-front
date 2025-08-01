@@ -20,7 +20,9 @@ export function BeneficiarioPage() {
         <header className="flex flex-col items-center">
           <CircleUser className="size-[150px] bg-gray-300 rounded-full" />
           <br />
-          <p className="text-2xl">Francisco Javier, Villaneuva</p>
+          <p className="text-2xl">
+            {user?.name}, {user?.last_name}
+          </p>
           <p className="text-gray-500">{user?.username}</p>
         </header>
         <div className="flex flex-col items-start gap-4 w-full text-lg">

@@ -21,7 +21,7 @@ export default function UserSessionCard() {
   return (
     <div className=" w-full  ">
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center justify-between  w-full  gap-2 bg-black/5 rounded-lg p-2 text-gray-700">
+        <DropdownMenuTrigger className="flex items-center justify-between  w-full  gap-2 bg-gray-100  p-2 text-gray-700">
           <div className="flex gap-1">
             <SquareUser className="size-10 " />
             <div className="flex flex-col items-start ">
