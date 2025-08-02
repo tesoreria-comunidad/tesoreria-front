@@ -1,6 +1,7 @@
 import { cuotaAdapter } from "@/adapters";
+import type { TCreateCuota } from "@/models";
 import { CuotaServices } from "@/services/cuota.service";
-import { setCuotas } from "@/store/features/cuota/cuotaSlice";
+import { addCuota, setCuotas } from "@/store/features/cuota/cuotaSlice";
 import { useAppDispatch } from "@/store/hooks";
 export function useCuotaQueries() {
   const dispatch = useAppDispatch();
@@ -17,6 +18,16 @@ export function useCuotaQueries() {
       throw error;
     }
   };
+  const createCuota = async (body: TCreateCuota) => {
+    try {
+      const apiCuotaRes = await CuotaServices.create(body);
 
-  return { fetchCuotas };
+      dispatch(addCuota(apiCuotaRes));
+    } catch (error) {
+      console.log("error fetchin families", error);
+      throw error;
+    }
+  };
+
+  return { fetchCuotas, createCuota };
 }
