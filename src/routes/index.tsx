@@ -1,10 +1,17 @@
 import type { TRole } from "@/constants/role.constants";
 import { BeneficiarioPage } from "@/pages/beneficiario/BeneficiarioPage";
+import { CuotasPage } from "@/pages/cuotas/CuotasPage";
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
 import RamasDetailPage from "@/pages/ramas/RamasDetailPage";
 import { RamasPage } from "@/pages/ramas/RamasPage";
 import { UsersPage } from "@/pages/users/UsersPage";
-import { HomeIcon, LayoutDashboard, Trees, Users } from "lucide-react";
+import {
+  CircleDollarSign,
+  HomeIcon,
+  LayoutDashboard,
+  Trees,
+  Users,
+} from "lucide-react";
 import type { JSX } from "react";
 
 // routes.ts
@@ -64,6 +71,14 @@ export const routes: TRoute[] = [
     icon: <Trees className="size-4" />,
     element: <BeneficiarioPage />,
     rolesAccess: ["BENEFICIARIO"],
+    sidebarContent: true,
+  },
+  {
+    path: "/cuotas",
+    name: "Cuotas",
+    icon: <CircleDollarSign className="size-4" />,
+    element: <CuotasPage />,
+    rolesAccess: ["MASTER"],
     sidebarContent: true,
   },
 ];
