@@ -1,7 +1,6 @@
-import { RootTable } from "@/components/common/table";
+import { RootTable, type TColumnDef } from "@/components/common/table";
 import type { TUser } from "@/models";
 import { useAppSelector } from "@/store/hooks";
-import type { ColumnDef } from "@tanstack/react-table";
 import { UserCell } from "./PersonCell";
 import RamaCell from "./RamaCell";
 import { formatCurrency } from "@/utils";
@@ -9,7 +8,7 @@ import { FormatedDate } from "@/components/common/FormatedDate";
 
 export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
   const { users } = useAppSelector((s) => s.users);
-  const columns: ColumnDef<TUser>[] = [
+  const columns: TColumnDef<TUser>[] = [
     {
       accessorKey: "id",
       header: "Beneficiario",
@@ -38,6 +37,67 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
           </p>
         </div>
       ),
+    },
+    {
+      accessorKey: "citizenship",
+      hidden: true,
+    },
+    {
+      accessorKey: "dni",
+      hidden: true,
+    },
+    {
+      accessorKey: "is_granted",
+      hidden: true,
+    },
+    // Campos faltantes de TUser, todos con hidden: true
+    {
+      accessorKey: "name",
+      hidden: true,
+    },
+    {
+      accessorKey: "lastname",
+      hidden: true,
+    },
+    {
+      accessorKey: "email",
+      hidden: true,
+    },
+    {
+      accessorKey: "phone",
+      hidden: true,
+    },
+    {
+      accessorKey: "gender",
+      hidden: true,
+    },
+    {
+      accessorKey: "created_at",
+      hidden: true,
+    },
+    {
+      accessorKey: "updated_at",
+      hidden: true,
+    },
+    {
+      accessorKey: "deleted_at",
+      hidden: true,
+    },
+    {
+      accessorKey: "notes",
+      hidden: true,
+    },
+    {
+      accessorKey: "status",
+      hidden: true,
+    },
+    {
+      accessorKey: "id_rama",
+      hidden: true,
+    },
+    {
+      accessorKey: "id_user",
+      hidden: true,
     },
   ];
   return <RootTable columns={columns} data={usersInput ? usersInput : users} />;
