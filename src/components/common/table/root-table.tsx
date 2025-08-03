@@ -23,8 +23,9 @@ import type {
   TableColumnFilterType,
   TableType,
 } from "@/interface/root-table.interface";
-import { Fragment, useState, type ReactNode } from "react";
+import { Fragment, useMemo, useState, type ReactNode } from "react";
 import "./table.css";
+import { ColumnVisibility } from "./header/ColumnVisibility";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -33,33 +34,56 @@ declare module "@tanstack/react-table" {
     filterPositon?: "inline" | "bottom";
   }
 }
+
+export type TColumnDef<TData, TValue = unknown> = ColumnDef<TData, TValue> & {
+  hidden?: boolean;
+};
+
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: (ColumnDef<TData, TValue> & { hidden?: boolean })[];
   data: TData[];
   tableType?: TableType;
   getRowCanExpand?: () => boolean;
   renderSubComponent?: (row: TData) => ReactNode;
   pageSize?: number;
   tableNameRef?: string;
+  tableHeader?: boolean;
 }
 
 export function RootTable<TData, TValue>({
   columns,
   data,
   pageSize = 20,
+  tableHeader = false,
 }: DataTableProps<TData, TValue>) {
+  // Idenficar las columnas visibles segun las columns
+  const initialVisibility = useMemo(() => {
+    const visibility: Record<string, boolean> = {};
+    columns.forEach((col) => {
+      //@ts-ignore
+      if (col.accessorKey && col.hidden) {
+        //@ts-ignore
+        visibility[col.accessorKey as string] = false;
+      }
+    });
+    return visibility;
+  }, [columns]);
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize,
   });
+  const [columnVisibility, setColumnVisibility] = useState(initialVisibility);
   const table = useReactTable({
     data,
     columns,
     state: {
       columnFilters,
       pagination,
+      columnVisibility,
     },
+    onColumnVisibilityChange: setColumnVisibility,
     defaultColumn: {
       size: 200,
       minSize: 10,
@@ -76,11 +100,16 @@ export function RootTable<TData, TValue>({
   });
 
   return (
-    <div className={"  flex flex-col  gap-1  "}>
+    <div className={"  flex flex-col  gap-1  w-full  "}>
+      {tableHeader ? (
+        <section className=" flex justify-end ">
+          <ColumnVisibility table={table} />
+        </section>
+      ) : null}
       <div
-        className={`  border   border-border   w-full  max-h-[100%]      scrollbar-custom `}
+        className={`  border   border-border   w-full max-w-full  max-h-[100%]   overflow-x-auto    scrollbar-custom    `}
       >
-        <Table className="table ">
+        <Table className=" table  ">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow

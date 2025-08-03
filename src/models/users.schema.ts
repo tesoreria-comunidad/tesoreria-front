@@ -16,9 +16,11 @@ export const UserSchema = BaseSchema.extend({
   dni: z.string(),
   birthdate: z.string(),
   citizenship: z.string(),
-  id_family: z.string(),
-  id_folder: z.string(),
-  id_rama: z.string(),
+  is_granted: z.boolean(),
+  is_active: z.boolean(),
+  id_family: z.string().nullable(),
+  id_folder: z.string().nullable(),
+  id_rama: z.string().nullable(),
 });
 
 export const CreateUserSchema = UserSchema.omit({
@@ -27,10 +29,11 @@ export const CreateUserSchema = UserSchema.omit({
   id_rama: true,
   createdAt: true,
   updatedAt: true,
-  email: true,
+  is_granted: true,
+  is_active: true,
 })
   .extend({
-    confirmPassword: z.string(),
+    confirmPassword: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Las contraseñas no coinciden",
@@ -38,3 +41,16 @@ export const CreateUserSchema = UserSchema.omit({
   });
 export type TUser = z.infer<typeof UserSchema>;
 export type TCreateUser = z.infer<typeof CreateUserSchema>;
+export const BulkCreateUserSchema = UserSchema.omit({
+  id: true,
+  id_folder: true,
+  id_rama: true,
+  id_family: true,
+  createdAt: true,
+  updatedAt: true,
+  username: true,
+  password: true,
+  role: true,
+});
+
+export type TBulkCreateUser = z.infer<typeof BulkCreateUserSchema>;

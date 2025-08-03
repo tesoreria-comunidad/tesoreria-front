@@ -5,6 +5,7 @@ import { useRamasQueries } from "@/queries/ramas.queries";
 import { useUserQueries } from "@/queries/user.queries";
 import { useFamilyQueries } from "@/queries/family.queries";
 import { usePersonsQueries } from "@/queries/persons.queries";
+import { useCuotaQueries } from "@/queries/cuota.queries";
 
 export function DataProvider({ children }: PropsWithChildren) {
   const accessToken = localStorage.getItem("accessToken");
@@ -13,7 +14,7 @@ export function DataProvider({ children }: PropsWithChildren) {
   const { fetchUsers } = useUserQueries();
   const { fetchFamilies } = useFamilyQueries();
   const { fetchPersons } = usePersonsQueries();
-
+  const { fetchCuotas } = useCuotaQueries();
   useEffect(() => {
     if (!accessToken) return;
 
@@ -25,6 +26,7 @@ export function DataProvider({ children }: PropsWithChildren) {
         await fetchUsers();
         await fetchFamilies();
         await fetchPersons();
+        await fetchCuotas();
       } catch (error) {
         console.log("Error fetching initial data", error);
       } finally {

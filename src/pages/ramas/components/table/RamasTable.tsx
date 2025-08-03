@@ -4,7 +4,7 @@ import { useAppSelector } from "@/store/hooks";
 import type { ColumnDef } from "@tanstack/react-table";
 import { AddUserAside } from "../AddUserAside";
 import { Link } from "react-router";
-import { BulkPersonUploader } from "@/pages/persons/components/BulkPersonUploader";
+import { UserBulkUploader } from "../UsersBulkUploader";
 
 export function RamasTable() {
   const { ramas } = useAppSelector((s) => s.ramas);
@@ -51,7 +51,7 @@ export function RamasTable() {
       cell: ({ row }) => (
         <div className="flex justify-center gap-2">
           <AddUserAside rama={row.original} />
-          <BulkPersonUploader id_rama={row.original.id} size="sm" />
+          <UserBulkUploader id_rama={row.original.id} size="sm" />
         </div>
       ),
     },

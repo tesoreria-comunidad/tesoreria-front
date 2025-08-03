@@ -1,12 +1,13 @@
 import type { TRole } from "@/constants/role.constants";
 import { BeneficiarioPage } from "@/pages/beneficiario/BeneficiarioPage";
+import { CuotasPage } from "@/pages/cuotas/CuotasPage";
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
 import { FamilyPage } from "@/pages/family/FamilyPage";
 import RamasDetailPage from "@/pages/ramas/RamasDetailPage";
 import { RamasPage } from "@/pages/ramas/RamasPage";
 import { UsersPage } from "@/pages/users/UsersPage";
 import {
-  ContactRound,
+  CircleDollarSign,
   HomeIcon,
   LayoutDashboard,
   Trees,
@@ -74,11 +75,11 @@ export const routes: TRoute[] = [
     sidebarContent: true,
   },
   {
-    path: "/family",
-    name: "Familia",
-    icon: <ContactRound className="size-4" />,
-    element: <FamilyPage />,
-    rolesAccess: ["BENEFICIARIO", "MASTER", "DIRIGENTE"],
+    path: "/cuotas",
+    name: "Cuotas",
+    icon: <CircleDollarSign className="size-4" />,
+    element: <CuotasPage />,
+    rolesAccess: ["MASTER"],
     sidebarContent: true,
   },
 ];

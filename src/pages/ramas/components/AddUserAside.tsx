@@ -106,7 +106,7 @@ export function AddUserAside({ rama }: IAddUserAsideProps) {
                   >
                     <CardHeader>
                       <CardTitle className="uppercase">
-                        {user.username}
+                        {user.name}, {user.last_name}
                       </CardTitle>
                       <CardDescription>{user.role}</CardDescription>
                     </CardHeader>

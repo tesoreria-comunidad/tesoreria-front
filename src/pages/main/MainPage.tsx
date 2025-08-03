@@ -8,14 +8,16 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 export function MainPage() {
   const { user } = useAppSelector((s) => s.session);
   return (
-    <div className=" h-full flex flex-col flex-1  ">
+    <div className=" h-screen w-screen ">
       <DataProvider>
         <Asidebar>
-          <section className="  h-full">
+          <section className="  h-full w-full   ">
             <div className="flex items-center   h-[5%] ">
               <SidebarTrigger />
             </div>
-            <section className="  m-2 rounded-md p-4  max-h-[90%] h-[90%]  overflow-x-hidden overflow-y-auto ">
+            <section
+              className={`rounded-md p-4  max-h-[90%] h-[90%] w-full    overflow-y-auto `}
+            >
               <Routes>
                 {routes.map(
                   (route) =>
