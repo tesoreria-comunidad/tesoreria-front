@@ -50,7 +50,7 @@ export function Asidebar({ children }: PropsWithChildren) {
         </SidebarFooter>
       </Sidebar>
       <main
-        className={` p-6  h-[100vh] max-h-[100vh]  ${
+        className={` p-6  h-[100vh] max-h-[100vh]  flex-1  ${
           open ? "max-w-[84vw]" : "max-w-[100vw]"
         } `}
       >
