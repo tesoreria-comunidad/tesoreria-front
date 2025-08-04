@@ -5,7 +5,7 @@ export const TransactionDirection = z.enum(["INCOME", "EXPENSE"]);
 export const PaymentMethod = z.enum(["EFECTIVO", "TRANSFERENCIA"]);
 export const TransactionSchema = BaseSchema.extend({
   amount: z.number(),
-  id_family: z.string().optional(),
+  id_family: z.string().nullable(),
   payment_method: PaymentMethod,
   direction: TransactionDirection,
   category: z.string(), // dinámica
