@@ -11,6 +11,7 @@ import {
   HomeIcon,
   LayoutDashboard,
   Trees,
+  UserCog2Icon,
   Users,
 } from "lucide-react";
 import type { JSX } from "react";
@@ -72,6 +73,14 @@ export const routes: TRoute[] = [
     icon: <Trees className="size-4" />,
     element: <BeneficiarioPage />,
     rolesAccess: ["BENEFICIARIO"],
+    sidebarContent: true,
+  },
+  {
+    path: "/family",
+    name: "Familias",
+    icon: <UserCog2Icon className="size-4" />,
+    element: <FamilyPage />,
+    rolesAccess: ["MASTER", "DIRIGENTE"],
     sidebarContent: true,
   },
   {
