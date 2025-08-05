@@ -8,10 +8,10 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 export function MainPage() {
   const { user } = useAppSelector((s) => s.session);
   return (
-    <div className=" h-screen w-screen ">
+    <div className=" h-screen w-screen   ">
       <DataProvider>
         <Asidebar>
-          <section className="  h-full w-full   ">
+          <section className="  h-full w-full    ">
             <div className="flex items-center   h-[5%] ">
               <SidebarTrigger />
             </div>

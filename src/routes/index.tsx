@@ -4,9 +4,11 @@ import { CuotasPage } from "@/pages/cuotas/CuotasPage";
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
 import RamasDetailPage from "@/pages/ramas/RamasDetailPage";
 import { RamasPage } from "@/pages/ramas/RamasPage";
+import { TransactionsPage } from "@/pages/transactions/TransactionsPage";
 import { UsersPage } from "@/pages/users/UsersPage";
 import {
   CircleDollarSign,
+  FileChartPie,
   HomeIcon,
   LayoutDashboard,
   Trees,
@@ -78,6 +80,14 @@ export const routes: TRoute[] = [
     name: "Cuotas",
     icon: <CircleDollarSign className="size-4" />,
     element: <CuotasPage />,
+    rolesAccess: ["MASTER"],
+    sidebarContent: true,
+  },
+  {
+    path: "/transactions",
+    name: "Transactions",
+    icon: <FileChartPie className="size-4" />,
+    element: <TransactionsPage />,
     rolesAccess: ["MASTER"],
     sidebarContent: true,
   },

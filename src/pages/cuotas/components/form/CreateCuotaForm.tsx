@@ -33,11 +33,16 @@ export function CreateCuotaForm() {
       setLoading(true);
       await createCuota(values);
       showAlert({
-        title: "Nueva cutoa creada",
+        title: "Nueva cuota creada",
         description: "El valor de la cuota se actualizó",
         type: "success",
       });
     } catch (error) {
+      showAlert({
+        title: "Error al crear cuota",
+        description: "",
+        type: "error",
+      });
       console.log("Error creating rama", error);
     } finally {
       setLoading(false);
