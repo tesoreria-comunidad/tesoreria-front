@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 import { TransactionsTable } from "./components/table/TransactionsTable";
 import { Label } from "@/components/ui/label";
 import { CreateTransactionAside } from "./components/CreateTransactionAside";
+import { TransactionGraph } from "./components/graphs/TransactionGraph";
 
 export function TransactionsPage() {
-  const { fetchTransactions } = useTransactionsQueries();
+  const { fetchTransactions, fetchTransactionsStats } =
+    useTransactionsQueries();
   const { isFetched } = useAppSelector((s) => s.transactions);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -16,6 +18,7 @@ export function TransactionsPage() {
       try {
         setLoading(true);
         await fetchTransactions();
+        await fetchTransactionsStats();
       } catch (error) {
         console.log(error);
       } finally {
@@ -32,6 +35,9 @@ export function TransactionsPage() {
         <CreateTransactionAside />
       </section>
       <div>
+        <section className="w-1/3 mx-auto">
+          <TransactionGraph />
+        </section>
         <TransactionsTable />
       </div>
     </div>
