@@ -33,11 +33,11 @@ export function CreateFamilyForm() {
   const onSubmit = async (values: TCreateFamily) => {
     try {
       setLoading(true);
-      const { name, phone, users } = values;
+
       const body = {
-        name,
-        phone,
-        users,
+        name: values.name,
+        phone: values.phone,
+        users: values.users,
       };
       await createFamily(body);
       form.reset();
@@ -96,14 +96,14 @@ export function CreateFamilyForm() {
                     <Label key={user.id} className="flex items-center gap-2">
                       <Input
                         type="checkbox"
-                        checked={field.value.includes(user.id)}
+                        checked={field.value.some((u) => u.id === user.id)}
                         onChange={(e) => {
                           const checked = e.target.checked;
                           let newValue = [...field.value];
                           if (checked) {
-                            newValue.push(user.id);
+                            newValue.push(user);
                           } else {
-                            newValue = newValue.filter((id) => id !== user.id);
+                            newValue = newValue.filter((u) => u.id !== user.id);
                           }
                           field.onChange(newValue);
                         }}

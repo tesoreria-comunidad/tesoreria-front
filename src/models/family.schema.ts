@@ -18,6 +18,8 @@ export const CreateFamilySchema = FamilySchema.omit({
   createdAt: true,
   id: true,
   updatedAt: true,
+  balance: true,
+  payments: true,
 });
 
 export type TFamily = z.infer<typeof FamilySchema>;
