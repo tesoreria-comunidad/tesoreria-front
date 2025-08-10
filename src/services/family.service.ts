@@ -7,7 +7,10 @@ export class FamilyServices {
     return res.data;
   }
   static async create(
-    body: Omit<TFamily, "id" | "createdAt" | "updatedAt" | "id_balance">
+    body: Omit<
+      TFamily,
+      "id" | "createdAt" | "updatedAt" | "id_balance" | "balance" | "payments"
+    >
   ): Promise<TApiFamily> {
     const res = await axiosInstance.post(`${BASE_URL}/family`, body);
     return res.data;
