@@ -13,4 +13,14 @@ export const FamilySchema = BaseSchema.extend({
   payments: z.array(PaymentSchema),
 });
 
+export const CreateFamilySchema = FamilySchema.omit({
+  id_balance: true,
+  createdAt: true,
+  id: true,
+  updatedAt: true,
+  balance: true,
+  payments: true,
+});
+
 export type TFamily = z.infer<typeof FamilySchema>;
+export type TCreateFamily = z.infer<typeof CreateFamilySchema>;
