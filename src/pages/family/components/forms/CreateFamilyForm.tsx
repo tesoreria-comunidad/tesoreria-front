@@ -13,12 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useFamilyQueries } from "@/queries/family.queries";
-import { useAppSelector } from "@/store/hooks";
-import { Label } from "@/components/ui/label";
 
 export function CreateFamilyForm() {
-  const { users } = useAppSelector((state) => state.users);
-
   const [loading, setLoading] = useState(false);
   const form = useForm<TCreateFamily>({
     resolver: zodResolver(CreateFamilySchema),
