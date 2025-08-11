@@ -84,39 +84,6 @@ export function CreateFamilyForm() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="users"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Integrantes de la familia</FormLabel>
-              <FormControl>
-                <div className="grid grid-cols-5 items-center">
-                  {users.map((user) => (
-                    <Label key={user.id} className="flex items-center gap-2">
-                      <Input
-                        type="checkbox"
-                        checked={field.value.some((u) => u.id === user.id)}
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          let newValue = [...field.value];
-                          if (checked) {
-                            newValue.push(user);
-                          } else {
-                            newValue = newValue.filter((u) => u.id !== user.id);
-                          }
-                          field.onChange(newValue);
-                        }}
-                      />
-                      {user.username}
-                    </Label>
-                  ))}
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <Button type="submit" isLoading={loading}>
           Crear
         </Button>
