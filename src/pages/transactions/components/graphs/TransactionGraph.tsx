@@ -37,7 +37,7 @@ export function TransactionGraph() {
       <CardHeader>
         <CardTitle>Ingresos - Egresos</CardTitle>
         <CardDescription>
-          {transactionsStats[0].month} -{" "}
+          {transactionsStats[0]?.month} -{" "}
           {transactionsStats.length > 1
             ? transactionsStats[transactionsStats.length - 1].month
             : ""}{" "}
