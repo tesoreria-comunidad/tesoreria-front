@@ -46,6 +46,8 @@ export const BulkCreateUserSchema = UserSchema.omit({
   id_folder: true,
   id_rama: true,
   id_family: true,
+  is_granted: true,
+  is_active: true,
   createdAt: true,
   updatedAt: true,
   username: true,

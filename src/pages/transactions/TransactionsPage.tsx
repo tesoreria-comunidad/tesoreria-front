@@ -10,7 +10,7 @@ import { TransactionGraph } from "./components/graphs/TransactionGraph";
 export function TransactionsPage() {
   const { fetchTransactions, fetchTransactionsStats } =
     useTransactionsQueries();
-  const { isFetched } = useAppSelector((s) => s.transactions);
+  const { isFetched, transactions } = useAppSelector((s) => s.transactions);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (isFetched) return;
@@ -35,9 +35,11 @@ export function TransactionsPage() {
         <CreateTransactionAside />
       </section>
       <div>
-        <section className="w-1/3 mx-auto">
-          <TransactionGraph />
-        </section>
+        {transactions ? (
+          <section className="w-1/3 mx-auto">
+            <TransactionGraph />
+          </section>
+        ) : null}
         <TransactionsTable />
       </div>
     </div>
