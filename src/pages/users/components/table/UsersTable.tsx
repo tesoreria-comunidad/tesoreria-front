@@ -2,9 +2,10 @@ import { RootTable, type TColumnDef } from "@/components/common/table";
 import type { TUser } from "@/models";
 import { useAppSelector } from "@/store/hooks";
 import { UserCell } from "./PersonCell";
-import RamaCell from "./RamaCell";
+import { RamaCell } from "./RamaCell";
 import { formatCurrency } from "@/utils";
 import { FormatedDate } from "@/components/common/FormatedDate";
+import { FamilyCell } from "./FamilyCell";
 
 export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
   const { users } = useAppSelector((s) => s.users);
@@ -17,7 +18,12 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
     {
       accessorKey: "id_family",
       header: "Familia",
-      cell: ({ getValue }) => <RamaCell ramaId={getValue<string>()} />,
+      cell: ({ getValue }) => <FamilyCell id_family={getValue<string>()} />,
+    },
+    {
+      accessorKey: "id_rama",
+      header: "Rama",
+      cell: ({ getValue }) => <RamaCell id_rama={getValue<string>()} />,
     },
     {
       accessorKey: "address",
@@ -100,5 +106,11 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
       hidden: true,
     },
   ];
-  return <RootTable columns={columns} data={usersInput ? usersInput : users} />;
+  return (
+    <RootTable
+      columns={columns}
+      data={usersInput ? usersInput : users}
+      tableHeader
+    />
+  );
 }

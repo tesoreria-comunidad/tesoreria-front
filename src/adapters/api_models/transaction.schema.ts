@@ -15,3 +15,15 @@ export const TransactionSchema = BaseSchema.extend({
 });
 
 export type TApiTransaction = z.infer<typeof TransactionSchema>;
+
+export const MonthlyStatSchema = z.object({
+  month: z.string(), // Ej: "January"
+  income: z.number(), // Total ingresos del mes
+  expense: z.number(), // Total egresos del mes
+});
+
+export const MonthlyStatsResponseSchema = z.array(MonthlyStatSchema);
+
+// TypeScript type
+export type TMonthlyStat = z.infer<typeof MonthlyStatSchema>;
+export type TMonthlyStatsResponse = z.infer<typeof MonthlyStatsResponseSchema>;

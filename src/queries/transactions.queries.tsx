@@ -4,6 +4,7 @@ import { TransactionService } from "@/services/transaction.service";
 import {
   addTransaction,
   setTransactions,
+  setTransactionsStats,
 } from "@/store/features/transactions/transactionsSlice";
 import { useAppDispatch } from "@/store/hooks";
 export function useTransactionsQueries() {
@@ -21,6 +22,16 @@ export function useTransactionsQueries() {
       throw error;
     }
   };
+  const fetchTransactionsStats = async () => {
+    try {
+      const apiRes = await TransactionService.getStatsMonthly();
+
+      dispatch(setTransactionsStats(apiRes));
+    } catch (error) {
+      console.log("Error fetching transactions", error);
+      throw error;
+    }
+  };
 
   const createTransaction = async (body: TCreateTransaction) => {
     try {
@@ -32,5 +43,5 @@ export function useTransactionsQueries() {
       throw error;
     }
   };
-  return { fetchTransactions, createTransaction };
+  return { fetchTransactions, createTransaction, fetchTransactionsStats };
 }

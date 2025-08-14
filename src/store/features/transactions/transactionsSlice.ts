@@ -1,14 +1,18 @@
+import type { TMonthlyStat } from "@/adapters/api_models/transaction.schema";
 import type { TTransaction } from "@/models/transaction.schema";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface SessionState {
   transactions: TTransaction[];
+  transactionsStats: TMonthlyStat[];
+
   inmutableTransactions: TTransaction[];
   isFetched: boolean;
 }
 
 const initialState: SessionState = {
   transactions: [],
+  transactionsStats: [],
   inmutableTransactions: [],
   isFetched: false,
 };
@@ -22,6 +26,9 @@ export const transactionsSlice = createSlice({
       state.inmutableTransactions = action.payload;
       state.isFetched = true;
     },
+    setTransactionsStats: (state, action: PayloadAction<TMonthlyStat[]>) => {
+      state.transactionsStats = action.payload;
+    },
     addTransaction: (state, action: PayloadAction<TTransaction>) => {
       state.transactions.push(action.payload);
       state.inmutableTransactions.push(action.payload);
@@ -29,5 +36,6 @@ export const transactionsSlice = createSlice({
   },
 });
 
-export const { setTransactions, addTransaction } = transactionsSlice.actions;
+export const { setTransactions, addTransaction, setTransactionsStats } =
+  transactionsSlice.actions;
 export default transactionsSlice.reducer;
