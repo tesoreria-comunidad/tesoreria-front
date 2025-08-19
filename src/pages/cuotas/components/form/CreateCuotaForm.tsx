@@ -21,8 +21,7 @@ export function CreateCuotaForm() {
   const form = useForm<TCreateCuota>({
     resolver: zodResolver(CreateCuotaSchema),
     defaultValues: {
-      cfa_amount: 0,
-      cuota_amount: 0,
+      value: 0,
     },
   });
 
@@ -53,7 +52,6 @@ export function CreateCuotaForm() {
     form.setValue(name, Number(value));
   };
 
-  console.log("FORM", form.getValues("cuota_amount"));
   return (
     <Form {...form}>
       <form
@@ -63,7 +61,7 @@ export function CreateCuotaForm() {
         <section className="space-y-8">
           <FormField
             control={form.control}
-            name="cuota_amount"
+            name="value"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Cuota</FormLabel>
@@ -78,29 +76,7 @@ export function CreateCuotaForm() {
                   />
                 </FormControl>
                 <FormDescription>
-                  {formatCurrency(Number(form.getValues("cuota_amount")))}
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="cfa_amount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Valor de CFA</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Nombre de la rama"
-                    {...field}
-                    onChange={(e) =>
-                      handleInputChange(field.name, e.target.value)
-                    }
-                  />
-                </FormControl>
-                <FormDescription>
-                  {formatCurrency(Number(form.getValues("cfa_amount")))}
+                  {formatCurrency(Number(form.getValues("value")))}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
