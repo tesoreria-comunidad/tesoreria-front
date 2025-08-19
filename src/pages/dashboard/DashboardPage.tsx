@@ -68,12 +68,12 @@ export function DashboardPage() {
           </CardFooter>
         </Card>
 
-        {currentCuota?.cuota_amount && (
+        {currentCuota?.value && (
           <Card>
             <CardHeader>
               <CardDescription>Cuota</CardDescription>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                {formatCurrency(currentCuota?.cuota_amount)}
+                {formatCurrency(currentCuota?.value)}
               </CardTitle>
               <CardAction>
                 <Link to={"/cuotas"}>

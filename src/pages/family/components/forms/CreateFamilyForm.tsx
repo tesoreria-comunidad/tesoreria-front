@@ -22,6 +22,7 @@ export function CreateFamilyForm() {
       name: "",
       phone: "",
       users: [],
+      manage_by: "",
     },
   });
 
@@ -34,6 +35,7 @@ export function CreateFamilyForm() {
         name: values.name,
         phone: values.phone,
         users: values.users,
+        manage_by: values.manage_by,
       };
       await createFamily(body);
       form.reset();

@@ -94,7 +94,7 @@ export const createFakeCuota = () =>
     id: faker.string.uuid(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    cuota_amount: 19000,
+    value: 19000,
     cfa_amount: 2000000,
   });
 
