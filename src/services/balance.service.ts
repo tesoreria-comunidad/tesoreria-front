@@ -7,7 +7,10 @@ export class BalanceServices {
     return res.data;
   }
   static async create() {}
-  static async getById() {}
+  static async getById(id: string): Promise<TApiBalance> {
+    const res = await axiosInstance.get(`${BASE_URL}/balance/${id}`);
+    return res.data;
+  }
   static async edit() {}
   static async delete() {}
 }

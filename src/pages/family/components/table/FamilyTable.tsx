@@ -3,6 +3,7 @@ import type { TFamily, TUser } from "@/models";
 import { useAppSelector } from "@/store/hooks";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Link } from "react-router";
+import BalanceCell from "./BalanceCell";
 
 export function FamilyTable() {
   const { families } = useAppSelector((s) => s.family);
@@ -44,16 +45,10 @@ export function FamilyTable() {
       },
     },
     {
-      accessorKey: "cobrabilidad",
-      header: "Cobrabilidad",
+      accessorKey: "id_balance",
+      header: "Balance",
       size: 50,
-      cell: () => (
-        <div className="uppercase text-center">
-          <div className="bg-orange-200 text-orange-600 font-semibold w-1/4 mx-auto p-1 rounded-md">
-            <span>89.9%</span>
-          </div>
-        </div>
-      ),
+      cell: ({ getValue }) => <BalanceCell id_balance={getValue<string>()} />,
     },
   ];
 

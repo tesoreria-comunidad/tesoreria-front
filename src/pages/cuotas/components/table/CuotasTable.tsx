@@ -9,7 +9,7 @@ export default function CuotasTable() {
   const { cuotas } = useAppSelector((s) => s.cuota);
   const columns: ColumnDef<TCuota>[] = [
     {
-      accessorKey: "cuota_amount",
+      accessorKey: "value",
       header: "Valor de cuota",
       cell: ({ getValue }) => (
         <div className="text-lg font-medium">

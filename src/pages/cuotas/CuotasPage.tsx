@@ -7,6 +7,7 @@ import CuotasTable from "./components/table/CuotasTable";
 export function CuotasPage() {
   const { currentCuota } = useAppSelector((s) => s.cuota);
 
+  console.log("currentCuota", currentCuota);
   return (
     <div className="size-full   overflow-y-auto   ">
       <section className="flex items-center justify-between  h-[5%]">
@@ -18,7 +19,7 @@ export function CuotasPage() {
           {currentCuota && (
             <div className=" p-6 flex flex-col items-center justify-center   border border-gray-200  mx-auto aspect-video  gap-2">
               <span className="text-3xl">
-                {formatCurrency(currentCuota.cuota_amount)}
+                {formatCurrency(currentCuota.value)}
               </span>
               <div className="bg-green-200 text-green-600 p-1 px-4 rounded-md text-sm">
                 actual
