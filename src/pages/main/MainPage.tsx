@@ -16,7 +16,7 @@ export function MainPage() {
               <SidebarTrigger />
             </div>
             <section
-              className={`rounded-md p-4  max-h-[90%] h-[90%] w-full    overflow-y-auto `}
+              className={`rounded-md p-4  max-h-[90%] h-[90%] w-full max-w-[1920px] mx-auto     overflow-y-auto `}
             >
               <Routes>
                 {routes.map(

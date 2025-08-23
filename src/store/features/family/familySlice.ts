@@ -3,12 +3,14 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface SessionState {
   families: TFamily[];
+  family?: TFamily;
   inmutableFamilies: TFamily[];
 }
 
 const initialState: SessionState = {
   families: [],
   inmutableFamilies: [],
+  family: undefined,
 };
 
 export const familiSlice = createSlice({
@@ -23,8 +25,11 @@ export const familiSlice = createSlice({
       state.families.push(action.payload);
       state.inmutableFamilies.push(action.payload);
     },
+    setFamily: (state, action: PayloadAction<TFamily>) => {
+      state.family = action.payload;
+    },
   },
 });
 
-export const { setFamilies, addFamily } = familiSlice.actions;
+export const { setFamilies, addFamily, setFamily } = familiSlice.actions;
 export default familiSlice.reducer;

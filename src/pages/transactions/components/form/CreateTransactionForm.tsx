@@ -36,6 +36,7 @@ import {
 import { useAppSelector } from "@/store/hooks";
 import { CategoryField } from "./compoents/CategoryField";
 import { useAlert } from "@/context/AlertContext";
+import { UploadFile } from "./compoents/UploadFile";
 export function CreateTransactionForm() {
   const [loading, setLoading] = useState(false);
   const { families } = useAppSelector((s) => s.family);
@@ -82,6 +83,8 @@ export function CreateTransactionForm() {
   };
   return (
     <Form {...form}>
+      <UploadFile />
+      <hr />
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="pt-8 flex flex-col justify-between h-full"

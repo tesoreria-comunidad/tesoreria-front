@@ -19,7 +19,7 @@ export function CreateTransactionAside() {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader className=" h-full ">
-          <SheetTitle>Crear Cuota Nueva</SheetTitle>
+          <SheetTitle>Generar nueva transacción</SheetTitle>
           <section className="flex-1 ">
             <CreateTransactionForm />
           </section>

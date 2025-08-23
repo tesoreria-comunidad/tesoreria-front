@@ -10,6 +10,14 @@ export class TransactionService {
     const res = await axiosInstance.get(`${BASE_URL}/transactions`);
     return res.data;
   }
+  static async getFamilyTransactions(
+    familyId: string
+  ): Promise<TApiTransaction[]> {
+    const res = await axiosInstance.get(
+      `${BASE_URL}/transactions/by-family/${familyId}`
+    );
+    return res.data;
+  }
   static async getStatsMonthly(): Promise<TMonthlyStat[]> {
     const res = await axiosInstance.get(
       `${BASE_URL}/transactions/stats/monthly`

@@ -15,7 +15,7 @@ export function FamilyTable() {
       size: 10,
       cell: ({ getValue, row }) => (
         <div className="uppercase">
-          <Link to={`/familias/${row.original.id}`} className="hover:underline">
+          <Link to={`/family/${row.original.id}`} className="hover:underline">
             <p className="space-x-4 text-lg">{getValue<string>()}</p>
           </Link>
         </div>
