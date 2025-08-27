@@ -1,5 +1,5 @@
 import { userAdapter } from "@/adapters";
-import type { TCreateUser } from "@/models";
+import type { TCreateUser, TUpdateUser } from "@/models";
 import { AuthServices } from "@/services/auth.service";
 import { UserServices } from "@/services/user.service";
 import { addUser, setUsers } from "@/store/features/user/usersSlice";
@@ -30,5 +30,21 @@ export function useUserQueries() {
       throw error;
     }
   };
-  return { fetchUsers, createUser };
+
+  const updateUser = async ({
+    id,
+    data,
+  }: {
+    id: string;
+    data: TUpdateUser;
+  }) => {
+    try {
+      const userUpdate = await UserServices.updateUser(id, data);
+      return userUpdate;
+    } catch (error) {
+      console.log("Error updating a user", error);
+      throw error;
+    }
+  };
+  return { fetchUsers, createUser, updateUser };
 }

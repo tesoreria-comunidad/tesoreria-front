@@ -39,8 +39,17 @@ export const CreateUserSchema = UserSchema.omit({
     message: "Las contraseñas no coinciden",
     path: ["confirmPassword"],
   });
+
+export const UpdateUserSchema = UserSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  password: true,
+}).partial();
+
 export type TUser = z.infer<typeof UserSchema>;
 export type TCreateUser = z.infer<typeof CreateUserSchema>;
+export type TUpdateUser = z.infer<typeof UpdateUserSchema>;
 export const BulkCreateUserSchema = UserSchema.omit({
   id: true,
   id_folder: true,
