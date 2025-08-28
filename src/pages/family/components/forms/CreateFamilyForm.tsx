@@ -13,9 +13,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useFamilyQueries } from "@/queries/family.queries";
-
+import { useAppSelector } from "@/store/hooks";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 export function CreateFamilyForm() {
   const [loading, setLoading] = useState(false);
+  const { inmutableRamas } = useAppSelector((s) => s.ramas);
+  const [ramaId, setRamaId] = useState<string>("");
   const form = useForm<TCreateFamily>({
     resolver: zodResolver(CreateFamilySchema),
     defaultValues: {
@@ -45,6 +54,12 @@ export function CreateFamilyForm() {
       setLoading(false);
     }
   };
+
+  const handleRamaChange = (value: string) => {
+    setRamaId(value);
+    form.setValue("manage_by", value);
+  };
+  console.log(form.getValues("manage_by"));
   return (
     <Form {...form}>
       <form
@@ -69,6 +84,34 @@ export function CreateFamilyForm() {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="name"
+          render={() => (
+            <FormItem>
+              <FormLabel>Rama encargada de la cobrabilidad</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={(value) => handleRamaChange(value)}
+                  value={ramaId}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Rama" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {inmutableRamas.map((rama) => (
+                      <SelectItem key={rama.id} value={rama.id}>
+                        {rama.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="phone"

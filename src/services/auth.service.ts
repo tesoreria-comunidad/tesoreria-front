@@ -1,3 +1,4 @@
+import type { TApiUser } from "@/adapters/api_models";
 import { axiosInstance, BASE_URL } from "@/config/axios.config";
 import type { ILoginResponse } from "@/interface/login-response.interface";
 import type { TCreateUser } from "@/models";
@@ -16,7 +17,7 @@ export class AuthServices {
     return res.data;
   }
 
-  static async me() {
+  static async me(): Promise<TApiUser> {
     const res = await axiosInstance.post(`${BASE_URL}/auth/me`);
     return res.data;
   }

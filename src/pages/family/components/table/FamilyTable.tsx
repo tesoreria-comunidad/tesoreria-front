@@ -4,6 +4,7 @@ import { useAppSelector } from "@/store/hooks";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Link } from "react-router";
 import BalanceCell from "./BalanceCell";
+import { RamaCell } from "@/pages/users/components/table/RamaCell";
 
 export function FamilyTable() {
   const { families } = useAppSelector((s) => s.family);
@@ -15,7 +16,7 @@ export function FamilyTable() {
       size: 10,
       cell: ({ getValue, row }) => (
         <div className="uppercase">
-          <Link to={`/familias/${row.original.id}`} className="hover:underline">
+          <Link to={`/family/${row.original.id}`} className="hover:underline">
             <p className="space-x-4 text-lg">{getValue<string>()}</p>
           </Link>
         </div>
@@ -26,22 +27,8 @@ export function FamilyTable() {
       header: "Integrantes",
       size: 50,
       cell: ({ getValue }) => {
-        const users = getValue<TUser[]>() ?? []; // <-- aquí el fallback
-        return (
-          <div className="text-center">
-            {users.length > 0 ? (
-              <ul className="space-y-1">
-                {users.map((user) => (
-                  <li key={user.id} className="uppercase">
-                    {user.name}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <span>Sin integrantes</span>
-            )}
-          </div>
-        );
+        const users = getValue<TUser[]>() ?? [];
+        return <div className="text-center">{users.length}</div>;
       },
     },
     {
@@ -49,6 +36,12 @@ export function FamilyTable() {
       header: "Balance",
       size: 50,
       cell: ({ getValue }) => <BalanceCell id_balance={getValue<string>()} />,
+    },
+    {
+      accessorKey: "manage_by",
+      header: "Cobrado Por",
+      size: 50,
+      cell: ({ getValue }) => <RamaCell id_rama={getValue<string>()} />,
     },
   ];
 

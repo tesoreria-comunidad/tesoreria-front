@@ -2,6 +2,7 @@ import type { TRole } from "@/constants/role.constants";
 import { BeneficiarioPage } from "@/pages/beneficiario/BeneficiarioPage";
 import { CuotasPage } from "@/pages/cuotas/CuotasPage";
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
+import FamilyByIdPage from "@/pages/family/FamilyByIdPage";
 import { FamilyPage } from "@/pages/family/FamilyPage";
 import RamasDetailPage from "@/pages/ramas/RamasDetailPage";
 import { RamasPage } from "@/pages/ramas/RamasPage";
@@ -83,6 +84,22 @@ export const routes: TRoute[] = [
     icon: <UserCog2Icon className="size-4" />,
     element: <FamilyPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
+    sidebarContent: true,
+  },
+  {
+    path: "/family/:familyId",
+    name: "Familia",
+    icon: <Users className="size-4" />,
+    element: <FamilyByIdPage />,
+    rolesAccess: ["MASTER", "DIRIGENTE"],
+    sidebarContent: false,
+  },
+  {
+    path: "/family/:familyId",
+    name: "Familia",
+    icon: <Users className="size-4" />,
+    element: <FamilyByIdPage />,
+    rolesAccess: ["FAMILY", "BENEFICIARIO"],
     sidebarContent: true,
   },
   {

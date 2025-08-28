@@ -22,6 +22,18 @@ export function useTransactionsQueries() {
       throw error;
     }
   };
+  const fetchFamilyTransactions = async (familyId: string) => {
+    try {
+      const apiRes = await TransactionService.getFamilyTransactions(familyId);
+      const adatpedTransactions = apiRes.map((apiData) =>
+        transactionAdapter(apiData)
+      );
+      dispatch(setTransactions(adatpedTransactions));
+    } catch (error) {
+      console.log("Error fetching transactions", error);
+      throw error;
+    }
+  };
   const fetchTransactionsStats = async () => {
     try {
       const apiRes = await TransactionService.getStatsMonthly();
@@ -43,5 +55,10 @@ export function useTransactionsQueries() {
       throw error;
     }
   };
-  return { fetchTransactions, createTransaction, fetchTransactionsStats };
+  return {
+    fetchTransactions,
+    createTransaction,
+    fetchTransactionsStats,
+    fetchFamilyTransactions,
+  };
 }

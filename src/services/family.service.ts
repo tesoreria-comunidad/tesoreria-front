@@ -15,7 +15,10 @@ export class FamilyServices {
     const res = await axiosInstance.post(`${BASE_URL}/family`, body);
     return res.data;
   }
-  static async getById() {}
+  static async getById(id: string) {
+    const res = await axiosInstance.get(`${BASE_URL}/family/${id}`);
+    return res.data;
+  }
   static async edit() {}
   static async delete() {}
 }

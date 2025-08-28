@@ -16,6 +16,10 @@ export function SessionProvider({ children }: PropsWithChildren) {
         await setAuthInterceptor(accessToken);
         const res = await AuthServices.me();
         dispatch(setSession(res));
+        if (res.role === "FAMILY") {
+          navigate(`/family/${res.id_family}`);
+          return;
+        }
       } catch (error) {
         localStorage.clear();
         navigate("/login");

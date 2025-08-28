@@ -1,8 +1,12 @@
 import { userAdapter } from "@/adapters";
-import type { TCreateUser } from "@/models";
+import type { TCreateUser, TUser } from "@/models";
 import { AuthServices } from "@/services/auth.service";
 import { UserServices } from "@/services/user.service";
-import { addUser, setUsers } from "@/store/features/user/usersSlice";
+import {
+  addUser,
+  setUsers,
+  updateUser,
+} from "@/store/features/user/usersSlice";
 import { useAppDispatch } from "@/store/hooks";
 export function useUserQueries() {
   const dispatch = useAppDispatch();
@@ -30,5 +34,15 @@ export function useUserQueries() {
       throw error;
     }
   };
-  return { fetchUsers, createUser };
+
+  const editUser = async (body: Partial<TUser>, userId: string) => {
+    try {
+      await UserServices.update(body, userId);
+      dispatch(updateUser(body));
+    } catch (error) {
+      console.log("Error creating new user", error);
+      throw error;
+    }
+  };
+  return { fetchUsers, createUser, editUser };
 }
