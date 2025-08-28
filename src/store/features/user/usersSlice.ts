@@ -23,8 +23,16 @@ export const userSlice = createSlice({
       state.users.push(action.payload);
       state.inmutableUsers.push(action.payload);
     },
+    updateUser: (state, action: PayloadAction<Partial<TUser>>) => {
+      state.users = state.users.map((user) =>
+        user.id === action.payload.id ? { ...user, ...action.payload } : user
+      );
+      state.inmutableUsers = state.inmutableUsers.map((user) =>
+        user.id === action.payload.id ? { ...user, ...action.payload } : user
+      );
+    },
   },
 });
 
-export const { setUsers, addUser } = userSlice.actions;
+export const { setUsers, addUser, updateUser } = userSlice.actions;
 export default userSlice.reducer;

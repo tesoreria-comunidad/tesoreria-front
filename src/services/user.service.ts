@@ -1,6 +1,6 @@
 import type { TApiUser } from "@/adapters/api_models";
 import { axiosInstance, BASE_URL } from "@/config/axios.config";
-import type { TCreateUser } from "@/models";
+import type { TCreateUser, TUser } from "@/models";
 export class UserServices {
   static async getAll(): Promise<TApiUser[]> {
     const res = await axiosInstance.get(`${BASE_URL}/user`);
@@ -11,7 +11,10 @@ export class UserServices {
     return res.data;
   }
   static async getById() {}
-  static async edit() {}
+  static async update(body: Partial<TUser>, id: string) {
+    const res = await axiosInstance.patch(`${BASE_URL}/user/${id}`, body);
+    return res.data;
+  }
   static async delete() {}
 
   static async bulkCreate({

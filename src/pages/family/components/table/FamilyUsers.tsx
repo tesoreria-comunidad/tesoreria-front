@@ -1,24 +1,21 @@
 import { RootTable, type TColumnDef } from "@/components/common/table";
 import type { TUser } from "@/models";
-import { useAppSelector } from "@/store/hooks";
-import { UserCell } from "./PersonCell";
-import { RamaCell } from "./RamaCell";
 import { FormatedDate } from "@/components/common/FormatedDate";
-import { FamilyCell } from "./FamilyCell";
-import { UserBalanceCell } from "./UserBalanceCell";
+import { UserCell } from "@/pages/users/components/table/PersonCell";
+import { RamaCell } from "@/pages/users/components/table/RamaCell";
 
-export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
-  const { users } = useAppSelector((s) => s.users);
+export function FamilyUsersTable({
+  users,
+  tableHeader = false,
+}: {
+  users: TUser[];
+  tableHeader?: boolean;
+}) {
   const columns: TColumnDef<TUser>[] = [
     {
       accessorKey: "id",
       header: "Beneficiario",
       cell: ({ row }) => <UserCell user={row.original} />,
-    },
-    {
-      accessorKey: "id_family",
-      header: "Familia",
-      cell: ({ getValue }) => <FamilyCell id_family={getValue<string>()} />,
     },
     {
       accessorKey: "id_rama",
@@ -28,16 +25,14 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
     {
       accessorKey: "address",
       cell: ({ getValue }) => <p className="truncate">{getValue<string>()}</p>,
+      hidden: true,
     },
     {
       accessorKey: "birthdate",
       cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
+      hidden: true,
     },
-    {
-      accessorKey: "balance",
-      header: "Balance",
-      cell: ({ row }) => <UserBalanceCell user={row.original} />,
-    },
+
     {
       accessorKey: "citizenship",
       hidden: true,
@@ -48,12 +43,36 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
     },
     {
       accessorKey: "is_granted",
-      hidden: true,
+      header: "Es Beado",
+      hidden: false,
+      cell: ({ getValue }) => (
+        <>
+          <div
+            className={` ${
+              getValue<boolean>()
+                ? "bg-yellow-200 rounded-md  text-yellow-600"
+                : "bg-green-200 rounded-md  text-green-600"
+            }  w-3/4 mx-auto p-1`}
+          >
+            <p className="font-medium  text-center">
+              {getValue<boolean>() ? "BECADO" : "no"}
+            </p>
+          </div>
+        </>
+      ),
     },
-    // Campos faltantes de TUser, todos con hidden: true
     {
-      accessorKey: "name",
+      accessorKey: "family_role",
       hidden: true,
+      cell: ({ getValue }) => (
+        <>
+          <div
+            className={` bg-purple-200 rounded-md  text-purple-600  w-3/4 mx-auto p-1`}
+          >
+            <p className="font-medium  text-center">{getValue<string>()}</p>
+          </div>
+        </>
+      ),
     },
     {
       accessorKey: "lastname",
@@ -88,7 +107,7 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
       hidden: true,
     },
     {
-      accessorKey: "is_active",
+      accessorKey: "status",
       hidden: true,
     },
     {
@@ -96,11 +115,5 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
       hidden: true,
     },
   ];
-  return (
-    <RootTable
-      columns={columns}
-      data={usersInput ? usersInput : users}
-      tableHeader
-    />
-  );
+  return <RootTable columns={columns} data={users} tableHeader={tableHeader} />;
 }
