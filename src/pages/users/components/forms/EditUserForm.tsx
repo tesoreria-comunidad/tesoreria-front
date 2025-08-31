@@ -32,8 +32,10 @@ export function EditUserForm({ user }: EditUserAsideProps) {
     resolver: zodResolver(UpdateUserSchema),
     defaultValues: {
       role: user?.role || "MASTER",
-      username: user?.username || "",
+      name: user?.name || "",
+      last_name: user?.last_name || "",
       address: user?.address || "",
+      id_rama: user?.id_rama || "",
     },
   });
 
@@ -61,13 +63,30 @@ export function EditUserForm({ user }: EditUserAsideProps) {
       >
         <FormField
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nombre de usuario</FormLabel>
+              <FormLabel>Nombre</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Nombre de usuario"
+                  placeholder="Nombre"
+                  {...field}
+                  autoComplete="additional-name webauthn"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="last_name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Apellido</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Apellido"
                   {...field}
                   autoComplete="additional-name webauthn"
                 />
@@ -139,6 +158,7 @@ export function EditUserForm({ user }: EditUserAsideProps) {
             )}
           />
         )}
+
         <Button type="submit" isLoading={loading}>
           Aceptar Cambios
         </Button>

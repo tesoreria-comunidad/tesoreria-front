@@ -2,12 +2,14 @@ import z from "zod";
 import { BaseSchema } from "./baseEntity.schema";
 import { RoleSchema } from "@/constants/role.constants";
 import { GenderSchema } from "@/constants/gender.constants";
+import { FamilyRoleSchema } from "@/constants/familiy-role.constants";
 
 export const UserSchema = BaseSchema.extend({
   username: z.string(),
   email: z.string(),
   password: z.string(),
   role: RoleSchema,
+  family_role: FamilyRoleSchema,
   name: z.string(),
   last_name: z.string(),
   address: z.string(),

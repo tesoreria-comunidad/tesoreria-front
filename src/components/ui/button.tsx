@@ -55,7 +55,7 @@ function Button({
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-      disabled={isLoading}
+      disabled={isLoading || props.disabled}
     >
       {isLoading ? <LoaderSpinner /> : props.children}
     </Comp>

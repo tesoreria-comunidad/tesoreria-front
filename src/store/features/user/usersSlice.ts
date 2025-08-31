@@ -23,18 +23,13 @@ export const userSlice = createSlice({
       state.users.push(action.payload);
       state.inmutableUsers.push(action.payload);
     },
-    updateUser: (state, action: PayloadAction<TUser>) => {
-      const idx = state.users.findIndex((u) => u.id === action.payload.id);
-      if (idx !== -1) {
-        state.users[idx] = action.payload;
-      }
-
-      const idxInmutable = state.inmutableUsers.findIndex(
-        (u) => u.id === action.payload.id
+    updateUser: (state, action: PayloadAction<Partial<TUser>>) => {
+      state.users = state.users.map((user) =>
+        user.id === action.payload.id ? { ...user, ...action.payload } : user
       );
-      if (idxInmutable !== -1) {
-        state.inmutableUsers[idxInmutable] = action.payload;
-      }
+      state.inmutableUsers = state.inmutableUsers.map((user) =>
+        user.id === action.payload.id ? { ...user, ...action.payload } : user
+      );
     },
   },
 });

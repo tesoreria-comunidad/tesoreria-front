@@ -44,6 +44,10 @@ export function LoginForm() {
       dispatch(setSession(user));
       await setAuthInterceptor(accessToken);
       localStorage.setItem("accessToken", accessToken);
+      if (user.role === "FAMILY") {
+        location.replace(`/family/${user.id_family}`);
+        return;
+      }
       if (user.role === "BENEFICIARIO") {
         location.replace("/beneficiario");
         return;

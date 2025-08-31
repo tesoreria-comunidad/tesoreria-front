@@ -11,6 +11,7 @@ export class UserServices {
     return res.data;
   }
   static async getById() {}
+  static async edit() {}
   static async delete() {}
 
   static async updateUser(id: string, data: TUpdateUser) {

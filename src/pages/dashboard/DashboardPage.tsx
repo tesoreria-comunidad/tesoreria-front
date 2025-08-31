@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAppSelector } from "@/store/hooks";
-import { Navigation, TrendingUp } from "lucide-react";
+import { Navigation } from "lucide-react";
 import { UsersTable } from "../users/components/table/UsersTable";
 import { RamasTable } from "../ramas/components/table/RamasTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -55,8 +55,8 @@ export function DashboardPage() {
             <CardAction>
               <Link to={"/family"}>
                 <Badge variant="outline">
-                  <TrendingUp />
-                  +12.5%
+                  <Navigation />
+                  ver
                 </Badge>
               </Link>
             </CardAction>

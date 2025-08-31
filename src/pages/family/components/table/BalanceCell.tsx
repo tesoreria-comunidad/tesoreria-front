@@ -1,5 +1,6 @@
 import { balanceAdapter } from "@/adapters";
 import BalanceCard from "@/components/common/BalanceCard";
+import { LoaderSpinner } from "@/components/common/LoaderSpinner";
 import type { TBalance } from "@/models";
 import { BalanceServices } from "@/services/balance.service";
 import { addBalance } from "@/store/features/balance/balanceSlice";
@@ -38,7 +39,11 @@ export default function BalanceCell({ id_balance }: BalanceCellProps) {
   }, [id_balance]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="px-2">
+        <LoaderSpinner />
+      </div>
+    );
   }
 
   if (!balance) return <div>No balance found</div>;
