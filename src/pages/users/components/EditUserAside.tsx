@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
+  Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -8,28 +9,32 @@ import {
 } from "@/components/ui/sheet";
 import { EditIcon } from "lucide-react";
 import { EditUserForm } from "./forms/EditUserForm";
-import { useAppSelector } from "@/store/hooks";
+import type { TUser } from "@/models";
 
-export function EditUserAside() {
-  const { user } = useAppSelector((s) => s.session);
+type EditUserAsideProps = {
+  user: TUser;
+};
 
+export function EditUserAside({ user }: EditUserAsideProps) {
   return (
     <div>
-      <SheetTrigger>
-        <Button className="flex items-center gap-2">
-          <EditIcon />
-        </Button>
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Editar Usuario ${user?.name}</SheetTitle>
-          <SheetDescription>
-            Selecciona el campo que quieres editar
-          </SheetDescription>
-          <br />
-          <EditUserForm />
-        </SheetHeader>
-      </SheetContent>
+      <Sheet>
+        <SheetTrigger>
+          <Button className="flex items-center gap-2">
+            <EditIcon />
+          </Button>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Editar Usuario {user?.name}</SheetTitle>
+            <SheetDescription>
+              Selecciona el campo que quieres editar
+            </SheetDescription>
+            <br />
+            <EditUserForm user={user} />
+          </SheetHeader>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

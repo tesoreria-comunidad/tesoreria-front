@@ -2,7 +2,11 @@ import { userAdapter } from "@/adapters";
 import type { TCreateUser, TUpdateUser } from "@/models";
 import { AuthServices } from "@/services/auth.service";
 import { UserServices } from "@/services/user.service";
-import { addUser, setUsers } from "@/store/features/user/usersSlice";
+import {
+  addUser,
+  setUsers,
+  updateUser,
+} from "@/store/features/user/usersSlice";
 import { useAppDispatch } from "@/store/hooks";
 export function useUserQueries() {
   const dispatch = useAppDispatch();
@@ -31,7 +35,7 @@ export function useUserQueries() {
     }
   };
 
-  const updateUser = async ({
+  const updateUserQuery = async ({
     id,
     data,
   }: {
@@ -40,11 +44,11 @@ export function useUserQueries() {
   }) => {
     try {
       const userUpdate = await UserServices.updateUser(id, data);
-      return userUpdate;
+      dispatch(updateUser(userUpdate));
     } catch (error) {
       console.log("Error updating a user", error);
       throw error;
     }
   };
-  return { fetchUsers, createUser, updateUser };
+  return { fetchUsers, createUser, updateUserQuery };
 }

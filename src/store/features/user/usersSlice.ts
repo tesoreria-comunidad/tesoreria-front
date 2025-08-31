@@ -23,8 +23,21 @@ export const userSlice = createSlice({
       state.users.push(action.payload);
       state.inmutableUsers.push(action.payload);
     },
+    updateUser: (state, action: PayloadAction<TUser>) => {
+      const idx = state.users.findIndex((u) => u.id === action.payload.id);
+      if (idx !== -1) {
+        state.users[idx] = action.payload;
+      }
+
+      const idxInmutable = state.inmutableUsers.findIndex(
+        (u) => u.id === action.payload.id
+      );
+      if (idxInmutable !== -1) {
+        state.inmutableUsers[idxInmutable] = action.payload;
+      }
+    },
   },
 });
 
-export const { setUsers, addUser } = userSlice.actions;
+export const { setUsers, addUser, updateUser } = userSlice.actions;
 export default userSlice.reducer;

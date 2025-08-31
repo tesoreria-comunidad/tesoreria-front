@@ -6,6 +6,7 @@ import { RamaCell } from "./RamaCell";
 import { formatCurrency } from "@/utils";
 import { FormatedDate } from "@/components/common/FormatedDate";
 import { FamilyCell } from "./FamilyCell";
+import { EditUserAside } from "../EditUserAside";
 
 export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
   const { users } = useAppSelector((s) => s.users);
@@ -43,6 +44,11 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
           </p>
         </div>
       ),
+    },
+    {
+      accessorKey: "actions",
+      header: "Editar",
+      cell: ({ row }) => <EditUserAside user={row.original as TUser} />,
     },
     {
       accessorKey: "citizenship",

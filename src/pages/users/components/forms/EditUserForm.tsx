@@ -1,10 +1,5 @@
 import { useForm } from "react-hook-form";
-import {
-  CreateUserSchema,
-  UpdateUserSchema,
-  type TCreateUser,
-  type TUpdateUser,
-} from "@/models";
+import { UpdateUserSchema, type TUpdateUser, type TUser } from "@/models";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +12,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useAppSelector } from "@/store/hooks";
 import { ROLE_VALUES, type TRole } from "@/constants/role.constants";
 import {
   Select,
@@ -27,23 +21,28 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useUserQueries } from "@/queries/user.queries";
-export function EditUserForm() {
+
+type EditUserAsideProps = {
+  user: TUser;
+};
+
+export function EditUserForm({ user }: EditUserAsideProps) {
   const [loading, setLoading] = useState(false);
-  const { user } = useAppSelector((s) => s.session);
   const form = useForm<TUpdateUser>({
     resolver: zodResolver(UpdateUserSchema),
     defaultValues: {
       role: user?.role || "MASTER",
       username: user?.username || "",
+      address: user?.address || "",
     },
   });
 
-  const { updateUser } = useUserQueries();
+  const { updateUserQuery } = useUserQueries();
   const onSubmit = async (values: TUpdateUser) => {
     try {
       setLoading(true);
       if (!user?.id) return;
-      await updateUser({ id: user.id, data: values });
+      await updateUserQuery({ id: user.id, data: values });
       form.reset();
     } catch (error) {
       console.log("Error creating user", error);
@@ -94,7 +93,24 @@ export function EditUserForm() {
             </FormItem>
           )}
         />
-        {userRole === "MASTER" && (
+        <FormField
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Dirección</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Nombre Direccion 1234"
+                  {...field}
+                  autoComplete="additional-name webauthn"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {userRole && (
           <FormField
             control={form.control}
             name="role"
