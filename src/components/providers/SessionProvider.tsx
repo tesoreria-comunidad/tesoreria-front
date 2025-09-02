@@ -11,8 +11,12 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     const validateUser = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        localStorage.clear();
+        navigate("/login");
+      }
       try {
-        const accessToken = localStorage.getItem("accessToken");
         await setAuthInterceptor(accessToken);
         const res = await AuthServices.me();
         dispatch(setSession(res));

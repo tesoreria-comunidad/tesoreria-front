@@ -106,6 +106,7 @@ export function UserBulkUploader({
           birthdate,
           role: "BENEFICIARIO",
           id_family: null,
+          family_role: "MEMBER",
         };
       });
 
@@ -212,7 +213,7 @@ export function UserBulkUploader({
                       } transition-all duration-300`}
                     >
                       {validPersons.length > 0 && (
-                        <div>
+                        <div className="space-y-2">
                           <BulkUsersTable users={validPersons} />
                           <p>{validPersons.length} personas cargadas.</p>
                         </div>

@@ -1,9 +1,8 @@
-import { RootTable } from "@/components/common/table";
+import { RootTable, type TColumnDef } from "@/components/common/table";
 import type { TBulkCreateUser } from "@/models";
-import type { ColumnDef } from "@tanstack/react-table";
 
 export function BulkUsersTable({ users }: { users: TBulkCreateUser[] }) {
-  const columns: ColumnDef<TBulkCreateUser>[] = [
+  const columns: TColumnDef<TBulkCreateUser>[] = [
     {
       accessorKey: "name",
       size: 80,
@@ -16,10 +15,12 @@ export function BulkUsersTable({ users }: { users: TBulkCreateUser[] }) {
     {
       accessorKey: "phone",
       size: 80,
+      hidden: true,
     },
     {
       accessorKey: "gender",
       size: 50,
+      hidden: true,
     },
     {
       accessorKey: "dni",
@@ -32,7 +33,8 @@ export function BulkUsersTable({ users }: { users: TBulkCreateUser[] }) {
     {
       accessorKey: "address",
       size: 80,
+      hidden: true,
     },
   ];
-  return <RootTable data={users} columns={columns} />;
+  return <RootTable data={users} columns={columns} tableHeader />;
 }
