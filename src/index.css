@@ -29,10 +29,10 @@
 /* Firefox */
 
 :root {
-  font-family: "Poppins", sans-serif;
+font-family: "Poppins", sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
+  font-optical-sizing: auto;
   overflow-x: hidden;
   color-scheme: light dark;
   color: rgba(0, 0, 0, 0.87);

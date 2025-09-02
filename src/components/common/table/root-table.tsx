@@ -56,13 +56,13 @@ export function RootTable<TData, TValue>({
   pageSize = 20,
   tableHeader = false,
 }: DataTableProps<TData, TValue>) {
-  // Idenficar las columnas visibles segun las columns
+  // columnas inicialmente ocultas segun prop `hidden`
   const initialVisibility = useMemo(() => {
     const visibility: Record<string, boolean> = {};
     columns.forEach((col) => {
-      //@ts-ignore
+      // @ts-ignore
       if (col.accessorKey && col.hidden) {
-        //@ts-ignore
+        // @ts-ignore
         visibility[col.accessorKey as string] = false;
       }
     });
@@ -75,6 +75,7 @@ export function RootTable<TData, TValue>({
     pageSize,
   });
   const [columnVisibility, setColumnVisibility] = useState(initialVisibility);
+
   const table = useReactTable({
     data,
     columns,
@@ -90,7 +91,7 @@ export function RootTable<TData, TValue>({
       maxSize: 500,
     },
     autoResetPageIndex: true,
-    debugTable: true,
+    debugTable: false,
     onPaginationChange: setPagination,
     getExpandedRowModel: getExpandedRowModel(),
     getCoreRowModel: getCoreRowModel(),
@@ -100,40 +101,54 @@ export function RootTable<TData, TValue>({
   });
 
   return (
-    <div className={"  flex flex-col  gap-1  w-full  "}>
+    <div className="w-full flex flex-col gap-2">
       {tableHeader ? (
-        <section className=" flex justify-end ">
+        <section className="flex items-center justify-end">
           <ColumnVisibility table={table} />
         </section>
       ) : null}
+
       <div
-        className={`  border   border-border   w-full max-w-full  max-h-[100%]   overflow-x-auto    scrollbar-custom    `}
+        className="
+          w-full max-w-full overflow-x-auto overflow-y-hidden
+          rounded-xl border bg-card shadow-sm
+          scrollbar-modern
+        "
       >
-        <Table className=" table  ">
-          <TableHeader>
+        <Table className="table-fixed">
+          {/* HEADER */}
+          <TableHeader
+            className="
+              sticky top-0 z-10
+             
+            "
+          >
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow
-                key={headerGroup.id}
-                className="  bg-light-grey   rounded-md  "
-              >
+              <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header, index) => (
                   <TableHead
                     key={header.id}
                     style={{ width: `${header.getSize()}px` }}
-                    className={` ${
+                    className={[
+                      // separadores sutiles entre columnas
                       index > 0 && index < headerGroup.headers.length - 1
                         ? "border-x"
-                        : ""
-                    }    border-border text-center     font-semibold   `}
+                        : "",
+
+                      "border-border text-center font-semibold  bg-muted ",
+                      "px-3 py-2 text-xs uppercase tracking-wide",
+                      "text-muted-foreground",
+                    ].join(" ")}
                   >
                     <div
-                      className={`flex w-full  ${
+                      className={[
+                        "flex w-full items-center",
                         !header.column.getCanFilter()
                           ? "justify-between"
-                          : "justify-center"
-                      } items-center  text-center `}
+                          : "justify-center",
+                      ].join(" ")}
                     >
-                      <div>
+                      <div className="truncate">
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -141,97 +156,131 @@ export function RootTable<TData, TValue>({
                               header.getContext()
                             )}
                       </div>
-
-                      {/* <div
-                        className={`${
-                          !header.column.getCanFilter() ? "" : "hidden"
-                        }`}
-                      >
-                        {!header.column.getCanFilter() ? (
-                          <TableFilter
-                            column={header.column}
-                            table={table}
-                            tableType={tableType}
-                          />
-                        ) : null}
-                      </div> */}
                     </div>
                   </TableHead>
                 ))}
               </TableRow>
             ))}
           </TableHeader>
+
+          {/* BODY */}
           <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <Fragment key={row.id}>
-                <TableRow key={row.id} className={`  text-md    text-left  `}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-sm  ">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </Fragment>
-            ))}
+            {table.getRowModel().rows.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={table.getAllColumns().length}
+                  className="h-28 text-center text-sm text-muted-foreground"
+                >
+                  No hay datos para mostrar
+                </TableCell>
+              </TableRow>
+            ) : (
+              table.getRowModel().rows.map((row) => (
+                <Fragment key={row.id}>
+                  <TableRow
+                    className="
+                      text-left text-sm
+                      even:bg-muted/30
+                      hover:bg-muted/40
+                      transition-colors
+                    "
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className="
+                          px-3 py-2 align-middle
+                          whitespace-nowrap
+                        "
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </Fragment>
+              ))
+            )}
           </TableBody>
         </Table>
+
+        {/* PAGINACIÓN */}
         {data.length > 10 && (
-          <div className="flex items-center justify-between p-2 border-t border-border">
+          <div
+            className="
+              flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between
+              border-t border-border p-3
+              bg-background/60
+            "
+          >
             <div className="flex items-center gap-2">
               <button
                 onClick={() => table.setPageIndex(0)}
                 disabled={!table.getCanPreviousPage()}
-                className="px-2 py-1 border rounded disabled:opacity-50"
+                aria-label="Primera página"
+                className="
+                  pagination-btn
+                "
               >
                 {"<<"}
               </button>
               <button
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
-                className="px-2 py-1 border rounded disabled:opacity-50"
+                aria-label="Página anterior"
+                className="pagination-btn"
               >
                 {"<"}
               </button>
               <button
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
-                className="px-2 py-1 border rounded disabled:opacity-50"
+                aria-label="Página siguiente"
+                className="pagination-btn"
               >
                 {">"}
               </button>
               <button
                 onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                 disabled={!table.getCanNextPage()}
-                className="px-2 py-1 border rounded disabled:opacity-50"
+                aria-label="Última página"
+                className="pagination-btn"
               >
                 {">>"}
               </button>
             </div>
 
-            <span className="text-sm">
+            <span className="text-xs sm:text-sm text-muted-foreground">
               Página{" "}
-              <strong>
+              <strong className="text-foreground">
                 {table.getState().pagination.pageIndex + 1} de{" "}
                 {table.getPageCount()}
               </strong>
             </span>
 
-            <select
-              className="text-sm border rounded px-2 py-1"
-              value={table.getState().pagination.pageSize}
-              onChange={(e) => {
-                table.setPageSize(Number(e.target.value));
-              }}
-            >
-              {[10, 20, 30, 50, 100].map((size) => (
-                <option key={size} value={size}>
-                  Mostrar {size}
-                </option>
-              ))}
-            </select>
+            <label className="inline-flex items-center gap-2 text-xs sm:text-sm">
+              <span className="text-muted-foreground">Filas:</span>
+              <select
+                className="
+                  rounded-md border bg-background px-2 py-1
+                  hover:bg-accent hover:text-accent-foreground
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+                  transition-colors
+                "
+                value={table.getState().pagination.pageSize}
+                onChange={(e) => {
+                  table.setPageSize(Number(e.target.value));
+                }}
+              >
+                {[10, 20, 30, 50, 100].map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
         )}
       </div>

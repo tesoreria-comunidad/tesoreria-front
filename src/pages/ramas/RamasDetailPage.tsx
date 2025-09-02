@@ -4,6 +4,7 @@ import { UsersTable } from "../users/components/table/UsersTable";
 import { Label } from "@radix-ui/react-label";
 import { EmptyPage } from "@/components/common/EmptyPage";
 import { UserBulkUploader } from "./components/UsersBulkUploader";
+import { AddUserAside } from "./components/AddUserAside";
 
 export default function RamasDetailPage() {
   const { ramaId } = useParams();
@@ -15,7 +16,11 @@ export default function RamasDetailPage() {
     <div className="size-full   overflow-y-auto   ">
       <section className="flex items-center justify-between  h-[5%]">
         <Label className="text-xl">{rama.name}</Label>
-        <UserBulkUploader id_rama={rama.id} />
+        {rama.users.length === 0 ? (
+          <UserBulkUploader id_rama={rama.id} />
+        ) : (
+          <AddUserAside rama={rama} />
+        )}
       </section>
       <section className=" h-[95%]">
         {rama.users.length ? (

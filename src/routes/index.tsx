@@ -40,7 +40,7 @@ export const routes: TRoute[] = [
   },
   {
     path: "/dashboard",
-    name: "Dashboard",
+    name: "Panel",
     icon: <LayoutDashboard className="size-4" />,
     element: <DashboardPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],

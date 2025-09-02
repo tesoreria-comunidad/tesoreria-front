@@ -18,7 +18,7 @@ export function Asidebar({ children }: PropsWithChildren) {
   const { pathname } = useLocation();
   const { open } = useSidebar();
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-100 to-gray-200">
+    <div className="flex h-screen bg-[#f1f1f1]">
       <Sidebar>
         <SidebarHeader className="flex  justify-center items-center h-[10vh]  ">
           <img src="/logo.png" className="size-20 aspect-square object-cover" />
