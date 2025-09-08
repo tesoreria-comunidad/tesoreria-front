@@ -53,13 +53,13 @@ export function AddMemberAside({ family }: { family: TFamily }) {
     setSearch(value);
     debounced(value);
   };
-  const { editUser } = useUserQueries();
+  const { updateUserQuery } = useUserQueries();
 
   const { showAlert } = useAlert();
   const handleSubmit = async () => {
     try {
       const promises = selectedUsers.map((user) => {
-        return editUser({ id_family: family.id }, user.id);
+        return updateUserQuery({ id: user.id, data: { id_family: family.id } });
       });
 
       await Promise.all(promises);

@@ -1,5 +1,5 @@
 import { userAdapter } from "@/adapters";
-import type { TCreateUser, TUser } from "@/models";
+import type { TCreateUser, TUpdateUser } from "@/models";
 import { AuthServices } from "@/services/auth.service";
 import { UserServices } from "@/services/user.service";
 import {
@@ -35,14 +35,20 @@ export function useUserQueries() {
     }
   };
 
-  const editUser = async (body: Partial<TUser>, userId: string) => {
+  const updateUserQuery = async ({
+    id,
+    data,
+  }: {
+    id: string;
+    data: TUpdateUser;
+  }) => {
     try {
-      await UserServices.update(body, userId);
-      dispatch(updateUser(body));
+      const userUpdate = await UserServices.updateUser(id, data);
+      dispatch(updateUser(userUpdate));
     } catch (error) {
-      console.log("Error creating new user", error);
+      console.log("Error updating a user", error);
       throw error;
     }
   };
-  return { fetchUsers, createUser, editUser };
+  return { fetchUsers, createUser, updateUserQuery };
 }

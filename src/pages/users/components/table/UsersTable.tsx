@@ -5,6 +5,7 @@ import { UserCell } from "./PersonCell";
 import { RamaCell } from "./RamaCell";
 import { FormatedDate } from "@/components/common/FormatedDate";
 import { FamilyCell } from "./FamilyCell";
+import { EditUserAside } from "../EditUserAside";
 import { UserBalanceCell } from "./UserBalanceCell";
 
 export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
@@ -37,6 +38,11 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
       accessorKey: "balance",
       header: "Balance",
       cell: ({ row }) => <UserBalanceCell user={row.original} />,
+    },
+    {
+      accessorKey: "actions",
+      header: "Editar",
+      cell: ({ row }) => <EditUserAside user={row.original as TUser} />,
     },
     {
       accessorKey: "citizenship",
