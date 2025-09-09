@@ -10,8 +10,9 @@ function DataCard({ children }: PropsWithChildren) {
 }
 export function BeneficiarioPage() {
   const { user } = useAppSelector((s) => s.session);
-  const { ramas } = useAppSelector((s) => s.ramas);
-  const rama = ramas.find((e) => e.id === user?.id_rama);
+
+  //@ts-ignore
+  const ramaName = user?.rama.name;
   return (
     <div className=" size-full flex flex-col items-center ">
       <Label className="text-3xl">Bienvenido</Label>
@@ -30,13 +31,13 @@ export function BeneficiarioPage() {
           <div className="w-full">
             <DataCard>
               <p className="text-sm font-light">Correo Electrónico</p>
-              <b>{user?.email || "useremail@gmail.com"}</b>
+              {user?.email ? <b>{user.email}</b> : <span>-</span>}
               <PenIcon className="absolute right-4 top-4 text-primary" />
             </DataCard>
             <hr className=" border-accent" />
             <DataCard>
               <p className="text-sm font-light">Telefono celular</p>
-              <b>{user?.phone || "+542915275753"}</b>
+              {user?.phone ? <b>{user.phone}</b> : <span>-</span>}
               <PenIcon className="absolute right-4 top-4 text-primary" />
             </DataCard>
           </div>
@@ -45,10 +46,16 @@ export function BeneficiarioPage() {
           <Label className="text-lg">Domicilo Actual</Label>
           <div className="w-full">
             <DataCard>
-              <b>{user?.address}</b>
-              <p className="text-sm font-light">
-                Bahia Blanca, Buenos Aires (8000) Argentina
-              </p>
+              {user?.address ? (
+                <>
+                  <b>{user?.address}</b>
+                  <p className="text-sm font-light">
+                    Bahia Blanca, Buenos Aires (8000) Argentina
+                  </p>
+                </>
+              ) : (
+                <>-</>
+              )}
               <PenIcon className="absolute right-4 top-4 text-primary" />
             </DataCard>
           </div>
@@ -57,10 +64,13 @@ export function BeneficiarioPage() {
           <Label className="text-lg">Rama Actual</Label>
           <div className="w-full">
             <DataCard>
-              <b>{rama?.name}</b>
-              <p className="text-sm font-light">
-                {/* Bahia Blanca, Buenos Aires (8000) Argentina */}
-              </p>
+              {ramaName ? (
+                <>
+                  <b>{ramaName}</b>
+                </>
+              ) : (
+                <>-</>
+              )}
             </DataCard>
           </div>
         </div>

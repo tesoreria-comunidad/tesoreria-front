@@ -4,6 +4,7 @@ import {
   BulkCreateUserSchema,
   type TBulkCreateUser,
   type TCreateUser,
+  type TUser,
 } from "@/models";
 import { Input } from "@/components/ui/input";
 import { BulkUsersTable } from "./table/BulkUsersTable";
@@ -89,25 +90,44 @@ export function UserBulkUploader({
     if (!validPersons.length) return alert("No hay datos válidos para enviar");
     setLoading(true);
     try {
-      const users: TCreateUser[] = validPersons.map((item) => {
-        let birthdate: string = "";
-        if (item.birthdate) {
-          const [day, month, year] = item.birthdate.split("/");
-          birthdate = new Date(
-            Number(year),
-            Number(month) - 1,
-            Number(day)
-          ).toISOString();
-        }
-        return {
-          ...item,
-          password: item.dni,
-          username: item.dni,
-          birthdate,
-          role: "BENEFICIARIO",
-          id_family: null,
-          family_role: "MEMBER",
-        };
+      const users: Omit<TCreateUser, "username" | "password">[] =
+        validPersons.map((item) => {
+          let birthdate: string = "";
+          if (item.birthdate) {
+            const [day, month, year] = item.birthdate.split("/");
+            birthdate = new Date(
+              Number(year),
+              Number(month) - 1,
+              Number(day)
+            ).toISOString();
+          }
+          return {
+            ...item,
+            birthdate,
+            role: "BENEFICIARIO",
+            id_family: null,
+            family_role: "MEMBER",
+          };
+        });
+
+      const filteredUsersData = users.map((user) => {
+        const aux: Partial<TUser> = {} as Partial<TUser>;
+        (Object.keys(user) as (keyof TUser)[]).forEach((key) => {
+          //@ts-ignore
+          if (user[key]) {
+            //@ts-ignore
+            aux[key] = user[key];
+          }
+        });
+
+        return aux;
+      });
+
+      console.log("filteredUsers", filteredUsersData);
+
+      await UserServices.bulkCreate({
+        users: filteredUsersData,
+        id_rama,
       });
 
       await UserServices.bulkCreate({
