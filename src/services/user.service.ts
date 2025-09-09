@@ -21,7 +21,7 @@ export class UserServices {
     users,
     id_rama,
   }: {
-    users: TCreateUser[];
+    users: Partial<Omit<TCreateUser, "username" | "password">>[];
     id_rama?: string;
   }): Promise<TApiUser[]> {
     let url = `${BASE_URL}/user/bulk`;
