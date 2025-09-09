@@ -10,9 +10,7 @@ function DataCard({ children }: PropsWithChildren) {
 }
 export function BeneficiarioPage() {
   const { user } = useAppSelector((s) => s.session);
-  const { ramas } = useAppSelector((s) => s.ramas);
-  const rama = ramas.find((e) => e.id === user?.id_rama);
-  console.log("user", user);
+
   //@ts-ignore
   const ramaName = user?.rama.name;
   return (
