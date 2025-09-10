@@ -3,16 +3,46 @@ import type { TUser } from "@/models";
 import { useAppSelector } from "@/store/hooks";
 import { UserCell } from "./PersonCell";
 import { RamaCell } from "./RamaCell";
-import { FormatedDate } from "@/components/common/FormatedDate";
 import { FamilyCell } from "./FamilyCell";
 import { UserBalanceCell } from "./UserBalanceCell";
+import UsersActionsDropdown from "../UsersActionsDropdown";
 
 export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
   const { users } = useAppSelector((s) => s.users);
   const columns: TColumnDef<TUser>[] = [
     {
-      accessorKey: "id",
+      accessorKey: "is_active",
+      header: "",
+      size: 70,
+      cell: ({ getValue }) => (
+        <div
+          className={` mx-auto rounded flex items-center justify-center ${
+            getValue()
+              ? "bg-green-200 text-green-600"
+              : "bg-red-200 text-red-600"
+          } `}
+        >
+          {getValue() ? "alta" : "baja"}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "is_granted",
+      header: "Beca",
+      size: 90,
+      cell: ({ getValue }) => (
+        <div
+          className={` mx-auto rounded flex items-center justify-center ${
+            getValue() ? "bg-orange-200 text-orange-600" : "-"
+          } `}
+        >
+          {getValue() ? "BECA" : "-"}
+        </div>
+      ),
+    },
+    {
       header: "Beneficiario",
+      size: 250,
       cell: ({ row }) => <UserCell user={row.original} />,
     },
     {
@@ -28,10 +58,16 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
     {
       accessorKey: "address",
       cell: ({ getValue }) => <p className="truncate">{getValue<string>()}</p>,
+      hidden: true,
     },
     {
       accessorKey: "birthdate",
-      cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
+      header: "Fecha de Nacimiento",
+      cell: ({ getValue }) => (
+        <div className="flex justify-center ">
+          {new Date(getValue<string>()).toLocaleDateString()}
+        </div>
+      ),
     },
     {
       accessorKey: "balance",
@@ -46,19 +82,7 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
       accessorKey: "dni",
       hidden: true,
     },
-    {
-      accessorKey: "is_granted",
-      hidden: true,
-    },
-    // Campos faltantes de TUser, todos con hidden: true
-    {
-      accessorKey: "name",
-      hidden: true,
-    },
-    {
-      accessorKey: "lastname",
-      hidden: true,
-    },
+
     {
       accessorKey: "email",
       hidden: true,
@@ -88,19 +112,23 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
       hidden: true,
     },
     {
-      accessorKey: "is_active",
-      hidden: true,
-    },
-    {
-      accessorKey: "id_user",
-      hidden: true,
+      accessorKey: "name",
+      header: "",
+      hidden: false,
+      size: 50,
+      cell: ({ row: { original: user } }) => (
+        <UsersActionsDropdown user={user} />
+      ),
     },
   ];
-  return (
-    <RootTable
-      columns={columns}
-      data={usersInput ? usersInput : users}
-      tableHeader
-    />
+
+  const sortedUsers = (usersInput ? [...usersInput] : [...users]).sort(
+    (a, b) => {
+      const lastNameComparison = a.last_name.localeCompare(b.last_name);
+      return lastNameComparison !== 0
+        ? lastNameComparison
+        : a.name.localeCompare(b.name);
+    }
   );
+  return <RootTable columns={columns} data={sortedUsers} tableHeader />;
 }

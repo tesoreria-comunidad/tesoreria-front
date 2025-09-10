@@ -26,7 +26,6 @@ export default function BalanceCell({ id_balance }: BalanceCellProps) {
       try {
         setLoading(true);
         const res = await BalanceServices.getById(id_balance);
-        console.log("Balance fetched:", balanceAdapter(res));
         dispatch(addBalance(balanceAdapter(res)));
       } catch (error) {
         console.log("Error fetching balance:", error);

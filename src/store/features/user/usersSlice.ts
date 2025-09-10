@@ -23,13 +23,32 @@ export const userSlice = createSlice({
       state.users.push(action.payload);
       state.inmutableUsers.push(action.payload);
     },
-    updateUser: (state, action: PayloadAction<Partial<TUser>>) => {
-      state.users = state.users.map((user) =>
-        user.id === action.payload.id ? { ...user, ...action.payload } : user
-      );
-      state.inmutableUsers = state.inmutableUsers.map((user) =>
-        user.id === action.payload.id ? { ...user, ...action.payload } : user
-      );
+    updateUser: (
+      state,
+      action: PayloadAction<{ id: string; changes: Partial<TUser> }>
+    ) => {
+      const { changes, id } = action.payload;
+
+      const index = state.users.findIndex((user) => user.id === id);
+
+      if (index !== -1) {
+        // Actualiza el servicio en el array principal
+        state.users[index] = {
+          ...state.users[index],
+          ...changes,
+        };
+
+        // Actualiza también los datos en inmutableServices
+        const immutableIndex = state.inmutableUsers.findIndex(
+          (service) => service.id === id
+        );
+        if (immutableIndex !== -1) {
+          state.inmutableUsers[immutableIndex] = {
+            ...state.inmutableUsers[immutableIndex],
+            ...changes,
+          };
+        }
+      }
     },
   },
 });
