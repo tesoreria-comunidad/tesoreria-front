@@ -123,15 +123,8 @@ export function UserBulkUploader({
         return aux;
       });
 
-      console.log("filteredUsers", filteredUsersData);
-
       await UserServices.bulkCreate({
         users: filteredUsersData,
-        id_rama,
-      });
-
-      await UserServices.bulkCreate({
-        users,
         id_rama,
       });
       showAlert({

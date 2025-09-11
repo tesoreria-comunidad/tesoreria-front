@@ -13,6 +13,36 @@ export function FamilyUsersTable({
 }) {
   const columns: TColumnDef<TUser>[] = [
     {
+      accessorKey: "is_active",
+      header: "Estado",
+      size: 50,
+      cell: ({ getValue }) => (
+        <div
+          className={` mx-auto rounded flex items-center justify-center ${
+            getValue()
+              ? "bg-green-200 text-green-600"
+              : "bg-red-200 text-red-600"
+          } `}
+        >
+          {getValue() ? "alta" : "baja"}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "is_granted",
+      header: "Beca",
+      size: 50,
+      cell: ({ getValue }) => (
+        <div
+          className={` mx-auto rounded flex items-center justify-center ${
+            getValue() ? "bg-orange-200 text-orange-600" : "-"
+          } `}
+        >
+          {getValue() ? "BECA" : "-"}
+        </div>
+      ),
+    },
+    {
       accessorKey: "id",
       header: "Beneficiario",
       cell: ({ row }) => <UserCell user={row.original} />,
@@ -41,26 +71,7 @@ export function FamilyUsersTable({
       accessorKey: "dni",
       hidden: true,
     },
-    {
-      accessorKey: "is_granted",
-      header: "Es Beado",
-      hidden: false,
-      cell: ({ getValue }) => (
-        <>
-          <div
-            className={` ${
-              getValue<boolean>()
-                ? "bg-yellow-200 rounded-md  text-yellow-600"
-                : "bg-green-200 rounded-md  text-green-600"
-            }  w-3/4 mx-auto p-1`}
-          >
-            <p className="font-medium  text-center">
-              {getValue<boolean>() ? "BECADO" : "no"}
-            </p>
-          </div>
-        </>
-      ),
-    },
+
     {
       accessorKey: "family_role",
       hidden: true,
@@ -108,10 +119,6 @@ export function FamilyUsersTable({
     },
     {
       accessorKey: "status",
-      hidden: true,
-    },
-    {
-      accessorKey: "id_user",
       hidden: true,
     },
   ];

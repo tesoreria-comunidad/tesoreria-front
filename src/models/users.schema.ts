@@ -56,6 +56,8 @@ export const BulkCreateUserSchema = UserSchema.omit({
   password: true,
   role: true,
   family_role: true,
+}).extend({
+  family_id: z.string().optional(),
 });
 
 export type TBulkCreateUser = z.infer<typeof BulkCreateUserSchema>;
