@@ -9,6 +9,7 @@ import { AddUserAside } from "./components/AddUserAside";
 export default function RamasDetailPage() {
   const { ramaId } = useParams();
   const { inmutableRamas } = useAppSelector((s) => s.ramas);
+  const { users } = useAppSelector((s) => s.users);
   const rama = inmutableRamas.find((r) => r.id === ramaId);
 
   if (!rama) return null;
@@ -24,7 +25,9 @@ export default function RamasDetailPage() {
       </section>
       <section className=" h-[95%]">
         {rama.users.length ? (
-          <UsersTable usersInput={rama.users} />
+          <UsersTable
+            usersInput={users.filter((user) => user.id_rama === rama.id)}
+          />
         ) : (
           <EmptyPage />
         )}

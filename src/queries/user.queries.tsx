@@ -38,7 +38,7 @@ export function useUserQueries() {
   const editUser = async (body: Partial<TUser>, userId: string) => {
     try {
       await UserServices.update(body, userId);
-      dispatch(updateUser(body));
+      dispatch(updateUser({ changes: body, id: userId }));
     } catch (error) {
       console.log("Error creating new user", error);
       throw error;

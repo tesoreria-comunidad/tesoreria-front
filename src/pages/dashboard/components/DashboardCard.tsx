@@ -44,8 +44,8 @@ export function DashboardCard({ type }: DashboardCardProps) {
       path: "/family",
     },
     users: {
-      amount: `${users.length}`,
-      title: "Beneficiarios",
+      amount: `${users.filter((u) => u.is_active).length}`,
+      title: "Beneficiarios Activos",
       descriptcion: `Becados: ${
         users.filter((user) => user.is_granted).length
       }.`,
