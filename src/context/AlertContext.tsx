@@ -10,7 +10,7 @@ type AlertType = "success" | "error" | "info" | "warning";
 
 interface Alert {
   title: string;
-  description: string;
+  description?: string;
   type: AlertType;
   visible?: boolean;
 }

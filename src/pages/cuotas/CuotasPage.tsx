@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FormatedDate } from "@/components/common/FormatedDate";
+import { UpdateBalanceButton } from "./components/UpdateBalanceButton";
 
 export function CuotasPage() {
   const { currentCuota } = useAppSelector((s) => s.cuota);
@@ -20,7 +21,10 @@ export function CuotasPage() {
     <div className="size-full   overflow-y-auto   ">
       <section className="flex items-center justify-between  h-[5%]">
         <Label className="text-xl">Cuota</Label>
-        <CreateRamaAside />
+        <div className="flex items-center gap-2">
+          <CreateRamaAside />
+          <UpdateBalanceButton />
+        </div>
       </section>
       <section className=" h-[95%] flex flex-col gap-4">
         <section className="flex">

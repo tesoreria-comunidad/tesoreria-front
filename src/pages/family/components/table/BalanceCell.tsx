@@ -14,7 +14,7 @@ export default function BalanceCell({ id_balance }: BalanceCellProps) {
   const { inmutableBalances } = useAppSelector((s) => s.balance);
   const dispatch = useAppDispatch();
 
-  const [balance, setBalance] = useState<TBalance | undefined>(undefined);
+  const [balance, setBalance] = useState<TBalance>();
   const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     const fetchBalance = async () => {
@@ -26,6 +26,7 @@ export default function BalanceCell({ id_balance }: BalanceCellProps) {
       try {
         setLoading(true);
         const res = await BalanceServices.getById(id_balance);
+        setBalance(balanceAdapter(res));
         dispatch(addBalance(balanceAdapter(res)));
       } catch (error) {
         console.log("Error fetching balance:", error);
@@ -45,7 +46,6 @@ export default function BalanceCell({ id_balance }: BalanceCellProps) {
     );
   }
 
-  if (!balance) return <div>No balance found</div>;
-
+  if (!balance) return "-";
   return <BalanceCard balanceValue={balance.value} />;
 }

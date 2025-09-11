@@ -48,7 +48,7 @@ export function DashboardCard({ type }: DashboardCardProps) {
       title: "Beneficiarios Activos",
       descriptcion: `Becados: ${
         users.filter((user) => user.is_granted).length
-      }.`,
+      }`,
       path: "/users",
     },
   };
