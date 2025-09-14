@@ -1,5 +1,6 @@
 import type { TApiBalance } from "@/adapters/api_models";
 import { axiosInstance, BASE_URL } from "@/config/axios.config";
+import type { TBalance } from "@/models";
 
 export class BalanceServices {
   static async getAll(): Promise<TApiBalance[]> {
@@ -20,6 +21,9 @@ export class BalanceServices {
     );
     return res.data;
   }
-  static async edit() {}
+  static async edit(id: string, body: Partial<TBalance>) {
+    const res = await axiosInstance.patch(`${BASE_URL}/balance/${id}`, body);
+    return res.data;
+  }
   static async delete() {}
 }

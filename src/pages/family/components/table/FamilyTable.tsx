@@ -35,7 +35,9 @@ export function FamilyTable() {
       accessorKey: "id_balance",
       header: "Balance",
       size: 50,
-      cell: ({ getValue }) => <BalanceCell id_balance={getValue<string>()} />,
+      cell: ({ getValue, row }) => (
+        <BalanceCell id_balance={getValue<string>()} family={row.original} />
+      ),
     },
     {
       accessorKey: "manage_by",

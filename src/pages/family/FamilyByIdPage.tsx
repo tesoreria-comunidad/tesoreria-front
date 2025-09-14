@@ -18,11 +18,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { formatCurrency } from "@/utils";
-import { UploadTransactionAside } from "./components/UploadTransactionAside";
 import { PageLoader } from "@/components/common/PageLoader";
 import { Label } from "@/components/ui/label";
 import { FamilyUsersTable } from "./components/table/FamilyUsers";
 import { AddMemberAside } from "./components/aside/AddMemberAside";
+import { UpdateFamilyDialog } from "./components/UpdateFamilyDialog";
 
 interface BalanceCardProps {
   balanceValue: number;
@@ -67,10 +67,9 @@ export default function FamilyByIdPage() {
     return <PageLoader />;
   }
 
-  console.log("Family", family);
-
   const users = family?.users;
   if (!family) return null;
+  console.log("Balance", balance);
   return (
     <div className=" mx-auto flex flex-col items-center gap-8">
       <Card className="w-1/2 ">
@@ -82,7 +81,7 @@ export default function FamilyByIdPage() {
             {balance && <BalanceCard balanceValue={balance?.value} />}
           </CardTitle>
           <CardAction>
-            <UploadTransactionAside family_id={family?.id} />
+            <UpdateFamilyDialog family={family} balance={balance!} />
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">

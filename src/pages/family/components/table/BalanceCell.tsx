@@ -1,16 +1,21 @@
 import { balanceAdapter } from "@/adapters";
 import BalanceCard from "@/components/common/BalanceCard";
 import { LoaderSpinner } from "@/components/common/LoaderSpinner";
-import type { TBalance } from "@/models";
+import type { TBalance, TFamily } from "@/models";
 import { BalanceServices } from "@/services/balance.service";
 import { addBalance } from "@/store/features/balance/balanceSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useEffect, useState } from "react";
 
+import { IsCustomCuotaTooltip } from "@/components/common/IsCustomCuotaTooltip";
+
+import { UpdateFamilyDialog } from "../UpdateFamilyDialog";
+
 interface BalanceCellProps {
   id_balance: string;
+  family: TFamily;
 }
-export default function BalanceCell({ id_balance }: BalanceCellProps) {
+export default function BalanceCell({ id_balance, family }: BalanceCellProps) {
   const { inmutableBalances } = useAppSelector((s) => s.balance);
   const dispatch = useAppDispatch();
 
@@ -47,5 +52,13 @@ export default function BalanceCell({ id_balance }: BalanceCellProps) {
   }
 
   if (!balance) return "-";
-  return <BalanceCard balanceValue={balance.value} />;
+  return (
+    <div className="flex items-center justify-between  gap-6">
+      <BalanceCard balanceValue={balance.value} />
+      <section className="flex items-center gap-1">
+        {balance.is_custom_cuota && <IsCustomCuotaTooltip />}
+        <UpdateFamilyDialog balance={balance} family={family} viewBalanceData />
+      </section>
+    </div>
+  );
 }
