@@ -14,11 +14,19 @@ import type { TUser } from "@/models";
 import {
   ArrowBigDown,
   ArrowBigUp,
+  Edit2Icon,
   HeartHandshake,
   MenuSquare,
 } from "lucide-react";
 import { UserStatusUpdateDialog } from "./table/UserStatusUpdateDialog";
 import { UserGrantUpdateDialog } from "./table/UserGrantUpdateDialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { UserEditSheet } from "./UserEditSheet";
 
 interface UsersActionsDropdownProps {
   user: TUser;
@@ -29,12 +37,19 @@ export default function UsersActionsDropdown({
 }: UsersActionsDropdownProps) {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [dialogType, setDialogType] = useState<"grant" | "status">("status");
+  const [dialogType, setDialogType] = useState<"grant" | "status" | "edit">(
+    "status"
+  );
+  const [openSheet, setOpenSheet] = useState(false);
 
-  const handleOpenDialog = (type: "grant" | "status") => {
+  const handleOpenDialog = (type: "grant" | "status" | "edit") => {
     setDialogType(type);
     setOpenDropdown(false); // cerramos el dropdown
-    setOpenDialog(true); // abrimos el dialog
+    if (type === "edit") {
+      setOpenSheet(true);
+    } else {
+      setOpenDialog(true);
+    } // abrimos el dialog
   };
 
   return (
@@ -84,7 +99,7 @@ export default function UsersActionsDropdown({
             {user.is_granted ? (
               <>
                 <HeartHandshake />
-                Quitar Becar
+                Quitar Beca
               </>
             ) : (
               <>
@@ -92,6 +107,15 @@ export default function UsersActionsDropdown({
                 Becar
               </>
             )}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault(); // prevenimos que se cierre antes
+              handleOpenDialog("edit");
+            }}
+          >
+            <Edit2Icon />
+            Editar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -103,6 +127,15 @@ export default function UsersActionsDropdown({
           <UserStatusUpdateDialog user={user} />
         )}
       </Dialog>
+
+      <Sheet open={openSheet} onOpenChange={setOpenSheet}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Editar Usuario</SheetTitle>
+          </SheetHeader>
+          <UserEditSheet user={user} />
+        </SheetContent>
+      </Sheet>
     </>
   );
 }
