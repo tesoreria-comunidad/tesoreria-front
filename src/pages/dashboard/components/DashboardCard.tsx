@@ -32,7 +32,7 @@ export function DashboardCard({ type }: DashboardCardProps) {
     cuota: {
       amount: currentCuota?.value ? formatCurrency(currentCuota?.value) : "-",
       title: "Cuota Actual",
-      descriptcion: `desde ${formatDate(
+      descriptcion: `Desde el ${formatDate(
         currentCuota?.createdAt || new Date().toISOString()
       )}.`,
       path: "/cuotas",
@@ -44,7 +44,9 @@ export function DashboardCard({ type }: DashboardCardProps) {
       path: "/family",
     },
     users: {
-      amount: `${users.filter((u) => u.is_active).length}`,
+      amount: `${
+        users.filter((u) => u.is_active && u.role === "BENEFICIARIO").length
+      }`,
       title: "Beneficiarios Activos",
       descriptcion: `Becados: ${
         users.filter((user) => user.is_granted).length

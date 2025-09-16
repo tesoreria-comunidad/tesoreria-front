@@ -1,8 +1,6 @@
-import { UsersTable } from "../users/components/table/UsersTable";
-import { RamasTable } from "../ramas/components/table/RamasTable";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import { DashboardCard } from "./components/DashboardCard";
+import { UsersGraphs } from "./components/UsersGraphs";
+import { RamasGraphs } from "./components/RamasGraphs";
 export function DashboardPage() {
   return (
     <div className=" size-full flex flex-col gap-4   ">
@@ -12,19 +10,16 @@ export function DashboardPage() {
         <DashboardCard type="cuota" />
       </section>
 
-      <section className=" flex-1 w-full  p-4 bg-white rounded-2xl">
-        <Tabs defaultValue="usuarios" className="size-full">
-          <TabsList>
-            <TabsTrigger value="usuarios">Usuarios</TabsTrigger>
-            <TabsTrigger value="ramas">Ramas</TabsTrigger>
-          </TabsList>
-          <TabsContent value="usuarios">
-            <UsersTable />
-          </TabsContent>
-          <TabsContent value="ramas">
-            <RamasTable />
-          </TabsContent>
-        </Tabs>
+      <section className="  w-full    ">
+        <section className="size-full  flex items-start  gap-4 ">
+          <div className="flex flex-col gap-4 w-1/4 h-full">
+            <UsersGraphs />
+            <UsersGraphs />
+          </div>
+          <div className="w-3/4 h-full">
+            <RamasGraphs />
+          </div>
+        </section>
       </section>
     </div>
   );
