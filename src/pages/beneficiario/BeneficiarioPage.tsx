@@ -1,0 +1,114 @@
+import { Label } from "@/components/ui/label";
+import { useAppSelector } from "@/store/hooks";
+import { CircleUser, PenIcon } from "lucide-react";
+import type { PropsWithChildren } from "react";
+
+function DataCard({ children }: PropsWithChildren) {
+  return (
+    <div className="bg-white p-6 w-full rounded-md relative">{children}</div>
+  );
+}
+export function BeneficiarioPage() {
+  const { user } = useAppSelector((s) => s.session);
+
+  //@ts-ignore
+  const ramaName = user?.rama.name;
+  return (
+    <div className=" size-full flex flex-col items-center ">
+      <Label className="text-3xl">Bienvenido</Label>
+
+      <section className="flex flex-col items-center w-1/2 gap-6  px-6">
+        <header className="flex flex-col items-center">
+          <CircleUser className="size-[150px] bg-gray-300 rounded-full" />
+          <br />
+          <p className="text-2xl">
+            {user?.name}, {user?.last_name}
+          </p>
+          <p className="text-gray-500">{user?.username}</p>
+        </header>
+        <div className="flex flex-col items-start gap-4 w-full text-lg">
+          <Label className="text-lg">Mis datos personales</Label>
+          <div className="w-full">
+            <DataCard>
+              <p className="text-sm font-light">Correo Electrónico</p>
+              {user?.email ? <b>{user.email}</b> : <span>-</span>}
+              <PenIcon className="absolute right-4 top-4 text-primary" />
+            </DataCard>
+            <hr className=" border-accent" />
+            <DataCard>
+              <p className="text-sm font-light">Telefono celular</p>
+              {user?.phone ? <b>{user.phone}</b> : <span>-</span>}
+              <PenIcon className="absolute right-4 top-4 text-primary" />
+            </DataCard>
+          </div>
+        </div>
+        <div className="flex flex-col items-start gap-4 w-full text-lg">
+          <Label className="text-lg">Domicilo Actual</Label>
+          <div className="w-full">
+            <DataCard>
+              {user?.address ? (
+                <>
+                  <b>{user?.address}</b>
+                  <p className="text-sm font-light">
+                    Bahia Blanca, Buenos Aires (8000) Argentina
+                  </p>
+                </>
+              ) : (
+                <>-</>
+              )}
+              <PenIcon className="absolute right-4 top-4 text-primary" />
+            </DataCard>
+          </div>
+        </div>
+        <div className="flex flex-col items-start gap-4 w-full text-lg">
+          <Label className="text-lg">Rama Actual</Label>
+          <div className="w-full">
+            <DataCard>
+              {ramaName ? (
+                <>
+                  <b>{ramaName}</b>
+                </>
+              ) : (
+                <>-</>
+              )}
+            </DataCard>
+          </div>
+        </div>
+        <div className="flex flex-col items-start gap-4 w-full text-lg">
+          <Label className="text-lg">Tus Datos</Label>
+          <div className="w-full">
+            <DataCard>
+              <PenIcon className="absolute right-4 top-4 text-primary" />
+              <div className="grid grid-cols-2 gap-y-8">
+                <div>
+                  <p className="text-sm font-light">Nombre</p>
+                  <b>{user?.name}</b>
+                </div>
+                <div>
+                  <p className="text-sm font-light">Apellido</p>
+                  <b>{user?.name}</b>
+                </div>
+                <div>
+                  <p className="text-sm font-light">DNI</p>
+                  <b>{user?.name}</b>
+                </div>
+                <div>
+                  <p className="text-sm font-light">Sexo</p>
+                  <b>{user?.gender}</b>
+                </div>
+                <div>
+                  <p className="text-sm font-light">Fecha de nacimiento</p>
+                  <b>{user?.birthdate}</b>
+                </div>
+                <div>
+                  <p className="text-sm font-light">Nacionalidad</p>
+                  <b>{user?.citizenship}</b>
+                </div>
+              </div>
+            </DataCard>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -1,0 +1,453 @@
+// CreateUserForm.tsx
+import { useForm } from "react-hook-form";
+import { CreateUserSchema, type TCreateUser } from "@/models";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { useAppSelector } from "@/store/hooks";
+import { ROLE_VALUES, type TRole } from "@/constants/role.constants";
+import {
+  FAMILY_ROLE_VALUES,
+  type TFamilyRole,
+} from "@/constants/familiy-role.constants";
+import { GENDER_OPTIONS, type TGender } from "@/constants/gender.constants";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { useUserQueries } from "@/queries/user.queries";
+import { DatePickerField } from "@/components/common/DatePickerField";
+
+export function CreateUserForm({ idRama }: { idRama?: string }) {
+  const [loading, setLoading] = useState(false);
+  const { user } = useAppSelector((s) => s.session);
+
+  const form = useForm<TCreateUser>({
+    resolver: zodResolver(CreateUserSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      role: "BENEFICIARIO",
+      family_role: "MEMBER", // ajustá al default que uses
+      name: "",
+      last_name: "",
+      address: "",
+      phone: "",
+      gender: "HOMBRE", // ajustá al default que uses
+      dni: "",
+      birthdate: "", // si preferís Date -> cambia el schema
+      citizenship: "Argentina",
+      id_family: "", // lo convertimos a null si viene vacío
+      id_rama: idRama,
+    },
+  });
+
+  const { createUser } = useUserQueries();
+
+  const onSubmit = async (values: TCreateUser) => {
+    try {
+      setLoading(true);
+
+      // Normalizar id_family: "" -> null (CreateUserSchema permite null)
+      const payload: TCreateUser = {
+        ...values,
+        id_family:
+          values.id_family && values.id_family.trim() !== ""
+            ? values.id_family
+            : "",
+      };
+
+      await createUser(payload);
+      form.reset();
+    } catch (error) {
+      console.log("Error creating user", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const userRole = user?.role;
+
+  console.log("Render CreateUserForm", form.formState.errors);
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6"
+        autoComplete="off"
+      >
+        {/* Sección: Credenciales */}
+        <div className="space-y-4 rounded-xl border p-4">
+          <h3 className="text-sm font-semibold text-muted-foreground">
+            Credenciales
+          </h3>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nombre de usuario</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="usuario.ejemplo"
+                      {...field}
+                      autoComplete="username"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Correo electrónico</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="example@mail.com"
+                      {...field}
+                      autoComplete="email"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Contraseña</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="********"
+                      {...field}
+                      type="password"
+                      autoComplete="new-password"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirmar contraseña</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="********"
+                      {...field}
+                      type="password"
+                      autoComplete="new-password"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {userRole === "MASTER" && (
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Rol</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={(value) =>
+                          field.onChange(value as TRole)
+                        }
+                        value={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar rol" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {ROLE_VALUES.map((role) => (
+                            <SelectItem key={role} value={role}>
+                              {role}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Sección: Datos personales */}
+        <div className="space-y-4 rounded-xl border p-4">
+          <h3 className="text-sm font-semibold text-muted-foreground">
+            Datos personales
+          </h3>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nombre</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Nombre"
+                      {...field}
+                      autoComplete="given-name"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="last_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Apellido</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Apellido"
+                      {...field}
+                      autoComplete="family-name"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="dni"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>DNI</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Documento"
+                      {...field}
+                      inputMode="numeric"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="birthdate"
+              render={() => (
+                <DatePickerField
+                  control={form.control}
+                  name="birthdate"
+                  label="Fecha de nacimiento"
+                  placeholder="Seleccionar fecha"
+                  disableFuture
+                />
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Género</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={(value) =>
+                        field.onChange(value as TGender)
+                      }
+                      value={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar género" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {GENDER_OPTIONS.map((g) => (
+                          <SelectItem key={g} value={g}>
+                            {g}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="citizenship"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nacionalidad</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Argentina" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        {/* Sección: Contacto y domicilio */}
+        <div className="space-y-4 rounded-xl border p-4">
+          <h3 className="text-sm font-semibold text-muted-foreground">
+            Contacto y domicilio
+          </h3>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Teléfono</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="+54 9 ..."
+                      {...field}
+                      inputMode="tel"
+                      autoComplete="tel"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem className="sm:col-span-2">
+                  <FormLabel>Dirección</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Calle, número, ciudad, provincia"
+                      {...field}
+                      autoComplete="street-address"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        {/* Sección: Grupo familiar */}
+        <div className="space-y-4 rounded-xl border p-4">
+          <h3 className="text-sm font-semibold text-muted-foreground">
+            Grupo familiar
+          </h3>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="family_role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rol en la familia</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={(value) =>
+                        field.onChange(value as TFamilyRole)
+                      }
+                      value={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar rol familiar" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {FAMILY_ROLE_VALUES.map((fr) => (
+                          <SelectItem key={fr} value={fr}>
+                            {fr}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="id_family"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ID de familia (opcional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      value={field && field.value !== null ? field.value : ""}
+                      placeholder="Ej: fam_123 (dejar vacío si no corresponde)"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => form.reset()}
+            disabled={loading}
+          >
+            Limpiar
+          </Button>
+          <Button
+            type="submit"
+            isLoading={loading || form.formState.isSubmitting}
+          >
+            Crear
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}

@@ -1,0 +1,53 @@
+import { Label } from "@/components/ui/label";
+import { useAppSelector } from "@/store/hooks";
+import { CreateRamaAside } from "./components/CreateRamaAside";
+import { formatCurrency } from "@/utils";
+import CuotasTable from "./components/table/CuotasTable";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { FormatedDate } from "@/components/common/FormatedDate";
+import { UpdateBalanceButton } from "./components/UpdateBalanceButton";
+
+export function CuotasPage() {
+  const { currentCuota } = useAppSelector((s) => s.cuota);
+  return (
+    <div className="size-full   overflow-y-auto   ">
+      <section className="flex items-center justify-between  h-[5%]">
+        <Label className="text-xl">Cuota</Label>
+        <div className="flex items-center gap-2">
+          <CreateRamaAside />
+          <UpdateBalanceButton />
+        </div>
+      </section>
+      <section className=" h-[95%] flex flex-col gap-4">
+        <section className="flex">
+          {currentCuota && (
+            <div className=" mx-auto ">
+              <Card>
+                <CardHeader>
+                  <CardDescription>Cuota</CardDescription>
+                  <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                    <span className="text-3xl">
+                      {formatCurrency(currentCuota.value)}
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+                <CardFooter className="flex-col items-start gap-1.5 text-sm">
+                  <div className="text-muted-foreground flex gap-1">
+                    Desde: <FormatedDate date={currentCuota.createdAt} />
+                  </div>
+                </CardFooter>
+              </Card>
+            </div>
+          )}
+        </section>
+        <CuotasTable />
+      </section>
+    </div>
+  );
+}

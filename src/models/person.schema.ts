@@ -1,0 +1,24 @@
+import z from "zod";
+import { BaseSchema } from "./baseEntity.schema";
+import { GenderSchema } from "@/constants/gender.constants";
+
+export const PersonsSchema = BaseSchema.extend({
+  name: z.string(),
+  last_name: z.string(),
+  address: z.string(),
+  phone: z.string(),
+  email: z.string().email(),
+  gender: GenderSchema,
+  dni: z.string(),
+  id_family: z.string(),
+});
+export type TPerson = z.infer<typeof PersonsSchema>;
+
+export const CreatePersonSchema = PersonsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  id_family: true,
+});
+
+export type TCreatePerson = z.infer<typeof CreatePersonSchema>;
