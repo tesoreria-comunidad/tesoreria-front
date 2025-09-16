@@ -45,11 +45,13 @@ export default function FamilyByIdPage() {
   const { familyId } = useParams();
   const dispatch = useAppDispatch();
   const { balance } = useAppSelector((state) => state.balance);
-  const { family } = useAppSelector((state) => state.family);
+  const { families } = useAppSelector((state) => state.family);
+  const { ramas } = useAppSelector((state) => state.ramas);
   const [loading, setLoading] = useState(false);
   const { fetchFamilyTransactions } = useTransactionsQueries();
+  const family = families.find((f) => f.id === familyId);
   useEffect(() => {
-    if (family && family.id === familyId) return;
+    // if (family && family.id === familyId) return;
     const fetchData = async () => {
       setLoading(true);
       await fetchFamilyTransactions(familyId!);
@@ -68,8 +70,8 @@ export default function FamilyByIdPage() {
   }
 
   const users = family?.users;
-  if (!family) return null;
-  console.log("Balance", balance);
+  const rama = ramas.find((r) => r.id === family?.manage_by);
+  if (!balance || !family) return null;
   return (
     <div className=" mx-auto flex flex-col items-center gap-8">
       <Card className="w-1/2 ">
@@ -86,7 +88,7 @@ export default function FamilyByIdPage() {
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="text-muted-foreground">
-            Balance actual de la familia
+            Balance actual de la familia adminstrado por {rama?.name || "N/A"}
           </div>
         </CardFooter>
       </Card>

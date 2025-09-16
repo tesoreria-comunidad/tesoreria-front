@@ -28,8 +28,33 @@ export const familiSlice = createSlice({
     setFamily: (state, action: PayloadAction<TFamily>) => {
       state.family = action.payload;
     },
+    updateFamily: (
+      state,
+      action: PayloadAction<{ id: string; changes: Partial<TFamily> }>
+    ) => {
+      const { changes, id } = action.payload;
+
+      const index = state.families.findIndex((user) => user.id === id);
+
+      if (index !== -1) {
+        state.families[index] = {
+          ...state.families[index],
+          ...changes,
+        };
+        const immutableIndex = state.inmutableFamilies.findIndex(
+          (family) => family.id === id
+        );
+        if (immutableIndex !== -1) {
+          state.inmutableFamilies[immutableIndex] = {
+            ...state.inmutableFamilies[immutableIndex],
+            ...changes,
+          };
+        }
+      }
+    },
   },
 });
 
-export const { setFamilies, addFamily, setFamily } = familiSlice.actions;
+export const { setFamilies, addFamily, setFamily, updateFamily } =
+  familiSlice.actions;
 export default familiSlice.reducer;

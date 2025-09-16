@@ -30,7 +30,6 @@ export function CreateFamilyForm() {
     defaultValues: {
       name: "",
       phone: "",
-      users: [],
       manage_by: "",
     },
   });
@@ -43,7 +42,6 @@ export function CreateFamilyForm() {
       const body = {
         name: values.name,
         phone: values.phone,
-        users: values.users,
         manage_by: values.manage_by,
       };
       await createFamily(body);
@@ -59,7 +57,6 @@ export function CreateFamilyForm() {
     setRamaId(value);
     form.setValue("manage_by", value);
   };
-  console.log(form.getValues("manage_by"));
   return (
     <Form {...form}>
       <form

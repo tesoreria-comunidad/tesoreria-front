@@ -32,15 +32,12 @@ export const userSlice = createSlice({
       const index = state.users.findIndex((user) => user.id === id);
 
       if (index !== -1) {
-        // Actualiza el servicio en el array principal
         state.users[index] = {
           ...state.users[index],
           ...changes,
         };
-
-        // Actualiza también los datos en inmutableServices
         const immutableIndex = state.inmutableUsers.findIndex(
-          (service) => service.id === id
+          (user) => user.id === id
         );
         if (immutableIndex !== -1) {
           state.inmutableUsers[immutableIndex] = {

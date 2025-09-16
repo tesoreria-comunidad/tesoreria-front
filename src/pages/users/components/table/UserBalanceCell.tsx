@@ -15,8 +15,6 @@ export function UserBalanceCell({ user }: { user: TUser }) {
 
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    console.log({ family });
-
     if (familyStore) {
       setFamily(familyStore);
       return;

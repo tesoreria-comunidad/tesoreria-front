@@ -36,7 +36,7 @@ import {
 import { useAppSelector } from "@/store/hooks";
 import { CategoryField } from "./compoents/CategoryField";
 import { useAlert } from "@/context/AlertContext";
-import { UploadFile } from "./compoents/UploadFile";
+import { DatePickerField } from "@/components/common/DatePickerField";
 export function CreateTransactionForm() {
   const [loading, setLoading] = useState(false);
   const { families } = useAppSelector((s) => s.family);
@@ -83,8 +83,6 @@ export function CreateTransactionForm() {
   };
   return (
     <Form {...form}>
-      <UploadFile />
-      <hr />
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="pt-8 flex flex-col justify-between h-full"
@@ -108,6 +106,27 @@ export function CreateTransactionForm() {
                   </FormControl>
                   <FormDescription>
                     {formatCurrency(form.getValues("amount"))}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="payment_date"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormControl>
+                    <DatePickerField
+                      control={form.control}
+                      name={field.name}
+                      label="Fecha"
+                      placeholder="Seleccionar fecha"
+                      disableFuture
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Fecha en la que se realizó esta transacción
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
