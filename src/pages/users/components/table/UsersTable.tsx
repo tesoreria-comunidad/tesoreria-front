@@ -6,9 +6,13 @@ import { RamaCell } from "./RamaCell";
 import { FamilyCell } from "./FamilyCell";
 import { UserBalanceCell } from "./UserBalanceCell";
 import UsersActionsDropdown from "../UsersActionsDropdown";
+import type { RowSelectionState } from "@tanstack/react-table";
+import { useState } from "react";
+import { SelectUsersAction } from "./components/SelectUsersAction";
 
 export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
   const { users } = useAppSelector((s) => s.users);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const columns: TColumnDef<TUser>[] = [
     {
       accessorKey: "is_active",
@@ -130,5 +134,27 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
         : a.name.localeCompare(b.name);
     }
   );
-  return <RootTable columns={columns} data={sortedUsers} tableHeader />;
+  const selectedUsers = Object.keys(rowSelection).map(
+    (key) => sortedUsers[parseInt(key, 10)]
+  );
+  return (
+    <div className="pt-2 relative">
+      {/* Panel de acciones sobre seleccionados */}
+      {Object.keys(rowSelection).length > 0 && (
+        <div className="flex items-center justify-between p-2 gap-2 rounded absolute top-0 ">
+          <span>{selectedUsers.length} seleccionados</span>
+          <SelectUsersAction users={selectedUsers} />
+        </div>
+      )}
+
+      <RootTable
+        columns={columns}
+        data={sortedUsers}
+        tableHeader
+        rowSelection={rowSelection} // 👈 le pasamos el estado
+        onRowSelectionChange={setRowSelection} // 👈 y el updater
+        enableRowSelection
+      />
+    </div>
+  );
 }

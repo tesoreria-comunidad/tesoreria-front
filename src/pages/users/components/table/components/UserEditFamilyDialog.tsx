@@ -92,9 +92,6 @@ export function UserEditFamilyDialog({ user }: { user: TUser }) {
               {family.name}
             </SelectItem>
           ))}
-          <SelectItem value="light">Light</SelectItem>
-          <SelectItem value="dark">Dark</SelectItem>
-          <SelectItem value="system">System</SelectItem>
         </SelectContent>
       </Select>
       <section className="space-y-2 relative">

@@ -19,15 +19,15 @@ import { useAppSelector } from "@/store/hooks";
 const chartConfig = {
   altas: {
     label: "Activos",
-    color: "#348862;",
+    color: "#348862",
   },
   bajas: {
     label: "Bajas",
-    color: "#e7000b;",
+    color: "#e7000b",
   },
   becas: {
     label: "Becados",
-    color: "#fe9a00;",
+    color: "#fe9a00",
   },
 } satisfies ChartConfig;
 

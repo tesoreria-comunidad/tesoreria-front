@@ -14,7 +14,7 @@ export default function RamasDetailPage() {
 
   if (!rama) return null;
   return (
-    <div className="size-full   overflow-y-auto   ">
+    <div className="size-full   overflow-y-auto flex flex-col gap-4">
       <section className="flex items-center justify-between  h-[5%]">
         <Label className="text-xl">{rama.name}</Label>
         {rama.users.length === 0 ? (

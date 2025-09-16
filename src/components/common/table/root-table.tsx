@@ -9,6 +9,7 @@ import {
   type ColumnFiltersState,
   type PaginationState,
   type RowData,
+  type RowSelectionState,
 } from "@tanstack/react-table";
 
 import {
@@ -26,6 +27,7 @@ import type {
 import { Fragment, useMemo, useState, type ReactNode } from "react";
 import "./table.css";
 import { ColumnVisibility } from "./header/ColumnVisibility";
+import { getSelectionColumn } from "./utils/getSelectionColumns";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -48,6 +50,9 @@ interface DataTableProps<TData, TValue> {
   pageSize?: number;
   tableNameRef?: string;
   tableHeader?: boolean;
+  enableRowSelection?: boolean;
+  rowSelection?: RowSelectionState;
+  onRowSelectionChange?: (updater: {}) => void;
 }
 
 export function RootTable<TData, TValue>({
@@ -55,6 +60,9 @@ export function RootTable<TData, TValue>({
   data,
   pageSize = 20,
   tableHeader = false,
+  rowSelection,
+  onRowSelectionChange,
+  enableRowSelection = false,
 }: DataTableProps<TData, TValue>) {
   // columnas inicialmente ocultas segun prop `hidden`
   const initialVisibility = useMemo(() => {
@@ -78,11 +86,14 @@ export function RootTable<TData, TValue>({
 
   const table = useReactTable({
     data,
-    columns,
+    columns: enableRowSelection
+      ? [getSelectionColumn<TData>(), ...columns]
+      : columns,
     state: {
       columnFilters,
       pagination,
       columnVisibility,
+      rowSelection: rowSelection ?? {}, // 👈 usa el estado externo si existe
     },
     onColumnVisibilityChange: setColumnVisibility,
     defaultColumn: {
@@ -92,6 +103,8 @@ export function RootTable<TData, TValue>({
     },
     autoResetPageIndex: true,
     debugTable: false,
+    enableRowSelection,
+    onRowSelectionChange: onRowSelectionChange,
     onPaginationChange: setPagination,
     getExpandedRowModel: getExpandedRowModel(),
     getCoreRowModel: getCoreRowModel(),
