@@ -1,69 +1,89 @@
-# React + TypeScript + Vite
+# Tesorería Comunidad Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[Live Demo](https://tesoreria-front.vercel.app)  
+[Repository](https://github.com/tesoreria-comunidad/tesoreria-front)
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This is the frontend for the "Tesorería Comunidad" system, designed to manage user, family, and fee data for a community or organization. It provides dashboards, user management, family records, fee tracking, and beneficiary management.
 
-## Expanding the ESLint configuration
+The application is built using **React**, **TypeScript**, **Vite**, and **TailwindCSS** for fast development and a modern UI/UX. Routing is handled via `react-router`, and state management uses Redux patterns.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Features
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Dashboard with key metrics (active beneficiaries, families, current fee)
+- User and family management
+- Beneficiary tracking
+- Cuota (fee) management
+- Ramas (branches) management
+- Role-based access (Master, Dirigente, Family, Beneficiary)
+- Responsive design for mobile and desktop
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **React** (with hooks)
+- **TypeScript**
+- **Vite** (fast dev server and build tool)
+- **TailwindCSS** (utility-first CSS)
+- **Redux Toolkit** (for state management, via custom hooks)
+- **React Router** (for page navigation)
+- **Lucide React** (icons)
+- **ESLint** (with recommended TypeScript and React plugins)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `src/pages/` - Contains main page components (dashboard, users, families, cuotas, ramas, etc.)
+- `src/components/ui/` - UI components (inputs, badges, cards, calendar)
+- `src/store/` - Redux store and hooks
+- `src/routes/` - Application routes and role-based access configuration
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Getting Started
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/tesoreria-comunidad/tesoreria-front.git
+   cd tesoreria-front
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+   The app will be available at `http://localhost:5173` (default Vite port).
+
+4. **Build for production:**
+   ```bash
+   npm run build
+   ```
+
+## Configuration
+
+- Vite config and TailwindCSS are pre-configured.
+- All source code uses path alias `@` for `src/`.
+- ESLint is set up for TypeScript and React (see `eslint.config.js`).
+- See `package.json` for dependencies.
+
+## Usage
+
+- Log in to access the dashboard.
+- Navigate between users, families, cuotas, and ramas.
+- Actions are available based on your role (Master, Dirigente, Family, Beneficiary).
+
+## Contributing
+
+Pull requests and issues are welcome!  
+Please follow the code style guidelines enforced by ESLint and use TypeScript for all new code.
+
+## License
+
+This project does not currently specify a license.
+
+---
+
+**Note:**  
+Search results are limited to 10 files. For more code context, view the full repository on [GitHub](https://github.com/tesoreria-comunidad/tesoreria-front/search).
