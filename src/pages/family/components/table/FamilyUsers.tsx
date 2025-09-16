@@ -3,6 +3,7 @@ import type { TUser } from "@/models";
 import { FormatedDate } from "@/components/common/FormatedDate";
 import { UserCell } from "@/pages/users/components/table/PersonCell";
 import { RamaCell } from "@/pages/users/components/table/RamaCell";
+import UsersActionsDropdown from "@/pages/users/components/UsersActionsDropdown";
 
 export function FamilyUsersTable({
   users,
@@ -120,6 +121,14 @@ export function FamilyUsersTable({
     {
       accessorKey: "status",
       hidden: true,
+    },
+    {
+      accessorKey: "id",
+      header: "",
+      size: 10,
+      cell: ({ row }) => (
+        <UsersActionsDropdown user={row.original} showFamilyOptions />
+      ),
     },
   ];
   return <RootTable columns={columns} data={users} tableHeader={tableHeader} />;

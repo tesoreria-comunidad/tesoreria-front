@@ -1,7 +1,11 @@
 import { familyAdapter } from "@/adapters";
-import type { TCreateFamily } from "@/models";
+import type { TCreateFamily, TFamily } from "@/models";
 import { FamilyServices } from "@/services/family.service";
-import { addFamily, setFamilies } from "@/store/features/family/familySlice";
+import {
+  addFamily,
+  setFamilies,
+  updateFamily,
+} from "@/store/features/family/familySlice";
 import { useAppDispatch } from "@/store/hooks";
 export function useFamilyQueries() {
   const dispatch = useAppDispatch();
@@ -19,15 +23,26 @@ export function useFamilyQueries() {
     }
   };
 
-  const createFamily = async (body: TCreateFamily) => {
+  const createFamily = async (body: TCreateFamily): Promise<TFamily> => {
     try {
       const apiFamily = await FamilyServices.create(body);
       const adaptedFamily = familyAdapter(apiFamily);
       dispatch(addFamily(adaptedFamily));
+
+      return adaptedFamily;
     } catch (error) {
       console.log("Error creating family", error);
       throw error;
     }
   };
-  return { fetchFamilies, createFamily };
+  const editFamily = async (id: string, body: Partial<TFamily>) => {
+    try {
+      await FamilyServices.edit(id, body);
+      dispatch(updateFamily({ id, changes: body }));
+    } catch (error) {
+      console.log("Error updating family", error);
+      throw error;
+    }
+  };
+  return { fetchFamilies, createFamily, editFamily };
 }

@@ -32,7 +32,7 @@ import {
 import { useUserQueries } from "@/queries/user.queries";
 import { DatePickerField } from "@/components/common/DatePickerField";
 
-export function CreateUserForm() {
+export function CreateUserForm({ idRama }: { idRama?: string }) {
   const [loading, setLoading] = useState(false);
   const { user } = useAppSelector((s) => s.session);
 
@@ -43,19 +43,19 @@ export function CreateUserForm() {
       email: "",
       password: "",
       confirmPassword: "",
-      role: "BENEFICIARIO" as TRole,
-      family_role: "TITULAR" as TFamilyRole, // ajustá al default que uses
+      role: "BENEFICIARIO",
+      family_role: "MEMBER", // ajustá al default que uses
       name: "",
       last_name: "",
       address: "",
       phone: "",
-      gender: "OTRO" as TGender, // ajustá al default que uses
+      gender: "HOMBRE", // ajustá al default que uses
       dni: "",
       birthdate: "", // si preferís Date -> cambia el schema
       citizenship: "Argentina",
       id_family: "", // lo convertimos a null si viene vacío
+      id_rama: idRama,
     },
-    mode: "onTouched",
   });
 
   const { createUser } = useUserQueries();
@@ -70,7 +70,7 @@ export function CreateUserForm() {
         id_family:
           values.id_family && values.id_family.trim() !== ""
             ? values.id_family
-            : null,
+            : "",
       };
 
       await createUser(payload);
@@ -84,6 +84,7 @@ export function CreateUserForm() {
 
   const userRole = user?.role;
 
+  console.log("Render CreateUserForm", form.formState.errors);
   return (
     <Form {...form}>
       <form

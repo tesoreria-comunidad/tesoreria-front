@@ -5,6 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { AddUserAside } from "../AddUserAside";
 import { Link } from "react-router";
 import { UserBulkUploader } from "../UsersBulkUploader";
+import { CobrabilidadCell } from "./components/CobrabilidadCell";
 
 export function RamasTable() {
   const { ramas } = useAppSelector((s) => s.ramas);
@@ -32,16 +33,10 @@ export function RamasTable() {
       ),
     },
     {
-      accessorKey: "users",
+      accessorKey: "id",
       header: "Cobrabilidad",
       size: 50,
-      cell: () => (
-        <div className="uppercase text-center ">
-          <div className="bg-orange-200 text-orange-600 font-semibold w-1/4 mx-auto p-1 rounded-md">
-            <span>89.9%</span>
-          </div>
-        </div>
-      ),
+      cell: ({ getValue }) => <CobrabilidadCell ramaId={getValue<string>()} />,
     },
 
     {

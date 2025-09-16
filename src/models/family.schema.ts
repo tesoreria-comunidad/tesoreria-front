@@ -21,6 +21,7 @@ export const CreateFamilySchema = FamilySchema.omit({
   updatedAt: true,
   balance: true,
   payments: true,
+  users: true,
 });
 
 export type TFamily = z.infer<typeof FamilySchema>;

@@ -15,8 +15,6 @@ import { UpdateBalanceButton } from "./components/UpdateBalanceButton";
 
 export function CuotasPage() {
   const { currentCuota } = useAppSelector((s) => s.cuota);
-
-  console.log("currentCuota", currentCuota);
   return (
     <div className="size-full   overflow-y-auto   ">
       <section className="flex items-center justify-between  h-[5%]">

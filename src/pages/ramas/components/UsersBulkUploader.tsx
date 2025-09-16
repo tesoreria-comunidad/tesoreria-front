@@ -90,7 +90,7 @@ export function UserBulkUploader({
     if (!validPersons.length) return alert("No hay datos válidos para enviar");
     setLoading(true);
     try {
-      const users: Omit<TCreateUser, "username" | "password">[] =
+      const users: Partial<Omit<TCreateUser, "username" | "password">>[] =
         validPersons.map((item) => {
           let birthdate: string = "";
           if (item.birthdate) {

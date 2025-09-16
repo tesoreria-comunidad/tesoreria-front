@@ -9,9 +9,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { UserRoundPlus } from "lucide-react";
 import type { TRama } from "@/models";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UsersSelector } from "./UsersSelector";
 import { CreateUserForm } from "@/pages/users/components/forms/CreateUserForm";
 interface IAddUserAsideProps {
   rama: TRama;
@@ -33,19 +30,9 @@ export function AddUserAside({ rama }: IAddUserAsideProps) {
 
           <br />
 
-          <Tabs defaultValue="usuarios" className="size-full p-2">
-            <TabsList>
-              <TabsTrigger value="usuarios">Usuarios existentes</TabsTrigger>
-              <TabsTrigger value="ramas">Crear Usuario Nuevo</TabsTrigger>
-            </TabsList>
-            <br />
-            <TabsContent value="usuarios" className="max-h-[80vh] ">
-              <UsersSelector rama={rama} />
-            </TabsContent>
-            <TabsContent value="ramas">
-              <CreateUserForm />
-            </TabsContent>
-          </Tabs>
+          <div>
+            <CreateUserForm />
+          </div>
         </SheetHeader>
       </SheetContent>
     </Sheet>

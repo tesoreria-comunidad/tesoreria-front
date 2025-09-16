@@ -14,24 +14,30 @@ import type { TUser } from "@/models";
 import {
   ArrowBigDown,
   ArrowBigUp,
+  EllipsisVertical,
   HeartHandshake,
-  MenuSquare,
+  Users,
 } from "lucide-react";
-import { UserStatusUpdateDialog } from "./table/UserStatusUpdateDialog";
-import { UserGrantUpdateDialog } from "./table/UserGrantUpdateDialog";
+import { UserStatusUpdateDialog } from "./table/components/UserStatusUpdateDialog";
+import { UserGrantUpdateDialog } from "./table/components/UserGrantUpdateDialog";
+import { UserEditFamilyDialog } from "./table/components/UserEditFamilyDialog";
 
 interface UsersActionsDropdownProps {
   user: TUser;
+  showFamilyOptions?: boolean;
 }
 
 export default function UsersActionsDropdown({
   user,
+  showFamilyOptions = false,
 }: UsersActionsDropdownProps) {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [dialogType, setDialogType] = useState<"grant" | "status">("status");
+  const [dialogType, setDialogType] = useState<"grant" | "status" | "family">(
+    "status"
+  );
 
-  const handleOpenDialog = (type: "grant" | "status") => {
+  const handleOpenDialog = (type: "grant" | "status" | "family") => {
     setDialogType(type);
     setOpenDropdown(false); // cerramos el dropdown
     setOpenDialog(true); // abrimos el dialog
@@ -44,8 +50,8 @@ export default function UsersActionsDropdown({
           asChild
           className="flex justify-center text-center"
         >
-          <Button variant={"ghost"} className="mx-auto" size={"icon"}>
-            <MenuSquare className="size-5" />
+          <Button variant="ghost">
+            <EllipsisVertical />
           </Button>
         </DropdownMenuTrigger>
 
@@ -93,15 +99,25 @@ export default function UsersActionsDropdown({
               </>
             )}
           </DropdownMenuItem>
+
+          {showFamilyOptions && (
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault(); // prevenimos que se cierre antes
+                handleOpenDialog("family");
+              }}
+            >
+              <Users />
+              Modifcar Familia
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        {dialogType === "grant" ? (
-          <UserGrantUpdateDialog user={user} />
-        ) : (
-          <UserStatusUpdateDialog user={user} />
-        )}
+        {dialogType === "grant" && <UserGrantUpdateDialog user={user} />}
+        {dialogType === "status" && <UserStatusUpdateDialog user={user} />}
+        {dialogType === "family" && <UserEditFamilyDialog user={user} />}
       </Dialog>
     </>
   );
