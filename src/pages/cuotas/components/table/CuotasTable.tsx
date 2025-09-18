@@ -39,6 +39,7 @@ export default function CuotasTable() {
     },
     {
       accessorKey: "createdAt",
+      header: "Fecha de creación",
       cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
     },
   ];

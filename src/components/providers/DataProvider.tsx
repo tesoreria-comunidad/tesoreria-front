@@ -6,6 +6,7 @@ import { useFamilyQueries } from "@/queries/family.queries";
 import { usePersonsQueries } from "@/queries/persons.queries";
 import { useCuotaQueries } from "@/queries/cuota.queries";
 import { AppLoader } from "../common/AppLoader";
+import { useCuotaPorHermanosQueries } from "@/queries/cuotaPorHermano.queries";
 
 export function DataProvider({ children }: PropsWithChildren) {
   const accessToken = localStorage.getItem("accessToken");
@@ -15,6 +16,7 @@ export function DataProvider({ children }: PropsWithChildren) {
   const { fetchFamilies } = useFamilyQueries();
   const { fetchPersons } = usePersonsQueries();
   const { fetchCuotas } = useCuotaQueries();
+  const { fetchCPH } = useCuotaPorHermanosQueries();
   useEffect(() => {
     if (!accessToken) return;
 
@@ -27,6 +29,7 @@ export function DataProvider({ children }: PropsWithChildren) {
         await fetchFamilies();
         await fetchPersons();
         await fetchCuotas();
+        await fetchCPH();
       } catch (error) {
         console.log("Error fetching initial data", error);
       } finally {
