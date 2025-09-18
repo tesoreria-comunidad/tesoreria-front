@@ -15,15 +15,15 @@ const chartConfig = {
   },
   activos: {
     label: "activos",
-    color: "#00bc7d;",
+    color: "#348862;",
   },
   inactivos: {
     label: "inactivos",
-    color: "hsl(var(--chart-2))",
+    color: "#e7000b",
   },
   becados: {
-    label: "inactivos",
-    color: "#fe9a00;",
+    label: "becados",
+    color: "#fe9a00",
   },
 } satisfies ChartConfig;
 
@@ -45,7 +45,7 @@ export function UsersGraphs() {
     {
       browser: "becados",
       visitors: grantedUsers.length,
-      fill: "var(--color-inactivos)",
+      fill: "var(--color-becados)",
     },
     {
       browser: "inactivos",

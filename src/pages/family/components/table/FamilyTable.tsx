@@ -4,13 +4,14 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Link } from "react-router";
 import BalanceCell from "./BalanceCell";
 import { RamaCell } from "@/pages/users/components/table/RamaCell";
+import { FamilyActionCell } from "./components/FamilyActionCell";
 
 export function FamilyTable({ families }: { families: TFamily[] }) {
   const columns: ColumnDef<TFamily>[] = [
     {
       accessorKey: "name",
       header: "Nombre",
-      size: 30,
+      size: 80,
       cell: ({ getValue, row }) => (
         <div className="uppercase">
           <Link to={`/family/${row.original.id}`} className="hover:underline">
@@ -22,7 +23,7 @@ export function FamilyTable({ families }: { families: TFamily[] }) {
     {
       accessorKey: "users",
       header: "Integrantes",
-      size: 10,
+      size: 80,
       cell: ({ getValue }) => {
         const users = getValue<TUser[]>() ?? [];
         return <div className="text-center">{users.length}</div>;
@@ -31,7 +32,7 @@ export function FamilyTable({ families }: { families: TFamily[] }) {
     {
       accessorKey: "id_balance",
       header: "Balance",
-      size: 30,
+      size: 100,
       cell: ({ getValue, row }) => (
         <BalanceCell id_balance={getValue<string>()} family={row.original} />
       ),
@@ -39,14 +40,14 @@ export function FamilyTable({ families }: { families: TFamily[] }) {
     {
       accessorKey: "manage_by",
       header: "Cobrado Por",
-      size: 10,
+      size: 50,
       cell: ({ getValue }) => <RamaCell id_rama={getValue<string>()} />,
     },
     {
-      accessorKey: "",
-      header: "Cobrado Por",
+      accessorKey: "id",
+      header: "",
       size: 10,
-      cell: ({ getValue }) => <RamaCell id_rama={getValue<string>()} />,
+      cell: ({ row }) => <FamilyActionCell family={row.original} />,
     },
   ];
 
