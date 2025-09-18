@@ -9,6 +9,7 @@ import SessionReducer from "./features/session/session-slice";
 import UserReducer from "./features/user/usersSlice";
 import PersonsReducer from "./features/persons/personSlice";
 import TransactionsReducer from "./features/transactions/transactionsSlice";
+import CuotaPorHermanoReducer from "./features/cuotaPorHemano/cuotaPorHermanoSlice";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     users: UserReducer,
     persons: PersonsReducer,
     transactions: TransactionsReducer,
+    cuotaPorHerman: CuotaPorHermanoReducer,
   },
 });
 
