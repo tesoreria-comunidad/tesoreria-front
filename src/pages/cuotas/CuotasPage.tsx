@@ -12,9 +12,12 @@ import {
 } from "@/components/ui/card";
 import { FormatedDate } from "@/components/common/FormatedDate";
 import { UpdateBalanceButton } from "./components/UpdateBalanceButton";
+import { CuotasPorHermanoAside } from "./components/CuotasPorHermanoAside";
 
 export function CuotasPage() {
   const { currentCuota } = useAppSelector((s) => s.cuota);
+  const { cuotasPorHemano } = useAppSelector((s) => s.cuotaPorHerman);
+  console.log("cuotasPorHemano", cuotasPorHemano);
   return (
     <div className="size-full   overflow-y-auto   ">
       <section className="flex items-center justify-between  h-[5%]">
@@ -22,6 +25,7 @@ export function CuotasPage() {
         <div className="flex items-center gap-2">
           <CreateRamaAside />
           <UpdateBalanceButton />
+          <CuotasPorHermanoAside />
         </div>
       </section>
       <section className=" h-[95%] flex flex-col gap-4">
