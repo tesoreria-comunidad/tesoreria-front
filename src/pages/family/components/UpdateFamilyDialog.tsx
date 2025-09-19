@@ -141,9 +141,6 @@ export function UpdateFamilyDialog({
                         {rama.name}
                       </SelectItem>
                     ))}
-                    <SelectItem value="light">Light</SelectItem>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

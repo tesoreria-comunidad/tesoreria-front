@@ -88,6 +88,10 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
     },
 
     {
+      accessorKey: "role",
+      hidden: true,
+    },
+    {
       accessorKey: "email",
       hidden: true,
     },

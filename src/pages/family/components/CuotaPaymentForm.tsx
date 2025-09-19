@@ -29,37 +29,42 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatCurrency } from "@/utils";
-import {
-  DIRECTIONS_OPTIONS,
-  type TDirectionOfTransaction,
-} from "@/constants/transactions.constatns";
-import { useAppSelector } from "@/store/hooks";
-import { CategoryField } from "./compoents/CategoryField";
+
 import { useAlert } from "@/context/AlertContext";
 import { DatePickerField } from "@/components/common/DatePickerField";
-export function CreateTransactionForm() {
+import type { TBalance, TFamily } from "@/models";
+export function CuotaPaymentForm({
+  family,
+  balance,
+}: {
+  family: TFamily;
+  balance: TBalance;
+}) {
+  console.log("first", {
+    family,
+    balance,
+  });
   const [loading, setLoading] = useState(false);
-  const { families } = useAppSelector((s) => s.family);
   const form = useForm<TCreateTransaction>({
     resolver: zodResolver(CreateTransactionSchema),
     defaultValues: {
-      amount: 0,
-      category: "",
+      amount: Math.abs(balance.value),
+      category: "CUOTA",
       concept: "",
       description: "",
       direction: "INCOME",
-      id_family: null,
+      id_family: family.id,
       payment_date: new Date().toISOString(),
       payment_method: "TRANSFERENCIA",
     },
   });
 
-  const { createTransaction } = useTransactionsQueries();
+  const { createTransactionCuotaFamily } = useTransactionsQueries();
   const { showAlert } = useAlert();
   async function onSubmit(values: TCreateTransaction) {
     try {
       setLoading(true);
-      await createTransaction({
+      await createTransactionCuotaFamily({
         ...values,
         payment_date: values.payment_date
           ? new Date(values.payment_date).toISOString()
@@ -90,10 +95,10 @@ export function CreateTransactionForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="pt-8 flex flex-col justify-between h-full"
+        className="p-4 flex flex-col justify-between gap-4 h-full"
       >
         <section className="space-y-8">
-          <div className="flex items-start gap-2">
+          <div className="flex flex-col w-full  gap-8">
             <FormField
               control={form.control}
               name="amount"
@@ -166,74 +171,6 @@ export function CreateTransactionForm() {
             />
           </div>
 
-          <div className="flex gap-2">
-            <CategoryField form={form} />
-            <FormField
-              control={form.control}
-              name="direction"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Dirección</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) =>
-                        form.setValue(
-                          "direction",
-                          value as TDirectionOfTransaction
-                        )
-                      }
-                      value={field.value}
-                    >
-                      <SelectTrigger className="w-full" value={field.value}>
-                        <SelectValue placeholder="Dirección " />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {DIRECTIONS_OPTIONS.map((d) => (
-                          <SelectItem value={d}>
-                            {d === "EXPENSE" ? "Gasto" : "Ingreso"}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="id_family"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Familia</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) =>
-                        form.setValue("id_family", value)
-                      }
-                      value={field.value as string}
-                    >
-                      <SelectTrigger
-                        className="w-full"
-                        value={field.value as string}
-                      >
-                        <SelectValue placeholder="Familia " />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {families.map((family) => (
-                          <SelectItem value={family.id}>
-                            {family.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
           <FormField
             control={form.control}
             name="concept"
@@ -265,7 +202,7 @@ export function CreateTransactionForm() {
           />
         </section>
         <Button type="submit" isLoading={loading}>
-          Crear
+          Cargar Cuota
         </Button>
       </form>
     </Form>

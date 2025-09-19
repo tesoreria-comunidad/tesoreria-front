@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { FamilyUsersTable } from "./components/table/FamilyUsers";
 import { AddMemberAside } from "./components/aside/AddMemberAside";
 import { UpdateFamilyDialog } from "./components/UpdateFamilyDialog";
+import { UploadTransactionAside } from "./components/UploadTransactionAside";
 
 interface BalanceCardProps {
   balanceValue: number;
@@ -82,13 +83,15 @@ export default function FamilyByIdPage() {
           <CardTitle className="text-lg font-semibold tabular-nums @[250px]/card:text-3xl flex ">
             {balance && <BalanceCard balanceValue={balance?.value} />}
           </CardTitle>
-          <CardAction>
+          <CardAction className="flex items-center gap-2">
             <UpdateFamilyDialog family={family} balance={balance!} />
+            <UploadTransactionAside family={family} balance={balance!} />
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="text-muted-foreground">
-            Balance actual de la familia adminstrado por {rama?.name || "N/A"}
+          <div className="text-muted-foreground ">
+            Balance actual de la familia adminstrado por{" "}
+            <strong>{rama?.name || "N/A"}</strong>
           </div>
         </CardFooter>
       </Card>

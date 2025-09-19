@@ -17,6 +17,7 @@ export function TransactionsTable() {
     {
       accessorKey: "amount",
       header: "Monto",
+      size: 200,
       cell: ({ getValue }) => (
         <p className="font-medium">{formatCurrency(getValue<number>())}</p>
       ),
@@ -33,7 +34,6 @@ export function TransactionsTable() {
     {
       accessorKey: "direction",
       header: "Dirección",
-      size: 100,
       cell: ({ getValue }) => (
         <>
           {getValue<TDirectionOfTransaction>() === "EXPENSE" ? (
@@ -53,13 +53,10 @@ export function TransactionsTable() {
       header: "Familia",
       cell: ({ getValue }) => <FamilyCell id_family={getValue<string>()} />,
     },
-    {
-      accessorKey: "payment_date",
-      header: "Fecha de Pago",
-      cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
-    },
+
     {
       accessorKey: "payment_method",
+      header: "Método de pago",
       cell: ({ getValue }) => (
         <PaymentMethodBadge method={getValue<TPaymentMethod>()} />
       ),
@@ -71,7 +68,16 @@ export function TransactionsTable() {
     },
     {
       accessorKey: "createdAt",
+      header: "Fecha de carga",
+      size: 250,
+      cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
       hidden: true,
+    },
+    {
+      accessorKey: "payment_date",
+      header: "Fecha de Pago",
+      size: 250,
+      cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
     },
     {
       accessorKey: "updatedAt",
