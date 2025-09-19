@@ -2,7 +2,7 @@ import z from "zod";
 import { BaseSchema } from "./baseEntity.schema";
 import { UserSchema } from "./users.schema";
 import { BalanceSchema } from "./balance.schema";
-import { TransactionSchema } from "./transaction.schema";
+import { TransactionSchema } from "@/adapters/api_models/transaction.schema";
 
 export const FamilySchema = BaseSchema.extend({
   name: z.string(),
