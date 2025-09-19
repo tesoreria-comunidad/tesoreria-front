@@ -9,8 +9,8 @@ import { RamasPage } from "@/pages/ramas/RamasPage";
 import { TransactionsPage } from "@/pages/transactions/TransactionsPage";
 import { UsersPage } from "@/pages/users/UsersPage";
 import {
+  ChartArea,
   CircleDollarSign,
-  FileChartPie,
   HomeIcon,
   LayoutDashboard,
   Trees,
@@ -112,8 +112,8 @@ export const routes: TRoute[] = [
   },
   {
     path: "/transactions",
-    name: "Transactions",
-    icon: <FileChartPie className="size-4" />,
+    name: "Movimientos",
+    icon: <ChartArea className="size-4" />,
     element: <TransactionsPage />,
     rolesAccess: ["MASTER"],
     sidebarContent: true,

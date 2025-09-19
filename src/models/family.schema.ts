@@ -2,7 +2,7 @@ import z from "zod";
 import { BaseSchema } from "./baseEntity.schema";
 import { UserSchema } from "./users.schema";
 import { BalanceSchema } from "./balance.schema";
-import { PaymentSchema } from "./payment.schema";
+import { TransactionSchema } from "./transaction.schema";
 
 export const FamilySchema = BaseSchema.extend({
   name: z.string(),
@@ -11,7 +11,7 @@ export const FamilySchema = BaseSchema.extend({
   users: z.array(UserSchema),
   id_balance: z.string().optional(),
   balance: BalanceSchema,
-  payments: z.array(PaymentSchema),
+  transactions: z.array(TransactionSchema),
 });
 
 export const CreateFamilySchema = FamilySchema.omit({
@@ -20,7 +20,7 @@ export const CreateFamilySchema = FamilySchema.omit({
   id: true,
   updatedAt: true,
   balance: true,
-  payments: true,
+  transactions: true,
   users: true,
 });
 

@@ -29,4 +29,11 @@ export class TransactionService {
     const res = await axiosInstance.post(`${BASE_URL}/transactions`, body);
     return res.data;
   }
+  static async familyCuota(body: TCreateTransaction): Promise<TApiTransaction> {
+    const res = await axiosInstance.post(
+      `${BASE_URL}/transactions/family-cuota`,
+      body
+    );
+    return res.data;
+  }
 }

@@ -26,4 +26,8 @@ export class BalanceServices {
     return res.data;
   }
   static async delete() {}
+  static async resetAll() {
+    const res = await axiosInstance.post(`${BASE_URL}/balance/reset-all`);
+    return res.data;
+  }
 }

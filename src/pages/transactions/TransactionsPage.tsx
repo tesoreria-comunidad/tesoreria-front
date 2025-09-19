@@ -6,6 +6,7 @@ import { TransactionsTable } from "./components/table/TransactionsTable";
 import { Label } from "@/components/ui/label";
 import { CreateTransactionAside } from "./components/CreateTransactionAside";
 import { TransactionGraph } from "./components/graphs/TransactionGraph";
+import { ExpensesByCategory } from "./components/graphs/ExpensesByCategory";
 
 export function TransactionsPage() {
   const { fetchTransactions, fetchTransactionsStats } =
@@ -34,10 +35,12 @@ export function TransactionsPage() {
         <Label className="text-xl">Movimientos</Label>
         <CreateTransactionAside />
       </section>
-      <div>
+      <div className="flex flex-col gap-2">
         {transactions ? (
-          <section className="w-1/3 mx-auto">
+          <section className="w-full mx-auto grid grid-cols-2 gap-4 ">
             <TransactionGraph />
+            <ExpensesByCategory />
+            {/* <TransactionGraph /> */}
           </section>
         ) : null}
         <TransactionsTable />

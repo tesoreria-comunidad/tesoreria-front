@@ -6,6 +6,7 @@ import { AddUserAside } from "../AddUserAside";
 import { Link } from "react-router";
 import { UserBulkUploader } from "../UsersBulkUploader";
 import { CobrabilidadCell } from "./components/CobrabilidadCell";
+import { TooltipComponent } from "@/components/common/TooltipComponent";
 
 export function RamasTable() {
   const { ramas } = useAppSelector((s) => s.ramas);
@@ -27,8 +28,22 @@ export function RamasTable() {
       header: "Beneficiarios",
       size: 50,
       cell: ({ getValue }) => (
-        <div className="uppercase text-center ">
-          <b className="space-x-4">{getValue<TUser[]>().length} </b>
+        <div className="uppercase text-center  flex items-center gap-2 justify-center">
+          <TooltipComponent text="Activos">
+            <b className="space-x-4 aspect-square  size-10 flex justify-center items-center bg-green-200 text-green-700 rounded">
+              {getValue<TUser[]>().filter((u) => u.is_active).length}{" "}
+            </b>
+          </TooltipComponent>
+          <TooltipComponent text="Bajas">
+            <b className="space-x-4 aspect-square  size-10 flex justify-center items-center bg-red-200 text-red-700 rounded">
+              {getValue<TUser[]>().filter((u) => !u.is_active).length}{" "}
+            </b>
+          </TooltipComponent>
+          <TooltipComponent text="Becados">
+            <b className="space-x-4 aspect-square  size-10 flex justify-center items-center bg-amber-200 text-amber-700 rounded">
+              {getValue<TUser[]>().filter((u) => u.is_granted).length}{" "}
+            </b>
+          </TooltipComponent>
         </div>
       ),
     },
@@ -36,7 +51,7 @@ export function RamasTable() {
       accessorKey: "id",
       header: "Cobrabilidad",
       size: 50,
-      cell: ({ getValue }) => <CobrabilidadCell ramaId={getValue<string>()} />,
+      cell: ({ row }) => <CobrabilidadCell rama={row.original} />,
     },
 
     {

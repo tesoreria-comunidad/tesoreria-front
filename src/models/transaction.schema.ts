@@ -9,7 +9,7 @@ export const TransactionSchema = BaseSchema.extend({
   payment_method: PaymentMethod,
   direction: TransactionDirection,
   category: z.string().min(1, "La categoría es requerida"), // dinámica
-  payment_date: z.string().datetime().optional(), // string ISO
+  payment_date: z.string(), // string ISO
   concept: z.string().optional(),
   description: z.string().optional(),
 });

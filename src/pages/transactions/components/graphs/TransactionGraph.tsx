@@ -1,4 +1,4 @@
-import { TrendingUp } from "lucide-react";
+import { Repeat2, TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import {
@@ -16,6 +16,11 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useAppSelector } from "@/store/hooks";
+import { useTransactionsQueries } from "@/queries/transactions.queries";
+import { Button } from "@/components/ui/button";
+import { TooltipComponent } from "@/components/common/TooltipComponent";
+import { useState } from "react";
+import { useAlert } from "@/context/AlertContext";
 
 export const description = "A multiple bar chart";
 
@@ -32,10 +37,34 @@ const chartConfig = {
 
 export function TransactionGraph() {
   const { transactionsStats } = useAppSelector((s) => s.transactions);
+  const { fetchTransactionsStats } = useTransactionsQueries();
+  const [loading, setLoading] = useState(false);
+  const { showAlert } = useAlert();
+  const handleReloadStats = async () => {
+    setLoading(true);
+    await fetchTransactionsStats();
+    showAlert({
+      title: "Estadisticas  actualizadas",
+      type: "info",
+    });
+    setLoading(false);
+  };
   return (
-    <Card>
+    <Card className="size-full relative">
       <CardHeader>
-        <CardTitle>Ingresos - Egresos</CardTitle>
+        <CardTitle className="flex justify-between">
+          <span>Ingresos - Egresos</span>
+          <TooltipComponent text="Refrescar">
+            <Button
+              size={"icon"}
+              variant={"secondary"}
+              onClick={handleReloadStats}
+              isLoading={loading}
+            >
+              <Repeat2 />
+            </Button>
+          </TooltipComponent>
+        </CardTitle>
         <CardDescription>
           {transactionsStats[0]?.month} -{" "}
           {transactionsStats.length > 1
@@ -53,7 +82,7 @@ export function TransactionGraph() {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => String(value).toUpperCase()}
             />
             <ChartTooltip
               cursor={false}

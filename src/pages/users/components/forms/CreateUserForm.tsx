@@ -35,6 +35,8 @@ import { DatePickerField } from "@/components/common/DatePickerField";
 export function CreateUserForm({ idRama }: { idRama?: string }) {
   const [loading, setLoading] = useState(false);
   const { user } = useAppSelector((s) => s.session);
+  const { families } = useAppSelector((s) => s.family);
+  const { ramas } = useAppSelector((s) => s.ramas);
 
   const form = useForm<TCreateUser>({
     resolver: zodResolver(CreateUserSchema),
@@ -64,16 +66,18 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
     try {
       setLoading(true);
 
-      // Normalizar id_family: "" -> null (CreateUserSchema permite null)
-      const payload: TCreateUser = {
-        ...values,
-        id_family:
-          values.id_family && values.id_family.trim() !== ""
-            ? values.id_family
-            : "",
-      };
+      const body: TCreateUser = {} as TCreateUser;
+      Object.keys(values).forEach((key) => {
+        //@ts-ignore
+        if (values[key]) {
+          //@ts-ignore
+          body[key] = values[key].trim();
+        }
+      });
 
-      await createUser(payload);
+      console.log("body,", body);
+
+      await createUser(body);
       form.reset();
     } catch (error) {
       console.log("Error creating user", error);
@@ -84,7 +88,7 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
 
   const userRole = user?.role;
 
-  console.log("Render CreateUserForm", form.formState.errors);
+  console.log("dirigente123", form.formState.errors);
   return (
     <Form {...form}>
       <form
@@ -194,6 +198,35 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
                           {ROLE_VALUES.map((role) => (
                             <SelectItem key={role} value={role}>
                               {role}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            {userRole === "MASTER" && (
+              <FormField
+                control={form.control}
+                name="id_rama"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Rama</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={(value) => field.onChange(value)}
+                        value={field.value || ""}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Rama" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {ramas.map((rama) => (
+                            <SelectItem key={rama.id} value={rama.id}>
+                              {rama.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -416,13 +449,23 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
               name="id_family"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>ID de familia (opcional)</FormLabel>
+                  <FormLabel>Familia (opcional)</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      value={field && field.value !== null ? field.value : ""}
-                      placeholder="Ej: fam_123 (dejar vacío si no corresponde)"
-                    />
+                    <Select
+                      onValueChange={(value) => field.onChange(value)}
+                      value={field.value || ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar familia" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {families.map((family) => (
+                          <SelectItem key={family.id} value={family.id}>
+                            {family.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

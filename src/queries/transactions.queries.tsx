@@ -55,10 +55,21 @@ export function useTransactionsQueries() {
       throw error;
     }
   };
+  const createTransactionCuotaFamily = async (body: TCreateTransaction) => {
+    try {
+      const newTransaction = await TransactionService.familyCuota(body);
+      const adaptedNewTransaction = transactionAdapter(newTransaction);
+      dispatch(addTransaction(adaptedNewTransaction));
+    } catch (error) {
+      console.log("Error creating new transaction", error);
+      throw error;
+    }
+  };
   return {
     fetchTransactions,
     createTransaction,
     fetchTransactionsStats,
     fetchFamilyTransactions,
+    createTransactionCuotaFamily,
   };
 }
