@@ -4,12 +4,14 @@ import {
   getExpandedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
   type ColumnDef,
   type ColumnFiltersState,
   type PaginationState,
   type RowData,
   type RowSelectionState,
+  type SortingState,
 } from "@tanstack/react-table";
 
 import {
@@ -28,6 +30,7 @@ import { Fragment, useMemo, useState, type ReactNode } from "react";
 import "./table.css";
 import { ColumnVisibility } from "./header/ColumnVisibility";
 import { getSelectionColumn } from "./utils/getSelectionColumns";
+import { ArrowDownAZ, ArrowUpAZ } from "lucide-react";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -83,7 +86,7 @@ export function RootTable<TData, TValue>({
     pageSize,
   });
   const [columnVisibility, setColumnVisibility] = useState(initialVisibility);
-
+  const [sorting, setSorting] = useState<SortingState>([]); // can set initial sorting state here
   const table = useReactTable({
     data,
     columns: enableRowSelection
@@ -94,6 +97,7 @@ export function RootTable<TData, TValue>({
       pagination,
       columnVisibility,
       rowSelection: rowSelection ?? {}, // 👈 usa el estado externo si existe
+      sorting,
     },
     onColumnVisibilityChange: setColumnVisibility,
     defaultColumn: {
@@ -104,6 +108,7 @@ export function RootTable<TData, TValue>({
     autoResetPageIndex: true,
     debugTable: false,
     enableRowSelection,
+    onSortingChange: setSorting,
     onRowSelectionChange: onRowSelectionChange,
     onPaginationChange: setPagination,
     getExpandedRowModel: getExpandedRowModel(),
@@ -111,6 +116,7 @@ export function RootTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
   return (
@@ -151,7 +157,11 @@ export function RootTable<TData, TValue>({
                       "border-border text-center font-semibold  bg-muted ",
                       "px-3 py-2 text-xs uppercase tracking-wide",
                       "text-muted-foreground",
+                      "cursor-pointer",
+                      "hover:bg-gray-200 ",
+                      "transition-all duration-150",
                     ].join(" ")}
+                    onClick={header.column.getToggleSortingHandler()}
                   >
                     <div
                       className={[
@@ -161,13 +171,18 @@ export function RootTable<TData, TValue>({
                           : "justify-center",
                       ].join(" ")}
                     >
-                      <div className="truncate">
+                      <div className="truncate flex items-center gap-2 ">
                         {header.isPlaceholder
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
                               header.getContext()
                             )}
+                        {{
+                          asc: <ArrowDownAZ className="w-4 h-4" />,
+                          desc: <ArrowUpAZ className="w-4 h-4" />,
+                        }[header.column.getIsSorted() as "asc" | "desc"] ??
+                          null}
                       </div>
                     </div>
                   </TableHead>

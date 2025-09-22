@@ -1,4 +1,3 @@
-import { FormatedDate } from "@/components/common/FormatedDate";
 import { PaymentMethodBadge } from "@/components/common/PaymentMethodBadge";
 import { RootTable, type TColumnDef } from "@/components/common/table";
 import {
@@ -66,18 +65,27 @@ export function TransactionsTable() {
       header: "Descripción",
       hidden: true,
     },
-    {
-      accessorKey: "createdAt",
-      header: "Fecha de carga",
-      size: 250,
-      cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
-      hidden: true,
-    },
+
     {
       accessorKey: "payment_date",
       header: "Fecha de Pago",
       size: 250,
-      cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
+      enableSorting: true,
+      cell: ({ getValue }) => (
+        <p className="text-center">
+          {new Date(getValue<string>()).toLocaleDateString()}
+        </p>
+      ),
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Fecha de carga",
+      size: 250,
+      cell: ({ getValue }) => (
+        <p className="text-center">
+          {new Date(getValue<string>()).toLocaleDateString()}
+        </p>
+      ),
     },
     {
       accessorKey: "updatedAt",
