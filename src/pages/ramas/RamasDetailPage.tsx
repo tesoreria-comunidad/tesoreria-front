@@ -1,4 +1,3 @@
-import { useAppSelector } from "@/store/hooks";
 import { useParams } from "react-router";
 import { UsersTable } from "../users/components/table/UsersTable";
 import { Label } from "@radix-ui/react-label";
@@ -6,11 +5,12 @@ import { EmptyPage } from "@/components/common/EmptyPage";
 import { UserBulkUploader } from "./components/UsersBulkUploader";
 import { AddUserAside } from "./components/AddUserAside";
 import { useRamasQuery } from "@/queries/ramas.queries";
+import { useUsersQuery } from "@/queries/user.queries";
 
 export default function RamasDetailPage() {
   const { ramaId } = useParams();
   const { data: ramas } = useRamasQuery();
-  const { users } = useAppSelector((s) => s.users);
+  const { data: users } = useUsersQuery();
   const rama = ramas?.find((r) => r.id === ramaId);
 
   if (!rama) return null;
@@ -27,7 +27,7 @@ export default function RamasDetailPage() {
       <section className=" h-[95%]">
         {rama.users.length ? (
           <UsersTable
-            usersInput={users.filter((user) => user.id_rama === rama.id)}
+            usersInput={users?.filter((user) => user.id_rama === rama.id)}
           />
         ) : (
           <EmptyPage />

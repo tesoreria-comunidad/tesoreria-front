@@ -1,19 +1,20 @@
 import { UsersTable } from "./components/table/UsersTable";
 import { CreateUserAside } from "./components/CreateUserAside";
-import { useAppSelector } from "@/store/hooks";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { useUsersQuery } from "@/queries/user.queries";
 
 export function UsersPage() {
-  const { inmutableUsers } = useAppSelector((s) => s.users);
+  const { data: users } = useUsersQuery();
   const [search, setSearch] = useState("");
 
-  const filteredUsers = inmutableUsers.filter(
-    (user) =>
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.last_name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredUsers =
+    users?.filter(
+      (user) =>
+        user.name.toLowerCase().includes(search.toLowerCase()) ||
+        user.last_name.toLowerCase().includes(search.toLowerCase())
+    ) || [];
 
   return (
     <div className="size-full  overflow-y-auto space-y-4  ">

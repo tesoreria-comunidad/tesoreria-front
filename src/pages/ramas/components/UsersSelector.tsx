@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { CheckIcon, UserX } from "lucide-react";
-import type { TUser, TRama } from "@/models";
-import { useAppSelector } from "@/store/hooks";
+import type { TUser } from "@/models";
 import {
   Card,
   CardDescription,
@@ -11,15 +10,13 @@ import {
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { Input } from "@/components/ui/input";
-interface IAddUserAsideProps {
-  rama: TRama;
-}
-export function UsersSelector({ rama }: IAddUserAsideProps) {
-  console.log("rama seleccionada:  ", rama);
-  const { users } = useAppSelector((s) => s.users);
-  const beneficiarios = users.filter((user) => user.role === "BENEFICIARIO");
+import { useUsersQuery } from "@/queries/user.queries";
 
-  const [usersList, setUsersList] = useState<TUser[]>(beneficiarios);
+export function UsersSelector() {
+  const { data: users } = useUsersQuery();
+  const beneficiarios = users?.filter((user) => user.role === "BENEFICIARIO");
+
+  const [usersList, setUsersList] = useState<TUser[]>(beneficiarios || []);
   const [selectedUsers, setSelectedUsers] = useState<TUser["id"][]>([]);
 
   const handleSelectUser = (userId: string) => {
@@ -34,13 +31,13 @@ export function UsersSelector({ rama }: IAddUserAsideProps) {
 
   // Debounce search at 300ms
   const debounced = useDebouncedCallback((value) => {
-    const filter = beneficiarios.filter(
+    const filter = beneficiarios?.filter(
       (user) =>
         user.username.toLowerCase().includes(value.toLowerCase()) ||
         user.name.toLowerCase().includes(value.toLowerCase()) ||
         user.last_name.toLowerCase().includes(value.toLowerCase())
     );
-    setUsersList(filter);
+    setUsersList(filter || []);
   }, 300);
 
   const handleSearch = (value: string) => {
