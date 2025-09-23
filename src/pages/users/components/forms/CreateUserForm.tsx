@@ -1,4 +1,3 @@
-// CreateUserForm.tsx
 import { useForm } from "react-hook-form";
 import { CreateUserSchema, type TCreateUser } from "@/models";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,8 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { useAppSelector } from "@/store/hooks";
 import { ROLE_VALUES, type TRole } from "@/constants/role.constants";
 import {
   FAMILY_ROLE_VALUES,
@@ -29,15 +26,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useUserQueries } from "@/queries/user.queries";
+import { useCreateUserMutation } from "@/queries/user.queries";
 import { DatePickerField } from "@/components/common/DatePickerField";
+import { useAppSelector } from "@/store/hooks";
 
 export function CreateUserForm({ idRama }: { idRama?: string }) {
-  const [loading, setLoading] = useState(false);
   const { user } = useAppSelector((s) => s.session);
   const { families } = useAppSelector((s) => s.family);
   const { ramas } = useAppSelector((s) => s.ramas);
-
+  const createUserMutation = useCreateUserMutation();
   const form = useForm<TCreateUser>({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
@@ -60,30 +57,23 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
     },
   });
 
-  const { createUser } = useUserQueries();
-
   const onSubmit = async (values: TCreateUser) => {
-    try {
-      setLoading(true);
-
-      const body: TCreateUser = {} as TCreateUser;
-      Object.keys(values).forEach((key) => {
+    const body: TCreateUser = {} as TCreateUser;
+    Object.keys(values).forEach((key) => {
+      //@ts-ignore
+      if (values[key]) {
         //@ts-ignore
-        if (values[key]) {
-          //@ts-ignore
-          body[key] = values[key].trim();
-        }
-      });
-
-      console.log("body,", body);
-
-      await createUser(body);
-      form.reset();
-    } catch (error) {
-      console.log("Error creating user", error);
-    } finally {
-      setLoading(false);
-    }
+        body[key] = values[key].trim();
+      }
+    });
+    createUserMutation.mutate(body, {
+      onSuccess: () => {
+        form.reset(); // limpiar form después de crear
+      },
+      onError: (error) => {
+        console.log("Error creating user", error);
+      },
+    });
   };
 
   const userRole = user?.role;
@@ -479,14 +469,11 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
             type="button"
             variant="outline"
             onClick={() => form.reset()}
-            disabled={loading}
+            disabled={createUserMutation.isPending}
           >
             Limpiar
           </Button>
-          <Button
-            type="submit"
-            isLoading={loading || form.formState.isSubmitting}
-          >
+          <Button type="submit" isLoading={createUserMutation.isPending}>
             Crear
           </Button>
         </div>

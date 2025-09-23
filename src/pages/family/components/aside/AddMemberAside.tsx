@@ -16,33 +16,41 @@ import {
 } from "@/components/ui/sheet";
 import { useAlert } from "@/context/AlertContext";
 import type { TFamily, TUser } from "@/models";
-import { useUserQueries } from "@/queries/user.queries";
-import { useAppSelector } from "@/store/hooks";
+import { useUsersQuery, useEditUserMutation } from "@/queries/user.queries";
 import { Check, CheckIcon, UserPlus, UserX } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+
 export function AddMemberAside({ family }: { family: TFamily }) {
-  const { users } = useAppSelector((s) => s.users);
+  const { data: users = [], isLoading } = useUsersQuery();
+  const editUserMutation = useEditUserMutation();
+  const { showAlert } = useAlert();
+
+  // Filtramos beneficiarios sin familia
   const beneficiarios = users.filter(
     (user) => user.role === "BENEFICIARIO" && !user.id_family
   );
+
   const [usersList, setUsersList] = useState<TUser[]>(beneficiarios);
   const [selectedUsers, setSelectedUsers] = useState<TUser[]>([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    setUsersList(beneficiarios);
+  }, [beneficiarios]);
 
   const handleSelectUser = (userId: string) => {
     const user = users.find((u) => u.id === userId);
     if (!user) return;
     setSelectedUsers((prev) =>
-      prev.find((item) => item.id === user?.id)
-        ? prev.filter((item) => item.id !== user?.id)
+      prev.find((item) => item.id === user.id)
+        ? prev.filter((item) => item.id !== user.id)
         : [...prev, { ...user }]
     );
   };
 
-  const [search, setSearch] = useState("");
-
-  // Debounce search at 300ms
-  const debounced = useDebouncedCallback((value) => {
+  // Debounce search
+  const debounced = useDebouncedCallback((value: string) => {
     const filter = beneficiarios.filter((user) =>
       user.username.toLowerCase().includes(value.toLowerCase())
     );
@@ -53,26 +61,28 @@ export function AddMemberAside({ family }: { family: TFamily }) {
     setSearch(value);
     debounced(value);
   };
-  const { editUser } = useUserQueries();
 
-  const { showAlert } = useAlert();
   const handleSubmit = async () => {
     try {
-      const promises = selectedUsers.map((user) => {
-        return editUser({ id_family: family.id }, user.id);
-      });
-
+      const promises = selectedUsers.map((user) =>
+        editUserMutation.mutateAsync({
+          body: { id_family: family.id },
+          userId: user.id,
+        })
+      );
       await Promise.all(promises);
+
       showAlert({
         title: "Usuarios agregados a la familia",
         description: "",
         type: "success",
       });
+      setSelectedUsers([]);
     } catch (error) {
       console.log("error", error);
       showAlert({
         title: "Error al agregar usuarios a la familia",
-        description: "",
+        description: "Intenta nuevamente",
         type: "error",
       });
     }
@@ -94,12 +104,16 @@ export function AddMemberAside({ family }: { family: TFamily }) {
           </SheetDescription>
           <br />
           <div className="absolute bottom-0 right-0 m-4">
-            <Button onClick={handleSubmit}>
+            <Button
+              onClick={handleSubmit}
+              isLoading={editUserMutation.isPending}
+              disabled={selectedUsers.length === 0}
+            >
               <Check />
               Confirmar
             </Button>
           </div>
-          <section className="max-h-[85dvh]  overflow-auto ">
+          <section className="max-h-[85dvh] overflow-auto">
             <Input
               placeholder="Buscar usuario por username"
               value={search}
@@ -107,26 +121,29 @@ export function AddMemberAside({ family }: { family: TFamily }) {
             />
             <br />
 
-            {usersList.length ? (
+            {isLoading ? (
+              <p className="text-sm text-gray-500">Cargando usuarios...</p>
+            ) : usersList.length ? (
               <div className="flex flex-col gap-2">
                 {usersList.map((user) => (
                   <div
-                    className={`flex items-center gap-2  ${
-                      selectedUsers.find((item) => item.id === user?.id)
+                    key={user.id}
+                    className={`flex items-center gap-2 ${
+                      selectedUsers.find((item) => item.id === user.id)
                         ? "opacity-100"
                         : "opacity-75"
                     }`}
                   >
                     <div
-                      className={` rounded-full grid place-items-center ${
-                        selectedUsers.find((item) => item.id === user?.id)
-                          ? "bg-primary-2 size-8 "
+                      className={`rounded-full grid place-items-center ${
+                        selectedUsers.find((item) => item.id === user.id)
+                          ? "bg-primary-2 size-8"
                           : "size-0"
                       } transition-all duration-200`}
                     >
                       <CheckIcon
                         className={`${
-                          selectedUsers.find((item) => item.id === user?.id)
+                          selectedUsers.find((item) => item.id === user.id)
                             ? "text-white size-4"
                             : "hidden"
                         }`}
@@ -147,7 +164,7 @@ export function AddMemberAside({ family }: { family: TFamily }) {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col gap-2 justify-center items-center ">
+              <div className="flex flex-col gap-2 justify-center items-center">
                 <UserX className="size-12" />
                 <p>No se encontraron usuarios {search}</p>
               </div>

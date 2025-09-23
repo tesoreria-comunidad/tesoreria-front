@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useUsersQuery } from "@/queries/user.queries";
 import { useAppSelector } from "@/store/hooks";
 import { formatCurrency } from "@/utils";
 import { formatDate } from "@/utils/format-date";
@@ -24,10 +25,11 @@ interface DashboardCardProps {
   type: TDashboardCard;
 }
 export function DashboardCard({ type }: DashboardCardProps) {
-  const { users } = useAppSelector((s) => s.users);
   const { families } = useAppSelector((s) => s.family);
   const { currentCuota } = useAppSelector((s) => s.cuota);
 
+  const { data: users } = useUsersQuery();
+  if (!users) return null;
   const Config: Record<TDashboardCard, TDashboardCardData> = {
     cuota: {
       amount: currentCuota?.value ? formatCurrency(currentCuota?.value) : "-",

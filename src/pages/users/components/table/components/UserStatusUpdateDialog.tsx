@@ -7,40 +7,38 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useUserQueries } from "@/queries/user.queries";
-import { useState } from "react";
+import { useEditUserMutation } from "@/queries/user.queries";
+
 import { useAlert } from "@/context/AlertContext";
 import { ArrowBigDown, ArrowBigUp, UserCircle } from "lucide-react";
 export function UserStatusUpdateDialog({ user }: { user: TUser }) {
-  const [loading, setLoading] = useState(false);
-  const { editUser } = useUserQueries();
+  const { mutate, isPending } = useEditUserMutation();
   const { showAlert } = useAlert();
   const submitChanges = async () => {
-    try {
-      setLoading(true);
-
-      await editUser(
-        {
-          is_active: !user.is_active,
+    mutate(
+      {
+        body: { is_active: !user.is_active },
+        userId: user.id,
+      },
+      {
+        onSuccess() {
+          showAlert({
+            title: `Usuario dado de ${
+              user.is_active ? "baja" : "alta"
+            } exitosamente`,
+            description: "",
+            type: "success",
+          });
         },
-        user.id
-      );
-      showAlert({
-        title: `Usuario dado de ${
-          user.is_active ? "baja" : "alta"
-        } exitosamente`,
-        description: "",
-        type: "success",
-      });
-    } catch (error) {
-      showAlert({
-        title: "Hubo un error al dar de baja el usuario",
-        description: "Vuelva a intentarlo mas tarde",
-        type: "error",
-      });
-    } finally {
-      setLoading(false);
-    }
+        onError() {
+          showAlert({
+            title: "Hubo un error al dar de baja el usuario",
+            description: "Vuelva a intentarlo mas tarde",
+            type: "error",
+          });
+        },
+      }
+    );
   };
   return (
     <DialogContent>
@@ -80,7 +78,7 @@ export function UserStatusUpdateDialog({ user }: { user: TUser }) {
       <DialogFooter>
         <Button
           onClick={submitChanges}
-          isLoading={loading}
+          isLoading={isPending}
           variant={user.is_active ? "destructive" : "default"}
         >
           Confirmar

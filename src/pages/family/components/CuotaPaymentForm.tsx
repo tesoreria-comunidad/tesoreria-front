@@ -11,12 +11,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import {
   CreateTransactionSchema,
   type TCreateTransaction,
 } from "@/models/transaction.schema";
-import { useTransactionsQueries } from "@/queries/transactions.queries";
 import {
   PAYMENT_METHODS_OPTIONS,
   type TPaymentMethod,
@@ -29,10 +27,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatCurrency } from "@/utils";
-
 import { useAlert } from "@/context/AlertContext";
 import { DatePickerField } from "@/components/common/DatePickerField";
 import type { TBalance, TFamily } from "@/models";
+import { useCreateTransactionCuotaFamilyMutation } from "@/queries/transactions.queries";
+
 export function CuotaPaymentForm({
   family,
   balance,
@@ -40,11 +39,6 @@ export function CuotaPaymentForm({
   family: TFamily;
   balance: TBalance;
 }) {
-  console.log("first", {
-    family,
-    balance,
-  });
-  const [loading, setLoading] = useState(false);
   const form = useForm<TCreateTransaction>({
     resolver: zodResolver(CreateTransactionSchema),
     defaultValues: {
@@ -59,38 +53,42 @@ export function CuotaPaymentForm({
     },
   });
 
-  const { createTransactionCuotaFamily } = useTransactionsQueries();
   const { showAlert } = useAlert();
+  const createCuotaMutation = useCreateTransactionCuotaFamilyMutation();
+
   async function onSubmit(values: TCreateTransaction) {
-    try {
-      setLoading(true);
-      await createTransactionCuotaFamily({
+    createCuotaMutation.mutate(
+      {
         ...values,
         payment_date: values.payment_date
           ? new Date(values.payment_date).toISOString()
           : new Date().toISOString(),
-      });
-      showAlert({
-        title: "Movimiento cargado",
-        description: "",
-        type: "success",
-      });
-    } catch (error) {
-      showAlert({
-        title: "Error al cargar nuevo movimiento",
-        description: "Por favor revisar los datos cargado",
-        type: "error",
-      });
-      console.log("Error creating rama", error);
-    } finally {
-      setLoading(false);
-    }
+      },
+      {
+        onSuccess: () => {
+          showAlert({
+            title: "Movimiento cargado",
+            description: "",
+            type: "success",
+          });
+          form.reset(); // limpiar form si querés
+        },
+        onError: () => {
+          showAlert({
+            title: "Error al cargar nuevo movimiento",
+            description: "Por favor revisar los datos cargados",
+            type: "error",
+          });
+        },
+      }
+    );
   }
 
   const handleInputChange = (name: keyof TCreateTransaction, value: string) => {
     if (isNaN(Number(value))) return;
     form.setValue(name, Number(value));
   };
+
   return (
     <Form {...form}>
       <form
@@ -98,7 +96,7 @@ export function CuotaPaymentForm({
         className="p-4 flex flex-col justify-between gap-4 h-full"
       >
         <section className="space-y-8">
-          <div className="flex flex-col w-full  gap-8">
+          <div className="flex flex-col w-full gap-8">
             <FormField
               control={form.control}
               name="amount"
@@ -160,7 +158,9 @@ export function CuotaPaymentForm({
                       </SelectTrigger>
                       <SelectContent>
                         {PAYMENT_METHODS_OPTIONS.map((role) => (
-                          <SelectItem value={role}>{role}</SelectItem>
+                          <SelectItem key={role} value={role}>
+                            {role}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -189,7 +189,7 @@ export function CuotaPaymentForm({
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Descripción</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Descripción de este movimiento"
@@ -201,7 +201,7 @@ export function CuotaPaymentForm({
             )}
           />
         </section>
-        <Button type="submit" isLoading={loading}>
+        <Button type="submit" isLoading={createCuotaMutation.isPending}>
           Cargar Cuota
         </Button>
       </form>

@@ -6,12 +6,14 @@ import {
 } from "@/constants/transactions.constatns";
 import type { TTransaction } from "@/models/transaction.schema";
 import { FamilyCell } from "@/pages/users/components/table/FamilyCell";
-import { useAppSelector } from "@/store/hooks";
 import { formatCurrency } from "@/utils";
 import { BanknoteArrowDown, BanknoteArrowUp } from "lucide-react";
 
-export function TransactionsTable() {
-  const { transactions } = useAppSelector((s) => s.transactions);
+export function TransactionsTable({
+  transactions,
+}: {
+  transactions: TTransaction[];
+}) {
   const columns: TColumnDef<TTransaction>[] = [
     {
       accessorKey: "amount",

@@ -1,12 +1,6 @@
-import { balanceAdapter, familyAdapter } from "@/adapters";
-import { useTransactionsQueries } from "@/queries/transactions.queries";
-import { BalanceServices } from "@/services/balance.service";
-import { FamilyServices } from "@/services/family.service";
-import { setBalance } from "@/store/features/balance/balanceSlice";
-import { setFamily } from "@/store/features/family/familySlice";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useTransactionsByFamilyIdQuery } from "@/queries/transactions.queries";
+import { useAppSelector } from "@/store/hooks";
 
-import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import FamilyTransactionsTable from "./components/table/FamilyTransactionsTable";
 import {
@@ -44,35 +38,24 @@ function BalanceCard({ balanceValue }: BalanceCardProps) {
 }
 export default function FamilyByIdPage() {
   const { familyId } = useParams();
-  const dispatch = useAppDispatch();
-  const { balance } = useAppSelector((state) => state.balance);
   const { families } = useAppSelector((state) => state.family);
   const { ramas } = useAppSelector((state) => state.ramas);
-  const [loading, setLoading] = useState(false);
-  const { fetchFamilyTransactions } = useTransactionsQueries();
+  const familyTransactionsQuery = useTransactionsByFamilyIdQuery(familyId!);
   const family = families.find((f) => f.id === familyId);
-  useEffect(() => {
-    // if (family && family.id === familyId) return;
-    const fetchData = async () => {
-      setLoading(true);
-      await fetchFamilyTransactions(familyId!);
-      const familyData = await FamilyServices.getById(familyId!);
-      dispatch(setFamily(familyAdapter(familyData)));
 
-      const balanceData = await BalanceServices.getById(familyData.id_balance);
-      dispatch(setBalance(balanceAdapter(balanceData)));
-      setLoading(false);
-    };
-    fetchData();
-  }, [familyId]);
-
-  if (loading) {
+  if (familyTransactionsQuery.isLoading) {
     return <PageLoader />;
+  }
+
+  if (!familyTransactionsQuery.data) {
+    return null;
   }
 
   const users = family?.users;
   const rama = ramas.find((r) => r.id === family?.manage_by);
-  if (!balance || !family) return null;
+
+  if (!family) return null;
+
   return (
     <div className=" mx-auto flex flex-col items-center gap-8">
       <Card className="w-1/2 ">
@@ -81,11 +64,13 @@ export default function FamilyByIdPage() {
             Balance Familia <strong>{family?.name}</strong>
           </CardDescription>
           <CardTitle className="text-lg font-semibold tabular-nums @[250px]/card:text-3xl flex ">
-            {balance && <BalanceCard balanceValue={balance?.value} />}
+            {family.balance && (
+              <BalanceCard balanceValue={family.balance?.value} />
+            )}
           </CardTitle>
           <CardAction className="flex items-center gap-2">
-            <UpdateFamilyDialog family={family} balance={balance!} />
-            <UploadTransactionAside family={family} balance={balance!} />
+            <UpdateFamilyDialog family={family} balance={family.balance!} />
+            <UploadTransactionAside family={family} balance={family.balance!} />
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -110,7 +95,7 @@ export default function FamilyByIdPage() {
       </section>
       <section className="w-full flex flex-col gap-4">
         <Label>Transacciones</Label>
-        <FamilyTransactionsTable />
+        <FamilyTransactionsTable transactions={familyTransactionsQuery.data} />
       </section>
     </div>
   );

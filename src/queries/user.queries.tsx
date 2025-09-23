@@ -1,48 +1,86 @@
 import { userAdapter } from "@/adapters";
+import { setAuthInterceptor } from "@/config/axios.config";
 import type { TCreateUser, TUser } from "@/models";
 import { AuthServices } from "@/services/auth.service";
 import { UserServices } from "@/services/user.service";
-import {
-  addUser,
-  setUsers,
-  updateUser,
-} from "@/store/features/user/usersSlice";
-import { useAppDispatch } from "@/store/hooks";
-export function useUserQueries() {
-  const dispatch = useAppDispatch();
 
-  const fetchUsers = async () => {
-    try {
-      const apiUserResponse = await UserServices.getAll();
-      const adaptedUsers = apiUserResponse.map((apiUser) =>
-        userAdapter(apiUser)
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+/* ============================
+ * Fetchers
+ * ============================ */
+export const fetchUsers = async (): Promise<TUser[]> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  const apiUserResponse = await UserServices.getAll();
+  return apiUserResponse.map((apiUser) => userAdapter(apiUser));
+};
+
+export const createUser = async (
+  body: Omit<TCreateUser, "confirmPassword">
+): Promise<TUser> => {
+  const newUser = await AuthServices.register(body);
+  return userAdapter(newUser);
+};
+
+export const editUser = async (
+  body: Partial<TUser>,
+  userId: string
+): Promise<TUser> => {
+  const updatedUser = await UserServices.update(body, userId);
+  return userAdapter(updatedUser);
+};
+
+/* ============================
+ * Queries
+ * ============================ */
+export function useUsersQuery() {
+  return useQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsers,
+  });
+}
+
+/* ============================
+ * Mutations
+ * ============================ */
+export function useCreateUserMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createUser,
+    onSuccess: () => {
+      // Refresca lista de usuarios al crear uno nuevo
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
+}
+
+export function useEditUserMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ body, userId }: { body: Partial<TUser>; userId: string }) =>
+      editUser(body, userId),
+    onSuccess: () => {
+      // Refresca lista de usuarios al editar
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
+}
+export function useBulkEditUserMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (updates: { id: string; data: Partial<TUser> }[]) => {
+      // Aplica todas las actualizaciones en paralelo
+      const results = await Promise.all(
+        updates.map(({ id, data }) => editUser(data, id))
       );
-      dispatch(setUsers(adaptedUsers));
-    } catch (error) {
-      console.log("Error fetching users", error);
-      throw error;
-    }
-  };
-
-  const createUser = async (body: Omit<TCreateUser, "confirmPassword">) => {
-    try {
-      const newUser = await AuthServices.register(body);
-      const adaptedNewUser = userAdapter(newUser);
-      dispatch(addUser(adaptedNewUser));
-    } catch (error) {
-      console.log("Error creating new user", error);
-      throw error;
-    }
-  };
-
-  const editUser = async (body: Partial<TUser>, userId: string) => {
-    try {
-      await UserServices.update(body, userId);
-      dispatch(updateUser({ changes: body, id: userId }));
-    } catch (error) {
-      console.log("Error creating new user", error);
-      throw error;
-    }
-  };
-  return { fetchUsers, createUser, editUser };
+      return results;
+    },
+    onSuccess: () => {
+      // Refresca la lista de usuarios después de un bulk edit
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
 }
