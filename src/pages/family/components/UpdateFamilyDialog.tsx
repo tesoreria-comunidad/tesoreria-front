@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import type { TBalance, TFamily } from "@/models";
+import type { TFamily } from "@/models";
 import { PenBoxIcon, Settings } from "lucide-react";
 import {
   Dialog,
@@ -18,10 +18,8 @@ import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { formatCurrency } from "@/utils";
 import { useAlert } from "@/context/AlertContext";
-import { BalanceServices } from "@/services/balance.service";
 import { BalanceDetailsCard } from "./BalanceDetailsCard";
 import { FamilyUsersTable } from "./table/FamilyUsers";
-import { useAppSelector } from "@/store/hooks";
 import {
   Select,
   SelectContent,
@@ -30,27 +28,37 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useFamilyQueries } from "@/queries/family.queries";
+import {
+  useBalanceByIdQuery,
+  useUpdateBalanceMutation,
+} from "@/queries/balance.queries";
+import { useRamasQuery } from "@/queries/ramas.queries";
 interface UpdateFamilyDialogProps {
   family: TFamily;
-  balance: TBalance;
+  id_balance: string;
   viewBalanceData?: boolean;
 }
 export function UpdateFamilyDialog({
   family,
-  balance,
+  id_balance,
   viewBalanceData = false,
 }: UpdateFamilyDialogProps) {
-  const { ramas } = useAppSelector((s) => s.ramas);
-  const familyRama = ramas.find((r) => r.id === family.manage_by);
-  const [isCustomCuota, setIsCustomCuota] = useState(balance.is_custom_cuota);
+  const { data: balance } = useBalanceByIdQuery(id_balance);
+  const { data: ramas } = useRamasQuery();
+
+  if (!ramas || !balance) return null;
+  const familyRama = ramas?.find((r) => r.id === family.manage_by);
+  const [isCustomCuota, setIsCustomCuota] = useState(balance?.is_custom_cuota);
   const [selectedRamaId, setSelectedRamaId] = useState(family.manage_by);
   const [familyName, setFamilyName] = useState(family.name);
   const [customCuotaValue, setCustomCuotaValue] = useState(
-    balance.custom_cuota ? balance.custom_cuota : 0
+    balance?.custom_cuota ? balance.custom_cuota : 0
   );
   const [loading, setLoading] = useState(false);
   const { showAlert } = useAlert();
   const { editFamily } = useFamilyQueries();
+
+  const balanceMutationQuery = useUpdateBalanceMutation();
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -59,11 +67,13 @@ export function UpdateFamilyDialog({
         balance.is_custom_cuota !== isCustomCuota ||
         balance.custom_cuota !== customCuotaValue
       ) {
-        const balanceResponse = await BalanceServices.edit(family.id_balance!, {
-          is_custom_cuota: isCustomCuota,
-          custom_cuota: customCuotaValue,
+        await balanceMutationQuery.mutateAsync({
+          body: {
+            is_custom_cuota: isCustomCuota,
+            custom_cuota: customCuotaValue,
+          },
+          id: family.id_balance!,
         });
-        console.log("Balance updated:", balanceResponse);
       }
 
       await editFamily(family.id, {
@@ -91,8 +101,8 @@ export function UpdateFamilyDialog({
 
   const areChanges =
     family.name !== familyName ||
-    balance.is_custom_cuota !== isCustomCuota ||
-    balance.custom_cuota !== customCuotaValue ||
+    balance?.is_custom_cuota !== isCustomCuota ||
+    balance?.custom_cuota !== customCuotaValue ||
     family.manage_by !== selectedRamaId;
   return (
     <div>
@@ -117,11 +127,7 @@ export function UpdateFamilyDialog({
             {viewBalanceData && (
               <section className="flex flex-col gap-4 py-4">
                 <div className="w-full flex items-center">
-                  <BalanceDetailsCard
-                    balance={balance}
-                    family={family}
-                    viewOnly
-                  />
+                  {balance && <BalanceDetailsCard family={family} viewOnly />}
                 </div>
               </section>
             )}

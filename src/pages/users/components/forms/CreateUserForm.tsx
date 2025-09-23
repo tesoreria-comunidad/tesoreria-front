@@ -29,11 +29,12 @@ import {
 import { useCreateUserMutation } from "@/queries/user.queries";
 import { DatePickerField } from "@/components/common/DatePickerField";
 import { useAppSelector } from "@/store/hooks";
+import { useRamasQuery } from "@/queries/ramas.queries";
 
 export function CreateUserForm({ idRama }: { idRama?: string }) {
   const { user } = useAppSelector((s) => s.session);
   const { families } = useAppSelector((s) => s.family);
-  const { ramas } = useAppSelector((s) => s.ramas);
+  const { data: ramas } = useRamasQuery();
   const createUserMutation = useCreateUserMutation();
   const form = useForm<TCreateUser>({
     resolver: zodResolver(CreateUserSchema),
@@ -214,7 +215,7 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
                           <SelectValue placeholder="Rama" />
                         </SelectTrigger>
                         <SelectContent>
-                          {ramas.map((rama) => (
+                          {ramas?.map((rama) => (
                             <SelectItem key={rama.id} value={rama.id}>
                               {rama.name}
                             </SelectItem>

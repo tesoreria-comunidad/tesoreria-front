@@ -21,16 +21,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAppSelector } from "@/store/hooks";
 import { useBulkEditUserMutation } from "@/queries/user.queries";
 import { useAlert } from "@/context/AlertContext";
+import { useRamasQuery } from "@/queries/ramas.queries";
 
 type UserAction = "dar_baja" | "becar" | "modificar_rama";
 
 export function SelectUsersAction({ users }: { users: TUser[] }) {
   const [selectedAction, setSelectedAction] = useState<UserAction | null>(null);
   const [rama, setRama] = useState<string | null>(null);
-  const { inmutableRamas } = useAppSelector((s) => s.ramas);
+  const { data: ramas } = useRamasQuery();
   const { showAlert } = useAlert();
   const { mutateAsync: bulkEdit, isPending } = useBulkEditUserMutation();
   const submitAction = async () => {
@@ -148,7 +148,7 @@ export function SelectUsersAction({ users }: { users: TUser[] }) {
                     <SelectValue placeholder="Selecciona una rama" />
                   </SelectTrigger>
                   <SelectContent>
-                    {inmutableRamas.map((rama) => (
+                    {ramas?.map((rama) => (
                       <SelectItem key={rama.id} value={rama.id.toString()}>
                         {rama.name}
                       </SelectItem>

@@ -18,6 +18,7 @@ import { FamilyUsersTable } from "./components/table/FamilyUsers";
 import { AddMemberAside } from "./components/aside/AddMemberAside";
 import { UpdateFamilyDialog } from "./components/UpdateFamilyDialog";
 import { UploadTransactionAside } from "./components/UploadTransactionAside";
+import { useRamasQuery } from "@/queries/ramas.queries";
 
 interface BalanceCardProps {
   balanceValue: number;
@@ -39,7 +40,8 @@ function BalanceCard({ balanceValue }: BalanceCardProps) {
 export default function FamilyByIdPage() {
   const { familyId } = useParams();
   const { families } = useAppSelector((state) => state.family);
-  const { ramas } = useAppSelector((state) => state.ramas);
+
+  const { data: ramas } = useRamasQuery();
   const familyTransactionsQuery = useTransactionsByFamilyIdQuery(familyId!);
   const family = families.find((f) => f.id === familyId);
 
@@ -47,7 +49,7 @@ export default function FamilyByIdPage() {
     return <PageLoader />;
   }
 
-  if (!familyTransactionsQuery.data) {
+  if (!familyTransactionsQuery.data || !ramas) {
     return null;
   }
 
@@ -69,7 +71,10 @@ export default function FamilyByIdPage() {
             )}
           </CardTitle>
           <CardAction className="flex items-center gap-2">
-            <UpdateFamilyDialog family={family} balance={family.balance!} />
+            <UpdateFamilyDialog
+              family={family}
+              id_balance={family.id_balance}
+            />
             <UploadTransactionAside family={family} balance={family.balance!} />
           </CardAction>
         </CardHeader>

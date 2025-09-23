@@ -5,12 +5,13 @@ import { Label } from "@radix-ui/react-label";
 import { EmptyPage } from "@/components/common/EmptyPage";
 import { UserBulkUploader } from "./components/UsersBulkUploader";
 import { AddUserAside } from "./components/AddUserAside";
+import { useRamasQuery } from "@/queries/ramas.queries";
 
 export default function RamasDetailPage() {
   const { ramaId } = useParams();
-  const { inmutableRamas } = useAppSelector((s) => s.ramas);
+  const { data: ramas } = useRamasQuery();
   const { users } = useAppSelector((s) => s.users);
-  const rama = inmutableRamas.find((r) => r.id === ramaId);
+  const rama = ramas?.find((r) => r.id === ramaId);
 
   if (!rama) return null;
   return (

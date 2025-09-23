@@ -13,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useFamilyQueries } from "@/queries/family.queries";
-import { useAppSelector } from "@/store/hooks";
 import {
   Select,
   SelectContent,
@@ -21,9 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRamasQuery } from "@/queries/ramas.queries";
 export function CreateFamilyForm() {
   const [loading, setLoading] = useState(false);
-  const { inmutableRamas } = useAppSelector((s) => s.ramas);
+  const { data: ramas } = useRamasQuery();
   const [ramaId, setRamaId] = useState<string>("");
   const form = useForm<TCreateFamily>({
     resolver: zodResolver(CreateFamilySchema),
@@ -96,7 +96,7 @@ export function CreateFamilyForm() {
                     <SelectValue placeholder="Rama" />
                   </SelectTrigger>
                   <SelectContent>
-                    {inmutableRamas.map((rama) => (
+                    {ramas?.map((rama) => (
                       <SelectItem key={rama.id} value={rama.id}>
                         {rama.name}
                       </SelectItem>
