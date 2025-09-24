@@ -18,7 +18,7 @@ import { useAlert } from "@/context/AlertContext";
 import type { TFamily, TUser } from "@/models";
 import { useUsersQuery, useEditUserMutation } from "@/queries/user.queries";
 import { Check, CheckIcon, UserPlus, UserX } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 export function AddMemberAside({ family }: { family: TFamily }) {
@@ -34,10 +34,6 @@ export function AddMemberAside({ family }: { family: TFamily }) {
   const [usersList, setUsersList] = useState<TUser[]>(beneficiarios);
   const [selectedUsers, setSelectedUsers] = useState<TUser[]>([]);
   const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    setUsersList(beneficiarios);
-  }, [beneficiarios]);
 
   const handleSelectUser = (userId: string) => {
     const user = users.find((u) => u.id === userId);

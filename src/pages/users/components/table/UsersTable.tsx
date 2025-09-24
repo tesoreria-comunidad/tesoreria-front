@@ -104,8 +104,12 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
       hidden: true,
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       hidden: true,
+      header: "Fecha de creacion",
+      cell: ({ getValue }) => (
+        <p>{new Date(getValue<string>()).toLocaleDateString()}</p>
+      ),
     },
     {
       accessorKey: "updated_at",

@@ -62,11 +62,6 @@ export function TransactionsTable({
         <PaymentMethodBadge method={getValue<TPaymentMethod>()} />
       ),
     },
-    {
-      accessorKey: "description",
-      header: "Descripción",
-      hidden: true,
-    },
 
     {
       accessorKey: "payment_date",
@@ -92,6 +87,13 @@ export function TransactionsTable({
     {
       accessorKey: "updatedAt",
       hidden: true,
+    },
+    {
+      accessorKey: "description",
+      header: "Descripción",
+      size: 500,
+      hidden: true,
+      cell: ({ getValue }) => <p className=" truncate">{getValue<string>()}</p>,
     },
   ];
   return <RootTable columns={columns} data={transactions} tableHeader />;

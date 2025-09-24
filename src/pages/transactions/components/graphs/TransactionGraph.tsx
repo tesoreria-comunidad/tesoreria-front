@@ -32,8 +32,17 @@ const chartConfig = {
 export function TransactionGraph() {
   const transaccitionsStatsQuery = useTransactionsStatsQuery();
 
-  if (transaccitionsStatsQuery.isLoading) return "Loading";
-
+  if (transaccitionsStatsQuery.isLoading) {
+    return (
+      <Card className="size-full relative p-4">
+        <div className="animate-pulse space-y-4  h-full flex flex-col">
+          <div className="h-6 bg-gray-300 rounded w-1/3"></div>
+          <div className="h-4 bg-gray-300 rounded w-1/4"></div>
+          <div className="flex-1 bg-gray-300 rounded"></div>
+        </div>
+      </Card>
+    );
+  }
   if (!transaccitionsStatsQuery.data) return;
   return (
     <Card className="size-full relative">
