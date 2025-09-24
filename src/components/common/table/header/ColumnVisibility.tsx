@@ -12,6 +12,10 @@ interface ColumnVisibilityProps<T> {
   table: Table<T>;
 }
 export function ColumnVisibility<T>({ table }: ColumnVisibilityProps<T>) {
+  console.log(
+    "table.getAllLeafColumns()",
+    table.getAllLeafColumns().map((i) => i.id)
+  );
   return (
     <div>
       <Popover>
@@ -45,8 +49,9 @@ export function ColumnVisibility<T>({ table }: ColumnVisibilityProps<T>) {
             </Label>
           </div>
           <Separator />
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 max-h-[40vh] overflow-auto">
             {table.getAllLeafColumns().map((column) => {
+              if (column.id === "id") return null;
               return (
                 <div
                   key={column.id}

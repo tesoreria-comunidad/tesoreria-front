@@ -44,7 +44,7 @@ export function FamilyUsersTable({
       ),
     },
     {
-      accessorKey: "id",
+      accessorKey: "beneficiario",
       header: "Beneficiario",
       cell: ({ row }) => <UserCell user={row.original} />,
     },

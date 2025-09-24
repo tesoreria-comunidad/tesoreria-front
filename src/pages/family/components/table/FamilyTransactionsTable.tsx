@@ -49,6 +49,9 @@ export default function FamilyTransactionsTable({
       accessorKey: "updatedAt",
       hidden: true,
     },
+    {
+      accessorKey: "id",
+    },
   ];
   if (transactions.length === 0) {
     return (

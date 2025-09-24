@@ -104,6 +104,11 @@ export function UpdateFamilyDialog({
     balance?.is_custom_cuota !== isCustomCuota ||
     balance?.custom_cuota !== customCuotaValue ||
     family.manage_by !== selectedRamaId;
+
+  const familyUsersIdRamas = family.users.map((u) => u.id_rama);
+  const availableRamas = ramas.filter((rama) =>
+    familyUsersIdRamas.includes(rama.id)
+  );
   return (
     <div>
       <Dialog>
@@ -137,12 +142,13 @@ export function UpdateFamilyDialog({
                 <Select
                   value={selectedRamaId}
                   onValueChange={setSelectedRamaId}
+                  disabled={availableRamas.length === 1}
                 >
                   <SelectTrigger className="w-full ">
                     <SelectValue placeholder="Seleccionar una familia" />
                   </SelectTrigger>
                   <SelectContent>
-                    {ramas.map((rama) => (
+                    {availableRamas.map((rama) => (
                       <SelectItem key={rama.id} value={rama.id.toString()}>
                         {rama.name}
                       </SelectItem>

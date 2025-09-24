@@ -16,6 +16,9 @@ export function TransactionsTable({
 }) {
   const columns: TColumnDef<TTransaction>[] = [
     {
+      accessorKey: "id",
+    },
+    {
       accessorKey: "amount",
       header: "Monto",
       size: 200,
