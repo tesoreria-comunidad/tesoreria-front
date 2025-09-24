@@ -1,10 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import FolderReducer from "./features/folder/folderSlice";
 import SessionReducer from "./features/session/session-slice";
 
 export const store = configureStore({
   reducer: {
-    folder: FolderReducer,
     session: SessionReducer,
   },
 });
