@@ -12,10 +12,6 @@ interface ColumnVisibilityProps<T> {
   table: Table<T>;
 }
 export function ColumnVisibility<T>({ table }: ColumnVisibilityProps<T>) {
-  console.log(
-    "table.getAllLeafColumns()",
-    table.getAllLeafColumns().map((i) => i.id)
-  );
   return (
     <div>
       <Popover>
