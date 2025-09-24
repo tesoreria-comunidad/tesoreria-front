@@ -11,9 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAppSelector } from "@/store/hooks";
+import { useFamiliesQuery } from "@/queries/family.queries";
 export function UploadFile({ family_id }: { family_id?: string }) {
-  const { families } = useAppSelector((s) => s.family);
+  const { data: families } = useFamiliesQuery();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [familyId, setFamilyId] = useState<string>(family_id || "");
@@ -82,7 +82,7 @@ export function UploadFile({ family_id }: { family_id?: string }) {
             <SelectValue placeholder="Familia" />
           </SelectTrigger>
           <SelectContent>
-            {families.map((family) => (
+            {families?.map((family) => (
               <SelectItem key={family.id} value={family.id}>
                 {family.name}
               </SelectItem>

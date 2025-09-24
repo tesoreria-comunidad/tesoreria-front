@@ -8,8 +8,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useAppSelector } from "@/store/hooks";
-
 import { Separator } from "@/components/ui/separator";
 import CPHCard from "./CPHCard";
 import {
@@ -20,10 +18,10 @@ import {
 } from "@/components/ui/tooltip";
 import { CuotasPorHermanoForm } from "./form/CuotasPorHermanoForm";
 import { Label } from "@/components/ui/label";
+import { useCPHQuery } from "@/queries/cuotaPorHermano.queries";
 
 export function CuotasPorHermanoAside() {
-  const { cuotasPorHemano } = useAppSelector((s) => s.cuotaPorHerman);
-
+  const { data: cuotasPorHemano } = useCPHQuery();
   return (
     <div>
       <Sheet>
@@ -53,7 +51,7 @@ export function CuotasPorHermanoAside() {
               <span>Cuotas Por hermanos</span>
 
               <div className="flex flex-col gap-2">
-                {cuotasPorHemano.map((cph) => (
+                {cuotasPorHemano?.map((cph) => (
                   <CPHCard cph={cph} key={cph.id} />
                 ))}
               </div>

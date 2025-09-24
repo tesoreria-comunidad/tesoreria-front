@@ -2,15 +2,15 @@ import { familyAdapter } from "@/adapters";
 import BalanceCard from "@/components/common/BalanceCard";
 import { LoaderSpinner } from "@/components/common/LoaderSpinner";
 import type { TFamily, TUser } from "@/models";
+import { useFamiliesQuery } from "@/queries/family.queries";
 import { FamilyServices } from "@/services/family.service";
-import { useAppSelector } from "@/store/hooks";
 import { useEffect, useState } from "react";
 
 export function UserBalanceCell({ user }: { user: TUser }) {
-  const { inmutableFamilies } = useAppSelector((s) => s.family);
+  const { data: families } = useFamiliesQuery();
   if (!user.id_family) return "-";
 
-  const familyStore = inmutableFamilies.find((f) => f.id === user.id_family);
+  const familyStore = families?.find((f) => f.id === user.id_family);
   const [family, setFamily] = useState<TFamily>();
 
   const [loading, setLoading] = useState(false);

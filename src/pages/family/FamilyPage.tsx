@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { CreatFamilyAside } from "./components/CreateFamilyAside";
 import { FamilyTable } from "./components/table/FamilyTable";
-import { useAppSelector } from "@/store/hooks";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { useFamiliesQuery } from "@/queries/family.queries";
 
 export function FamilyPage() {
-  const { families } = useAppSelector((s) => s.family);
+  const { data: families } = useFamiliesQuery();
   const [search, setSearch] = useState("");
 
-  const filteredFamilies = families.filter((family) =>
+  const filteredFamilies = families?.filter((family) =>
     family.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -28,13 +28,13 @@ export function FamilyPage() {
           </div>
 
           <span className="text-gray-600 text-sm">
-            ({filteredFamilies.length} resultados)
+            ({filteredFamilies?.length} resultados)
           </span>
         </div>
         <CreatFamilyAside />
       </section>
       <section className="overflow-y-auto  max-h-[95%]">
-        <FamilyTable families={filteredFamilies} />
+        {filteredFamilies && <FamilyTable families={filteredFamilies} />}
       </section>
     </div>
   );

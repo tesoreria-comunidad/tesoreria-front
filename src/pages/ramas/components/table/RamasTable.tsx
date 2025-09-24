@@ -1,15 +1,15 @@
 import { RootTable } from "@/components/common/table";
 import type { TRama, TUser } from "@/models";
-import { useAppSelector } from "@/store/hooks";
 import type { ColumnDef } from "@tanstack/react-table";
 import { AddUserAside } from "../AddUserAside";
 import { Link } from "react-router";
 import { UserBulkUploader } from "../UsersBulkUploader";
 import { CobrabilidadCell } from "./components/CobrabilidadCell";
 import { TooltipComponent } from "@/components/common/TooltipComponent";
+import { useRamasQuery } from "@/queries/ramas.queries";
 
 export function RamasTable() {
-  const { ramas } = useAppSelector((s) => s.ramas);
+  const ramaQuery = useRamasQuery();
   const columns: ColumnDef<TRama>[] = [
     {
       accessorKey: "name",
@@ -66,5 +66,7 @@ export function RamasTable() {
       ),
     },
   ];
-  return <RootTable columns={columns} data={ramas} />;
+
+  if (!ramaQuery.data) return null;
+  return <RootTable columns={columns} data={ramaQuery.data} />;
 }

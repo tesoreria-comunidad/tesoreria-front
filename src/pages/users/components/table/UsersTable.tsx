@@ -1,6 +1,5 @@
 import { RootTable, type TColumnDef } from "@/components/common/table";
 import type { TUser } from "@/models";
-import { useAppSelector } from "@/store/hooks";
 import { UserCell } from "./PersonCell";
 import { RamaCell } from "./RamaCell";
 import { FamilyCell } from "./FamilyCell";
@@ -9,9 +8,10 @@ import UsersActionsDropdown from "../UsersActionsDropdown";
 import type { RowSelectionState } from "@tanstack/react-table";
 import { useState } from "react";
 import { SelectUsersAction } from "./components/SelectUsersAction";
+import { useUsersQuery } from "@/queries/user.queries";
 
 export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
-  const { users } = useAppSelector((s) => s.users);
+  const { data: users } = useUsersQuery();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const columns: TColumnDef<TUser>[] = [
     {
@@ -104,8 +104,12 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
       hidden: true,
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       hidden: true,
+      header: "Fecha de creacion",
+      cell: ({ getValue }) => (
+        <p>{new Date(getValue<string>()).toLocaleDateString()}</p>
+      ),
     },
     {
       accessorKey: "updated_at",
@@ -130,7 +134,7 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
     },
   ];
 
-  const sortedUsers = (usersInput ? [...usersInput] : [...users]).sort(
+  const sortedUsers = (usersInput ? [...usersInput] : users || []).sort(
     (a, b) => {
       const lastNameComparison = a.last_name.localeCompare(b.last_name);
       return lastNameComparison !== 0

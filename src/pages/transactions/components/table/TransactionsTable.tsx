@@ -6,12 +6,14 @@ import {
 } from "@/constants/transactions.constatns";
 import type { TTransaction } from "@/models/transaction.schema";
 import { FamilyCell } from "@/pages/users/components/table/FamilyCell";
-import { useAppSelector } from "@/store/hooks";
 import { formatCurrency } from "@/utils";
 import { BanknoteArrowDown, BanknoteArrowUp } from "lucide-react";
 
-export function TransactionsTable() {
-  const { transactions } = useAppSelector((s) => s.transactions);
+export function TransactionsTable({
+  transactions,
+}: {
+  transactions: TTransaction[];
+}) {
   const columns: TColumnDef<TTransaction>[] = [
     {
       accessorKey: "amount",
@@ -60,11 +62,6 @@ export function TransactionsTable() {
         <PaymentMethodBadge method={getValue<TPaymentMethod>()} />
       ),
     },
-    {
-      accessorKey: "description",
-      header: "Descripción",
-      hidden: true,
-    },
 
     {
       accessorKey: "payment_date",
@@ -90,6 +87,13 @@ export function TransactionsTable() {
     {
       accessorKey: "updatedAt",
       hidden: true,
+    },
+    {
+      accessorKey: "description",
+      header: "Descripción",
+      size: 500,
+      hidden: true,
+      cell: ({ getValue }) => <p className=" truncate">{getValue<string>()}</p>,
     },
   ];
   return <RootTable columns={columns} data={transactions} tableHeader />;

@@ -3,10 +3,12 @@ import { PaymentMethodBadge } from "@/components/common/PaymentMethodBadge";
 import { RootTable, type TColumnDef } from "@/components/common/table";
 import type { TPaymentMethod } from "@/constants/payment-method.constants";
 import type { TTransaction } from "@/models/transaction.schema";
-import { useAppSelector } from "@/store/hooks";
 import { formatCurrency } from "@/utils";
-export default function FamilyTransactionsTable() {
-  const { transactions } = useAppSelector((s) => s.transactions);
+export default function FamilyTransactionsTable({
+  transactions,
+}: {
+  transactions: TTransaction[];
+}) {
   const columns: TColumnDef<TTransaction>[] = [
     {
       accessorKey: "amount",
