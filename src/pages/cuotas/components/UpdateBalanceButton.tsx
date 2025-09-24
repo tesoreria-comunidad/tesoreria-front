@@ -14,14 +14,17 @@ import { formatCurrency } from "@/utils";
 import { BalanceServices } from "@/services/balance.service";
 import { useState } from "react";
 import { useAlert } from "@/context/AlertContext";
+import { useFamiliesQuery } from "@/queries/family.queries";
+import { useCuotasQuery } from "@/queries/cuota.queries";
 export function UpdateBalanceButton() {
   const { user } = useAppSelector((s) => s.session);
-  const { currentCuota } = useAppSelector((s) => s.cuota);
-  const { families } = useAppSelector((s) => s.family);
+  const { data: cuotas } = useCuotasQuery();
+  const currentCuota = cuotas?.find((c) => c.is_active);
+  const { data: families } = useFamiliesQuery();
   const [loading, setLoading] = useState(false);
   if (user && user.role !== "MASTER") return null;
 
-  const activeFamilies = families.filter(
+  const activeFamilies = families?.filter(
     (f) => f.users.filter((u) => u.is_active).length > 0
   );
 
@@ -63,7 +66,7 @@ export function UpdateBalanceButton() {
             Valor de cuota: <p>{formatCurrency(currentCuota?.value || 0)}</p>
           </div>
           <div className="flex items-center gap-2">
-            Cantidad de familias: <p>{activeFamilies.length}</p>
+            Cantidad de familias: <p>{activeFamilies?.length}</p>
           </div>
         </DialogHeader>
         <DialogFooter>

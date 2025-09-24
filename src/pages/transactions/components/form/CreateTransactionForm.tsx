@@ -11,12 +11,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import {
   CreateTransactionSchema,
   type TCreateTransaction,
 } from "@/models/transaction.schema";
-import { useTransactionsQueries } from "@/queries/transactions.queries";
 import {
   PAYMENT_METHODS_OPTIONS,
   type TPaymentMethod,
@@ -33,13 +31,14 @@ import {
   DIRECTIONS_OPTIONS,
   type TDirectionOfTransaction,
 } from "@/constants/transactions.constatns";
-import { useAppSelector } from "@/store/hooks";
 import { CategoryField } from "./compoents/CategoryField";
 import { useAlert } from "@/context/AlertContext";
 import { DatePickerField } from "@/components/common/DatePickerField";
+import { useCreateTransactionMutation } from "@/queries/transactions.queries";
+import { useFamiliesQuery } from "@/queries/family.queries";
+
 export function CreateTransactionForm() {
-  const [loading, setLoading] = useState(false);
-  const { families } = useAppSelector((s) => s.family);
+  const { data: families } = useFamiliesQuery();
   const form = useForm<TCreateTransaction>({
     resolver: zodResolver(CreateTransactionSchema),
     defaultValues: {
@@ -54,38 +53,42 @@ export function CreateTransactionForm() {
     },
   });
 
-  const { createTransaction } = useTransactionsQueries();
   const { showAlert } = useAlert();
-  async function onSubmit(values: TCreateTransaction) {
-    try {
-      setLoading(true);
-      await createTransaction({
+  const createTransactionMutation = useCreateTransactionMutation();
+
+  function onSubmit(values: TCreateTransaction) {
+    createTransactionMutation.mutate(
+      {
         ...values,
         payment_date: values.payment_date
           ? new Date(values.payment_date).toISOString()
           : new Date().toISOString(),
-      });
-      showAlert({
-        title: "Movimiento cargado",
-        description: "",
-        type: "success",
-      });
-    } catch (error) {
-      showAlert({
-        title: "Error al cargar nuevo movimiento",
-        description: "Por favor revisar los datos cargado",
-        type: "error",
-      });
-      console.log("Error creating rama", error);
-    } finally {
-      setLoading(false);
-    }
+      },
+      {
+        onSuccess: () => {
+          showAlert({
+            title: "Movimiento cargado",
+            description: "",
+            type: "success",
+          });
+          form.reset(); // limpiar form después de crear
+        },
+        onError: () => {
+          showAlert({
+            title: "Error al cargar nuevo movimiento",
+            description: "Por favor revisar los datos cargados",
+            type: "error",
+          });
+        },
+      }
+    );
   }
 
   const handleInputChange = (name: keyof TCreateTransaction, value: string) => {
     if (isNaN(Number(value))) return;
     form.setValue(name, Number(value));
   };
+
   return (
     <Form {...form}>
       <form
@@ -155,7 +158,9 @@ export function CreateTransactionForm() {
                       </SelectTrigger>
                       <SelectContent>
                         {PAYMENT_METHODS_OPTIONS.map((role) => (
-                          <SelectItem value={role}>{role}</SelectItem>
+                          <SelectItem key={role} value={role}>
+                            {role}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -189,7 +194,7 @@ export function CreateTransactionForm() {
                       </SelectTrigger>
                       <SelectContent>
                         {DIRECTIONS_OPTIONS.map((d) => (
-                          <SelectItem value={d}>
+                          <SelectItem key={d} value={d}>
                             {d === "EXPENSE" ? "Gasto" : "Ingreso"}
                           </SelectItem>
                         ))}
@@ -220,8 +225,8 @@ export function CreateTransactionForm() {
                         <SelectValue placeholder="Familia " />
                       </SelectTrigger>
                       <SelectContent>
-                        {families.map((family) => (
-                          <SelectItem value={family.id}>
+                        {families?.map((family) => (
+                          <SelectItem key={family.id} value={family.id}>
                             {family.name}
                           </SelectItem>
                         ))}
@@ -252,7 +257,7 @@ export function CreateTransactionForm() {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Descripción</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Descripción de este movimiento"
@@ -264,7 +269,7 @@ export function CreateTransactionForm() {
             )}
           />
         </section>
-        <Button type="submit" isLoading={loading}>
+        <Button type="submit" isLoading={createTransactionMutation.isPending}>
           Crear
         </Button>
       </form>

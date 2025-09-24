@@ -1,5 +1,4 @@
 import type { TRama } from "@/models";
-import { useAppSelector } from "@/store/hooks";
 import {
   Dialog,
   DialogContent,
@@ -15,26 +14,26 @@ import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/utils";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
+import { useFamiliesQuery } from "@/queries/family.queries";
+import { useCPHQuery } from "@/queries/cuotaPorHermano.queries";
 
 export function CobrabilidadCell({ rama }: { rama: TRama }) {
   const ramaId = rama.id;
-  const { inmutableFamilies } = useAppSelector((s) => s.family);
-  const { cuotasPorHemano } = useAppSelector((s) => s.cuotaPorHerman);
-  const familiesFromRama = inmutableFamilies.filter(
-    (f) => f.manage_by === ramaId
-  );
+  const { data: families } = useFamiliesQuery();
+  const { data: cuotasPorHemano } = useCPHQuery();
+  const familiesFromRama = families?.filter((f) => f.manage_by === ramaId);
 
-  const activeFamilies = familiesFromRama.filter(
+  const activeFamilies = familiesFromRama?.filter(
     (f) => f.users.filter((u) => u.is_active && !u.is_granted).length > 0
   );
   let suma = 0;
   let transactionsSuma = 0;
   const currentMotnh = new Date().getMonth();
-  activeFamilies.forEach((family) => {
+  activeFamilies?.forEach((family) => {
     const usersCount = family.users.length;
     const transactions = family.transactions;
     const cuotaValue =
-      cuotasPorHemano.find((cuota) => cuota.cantidad === usersCount)?.valor ||
+      cuotasPorHemano?.find((cuota) => cuota.cantidad === usersCount)?.valor ||
       0;
 
     const monthTransactions = transactions.filter(

@@ -14,7 +14,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useAppSelector } from "@/store/hooks";
+import { useRamasQuery } from "@/queries/ramas.queries";
 
 const chartConfig = {
   altas: {
@@ -32,8 +32,10 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function RamasGraphs() {
-  const { inmutableRamas } = useAppSelector((state) => state.ramas);
-  const data = inmutableRamas.map((rama) => ({
+  const { data: ramas } = useRamasQuery();
+
+  if (!ramas) return null;
+  const data = ramas.map((rama) => ({
     name: rama.name,
     altas: rama.users.filter((user) => user.is_active).length,
     becas: rama.users.filter((user) => user.is_granted).length,

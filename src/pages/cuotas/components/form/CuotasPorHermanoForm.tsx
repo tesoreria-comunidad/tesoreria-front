@@ -15,12 +15,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useCuotaPorHermanosQueries } from "@/queries/cuotaPorHermano.queries";
+import { useCreateCPHMutation } from "@/queries/cuotaPorHermano.queries";
 import { useAlert } from "@/context/AlertContext";
-import { useState } from "react";
 
 export function CuotasPorHermanoForm() {
-  const [loading, setLoading] = useState(false);
   // Ajuste los valores predeterminados según el schema
   const form = useForm<TCreateCuotaPorHermano>({
     resolver: zodResolver(CreateCuotaPorHermanoSchema),
@@ -31,24 +29,22 @@ export function CuotasPorHermanoForm() {
     },
   });
 
-  const { createCPH } = useCuotaPorHermanosQueries();
-
+  const { mutate: createCPH, isPending: loading } = useCreateCPHMutation();
   const { showAlert } = useAlert();
   const onSubmit = async (data: TCreateCuotaPorHermano) => {
-    try {
-      setLoading(true);
-      await createCPH(data);
-      showAlert({
-        title: "Nueva cuota por hermano creada",
-        description: "",
-        type: "success",
-      });
-      form.reset();
-    } catch (error) {
-      console.log("error creating  CPH", error);
-    } finally {
-      setLoading(false);
-    }
+    createCPH(data, {
+      onSuccess: () => {
+        showAlert({
+          title: "Nueva cuota por hermano creada",
+          description: "",
+          type: "success",
+        });
+        form.reset();
+      },
+      onError(error) {
+        console.log("error creating  CPH", error);
+      },
+    });
   };
   return (
     <Form {...form}>

@@ -1,5 +1,4 @@
 import { Label } from "@/components/ui/label";
-import { useAppSelector } from "@/store/hooks";
 import { CreateRamaAside } from "./components/CreateRamaAside";
 import { formatCurrency } from "@/utils";
 import CuotasTable from "./components/table/CuotasTable";
@@ -13,11 +12,11 @@ import {
 import { FormatedDate } from "@/components/common/FormatedDate";
 import { UpdateBalanceButton } from "./components/UpdateBalanceButton";
 import { CuotasPorHermanoAside } from "./components/CuotasPorHermanoAside";
+import { useCuotasQuery } from "@/queries/cuota.queries";
 
 export function CuotasPage() {
-  const { currentCuota } = useAppSelector((s) => s.cuota);
-  const { cuotasPorHemano } = useAppSelector((s) => s.cuotaPorHerman);
-  console.log("cuotasPorHemano", cuotasPorHemano);
+  const { data: cuotas } = useCuotasQuery();
+  const currentCuota = cuotas?.find((c) => c.is_active);
   return (
     <div className="size-full   overflow-y-auto   ">
       <section className="flex items-center justify-between  h-[5%]">

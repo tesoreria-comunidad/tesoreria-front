@@ -7,7 +7,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useAppSelector } from "@/store/hooks";
+import { useUsersQuery } from "@/queries/user.queries";
 
 const chartConfig = {
   visitors: {
@@ -28,10 +28,10 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function UsersGraphs() {
-  const { inmutableUsers } = useAppSelector((state) => state.users);
-  const beneficiarios = inmutableUsers.filter(
-    (user) => user.role === "BENEFICIARIO"
-  );
+  const { data: users } = useUsersQuery();
+
+  if (!users) return null;
+  const beneficiarios = users.filter((user) => user.role === "BENEFICIARIO");
   const inactiveUsers = beneficiarios.filter((user) => !user.is_active);
   const activeUsers = beneficiarios.filter((user) => user.is_active);
   const grantedUsers = beneficiarios.filter((user) => user.is_granted);

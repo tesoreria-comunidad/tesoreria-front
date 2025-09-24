@@ -20,7 +20,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useAppSelector } from "@/store/hooks";
+import { useTransactionsQuery } from "@/queries/transactions.queries";
 
 const chartConfig = {
   value: {
@@ -37,17 +37,17 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ExpensesByCategory() {
-  const { inmutableTransactions } = useAppSelector((s) => s.transactions);
-
-  const categories = inmutableTransactions
-    .filter((t) => t.direction === "EXPENSE")
+  const { data: transactions } = useTransactionsQuery();
+  if (!transactions) return;
+  const categories = transactions
+    ?.filter((t) => t.direction === "EXPENSE")
     .map((t) => t.category);
 
   const list: Record<string, number> = {};
 
-  categories.forEach((category) => {
-    list[category] = inmutableTransactions
-      .filter((t) => t.category === category && t.direction === "EXPENSE")
+  categories?.forEach((category) => {
+    list[category] = transactions
+      ?.filter((t) => t.category === category && t.direction === "EXPENSE")
       .reduce((a, b) => a + b.amount, 0);
   });
 

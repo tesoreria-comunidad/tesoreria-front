@@ -1,4 +1,4 @@
-import { Repeat2, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import {
@@ -15,13 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useAppSelector } from "@/store/hooks";
-import { useTransactionsQueries } from "@/queries/transactions.queries";
-import { Button } from "@/components/ui/button";
-import { TooltipComponent } from "@/components/common/TooltipComponent";
-import { useState } from "react";
-import { useAlert } from "@/context/AlertContext";
-
+import { useTransactionsStatsQuery } from "@/queries/transactions.queries";
 export const description = "A multiple bar chart";
 
 const chartConfig = {
@@ -36,46 +30,39 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function TransactionGraph() {
-  const { transactionsStats } = useAppSelector((s) => s.transactions);
-  const { fetchTransactionsStats } = useTransactionsQueries();
-  const [loading, setLoading] = useState(false);
-  const { showAlert } = useAlert();
-  const handleReloadStats = async () => {
-    setLoading(true);
-    await fetchTransactionsStats();
-    showAlert({
-      title: "Estadisticas  actualizadas",
-      type: "info",
-    });
-    setLoading(false);
-  };
+  const transaccitionsStatsQuery = useTransactionsStatsQuery();
+
+  if (transaccitionsStatsQuery.isLoading) {
+    return (
+      <Card className="size-full relative p-4">
+        <div className="animate-pulse space-y-4  h-full flex flex-col">
+          <div className="h-6 bg-gray-300 rounded w-1/3"></div>
+          <div className="h-4 bg-gray-300 rounded w-1/4"></div>
+          <div className="flex-1 bg-gray-300 rounded"></div>
+        </div>
+      </Card>
+    );
+  }
+  if (!transaccitionsStatsQuery.data) return;
   return (
     <Card className="size-full relative">
       <CardHeader>
         <CardTitle className="flex justify-between">
           <span>Ingresos - Egresos</span>
-          <TooltipComponent text="Refrescar">
-            <Button
-              size={"icon"}
-              variant={"secondary"}
-              onClick={handleReloadStats}
-              isLoading={loading}
-            >
-              <Repeat2 />
-            </Button>
-          </TooltipComponent>
         </CardTitle>
         <CardDescription>
-          {transactionsStats[0]?.month} -{" "}
-          {transactionsStats.length > 1
-            ? transactionsStats[transactionsStats.length - 1].month
+          {transaccitionsStatsQuery.data[0]?.month} -{" "}
+          {transaccitionsStatsQuery.data.length > 1
+            ? transaccitionsStatsQuery.data[
+                transaccitionsStatsQuery.data.length - 1
+              ].month
             : ""}{" "}
           2025
         </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={transactionsStats}>
+          <BarChart accessibilityLayer data={transaccitionsStatsQuery.data}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"

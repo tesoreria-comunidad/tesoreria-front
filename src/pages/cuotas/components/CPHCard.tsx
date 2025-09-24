@@ -13,39 +13,43 @@ import {
 } from "@/components/ui/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useState } from "react";
-import { useCuotaPorHermanosQueries } from "@/queries/cuotaPorHermano.queries";
+import { useEditCPHMutation } from "@/queries/cuotaPorHermano.queries";
 import { useAlert } from "@/context/AlertContext";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 export default function CPHCard({ cph }: { cph: TCuotaPorHemanos }) {
-  const [loading, setLoading] = useState(false);
   const [newValue, setNewValue] = useState(cph.valor);
-  const { editCPH } = useCuotaPorHermanosQueries();
 
+  const { mutate: editCPH, isPending: loading } = useEditCPHMutation();
   const { showAlert } = useAlert();
-  const submitChanges = async () => {
-    try {
-      setLoading(true);
-      await editCPH(cph.id, {
-        valor: newValue,
-      });
-      showAlert({
-        title: "Cuota Por Hermano actualizada",
-        description: "",
-        type: "success",
-      });
-    } catch (error) {
-      showAlert({
-        title: "Hubo un error",
-        description:
-          "Error al intentar actualizar cuota por hermano, intentar mas tarde.",
-        type: "error",
-      });
-      console.log("Error Updating CPH:", error);
-    } finally {
-      setLoading(false);
-    }
+  const submitChanges = () => {
+    editCPH(
+      {
+        body: {
+          valor: newValue,
+        },
+        id: cph.id,
+      },
+      {
+        onSuccess() {
+          showAlert({
+            title: "Cuota Por Hermano actualizada",
+            description: "",
+            type: "success",
+          });
+        },
+        onError(error) {
+          console.log("Error Updating CPH:", error);
+          showAlert({
+            title: "Hubo un error",
+            description:
+              "Error al intentar actualizar cuota por hermano, intentar mas tarde.",
+            type: "error",
+          });
+        },
+      }
+    );
   };
   return (
     <>

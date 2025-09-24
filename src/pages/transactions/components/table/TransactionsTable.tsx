@@ -1,4 +1,3 @@
-import { FormatedDate } from "@/components/common/FormatedDate";
 import { PaymentMethodBadge } from "@/components/common/PaymentMethodBadge";
 import { RootTable, type TColumnDef } from "@/components/common/table";
 import {
@@ -7,12 +6,14 @@ import {
 } from "@/constants/transactions.constatns";
 import type { TTransaction } from "@/models/transaction.schema";
 import { FamilyCell } from "@/pages/users/components/table/FamilyCell";
-import { useAppSelector } from "@/store/hooks";
 import { formatCurrency } from "@/utils";
 import { BanknoteArrowDown, BanknoteArrowUp } from "lucide-react";
 
-export function TransactionsTable() {
-  const { transactions } = useAppSelector((s) => s.transactions);
+export function TransactionsTable({
+  transactions,
+}: {
+  transactions: TTransaction[];
+}) {
   const columns: TColumnDef<TTransaction>[] = [
     {
       accessorKey: "amount",
@@ -61,27 +62,38 @@ export function TransactionsTable() {
         <PaymentMethodBadge method={getValue<TPaymentMethod>()} />
       ),
     },
+
     {
-      accessorKey: "description",
-      header: "Descripción",
-      hidden: true,
+      accessorKey: "payment_date",
+      header: "Fecha de Pago",
+      size: 250,
+      enableSorting: true,
+      cell: ({ getValue }) => (
+        <p className="text-center">
+          {new Date(getValue<string>()).toLocaleDateString()}
+        </p>
+      ),
     },
     {
       accessorKey: "createdAt",
       header: "Fecha de carga",
       size: 250,
-      cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
-      hidden: true,
-    },
-    {
-      accessorKey: "payment_date",
-      header: "Fecha de Pago",
-      size: 250,
-      cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
+      cell: ({ getValue }) => (
+        <p className="text-center">
+          {new Date(getValue<string>()).toLocaleDateString()}
+        </p>
+      ),
     },
     {
       accessorKey: "updatedAt",
       hidden: true,
+    },
+    {
+      accessorKey: "description",
+      header: "Descripción",
+      size: 500,
+      hidden: true,
+      cell: ({ getValue }) => <p className=" truncate">{getValue<string>()}</p>,
     },
   ];
   return <RootTable columns={columns} data={transactions} tableHeader />;

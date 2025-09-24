@@ -21,34 +21,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAppSelector } from "@/store/hooks";
-import { useUserQueries } from "@/queries/user.queries";
+import { useBulkEditUserMutation } from "@/queries/user.queries";
 import { useAlert } from "@/context/AlertContext";
+import { useRamasQuery } from "@/queries/ramas.queries";
 
 type UserAction = "dar_baja" | "becar" | "modificar_rama";
 
 export function SelectUsersAction({ users }: { users: TUser[] }) {
   const [selectedAction, setSelectedAction] = useState<UserAction | null>(null);
   const [rama, setRama] = useState<string | null>(null);
-  const { inmutableRamas } = useAppSelector((s) => s.ramas);
-  const [loading, setLoading] = useState(false);
-
-  const { editUser } = useUserQueries();
+  const { data: ramas } = useRamasQuery();
   const { showAlert } = useAlert();
+  const { mutateAsync: bulkEdit, isPending } = useBulkEditUserMutation();
   const submitAction = async () => {
     try {
-      setLoading(true);
       if (selectedAction === "dar_baja") {
-        const promises = users.map((u) => editUser({ is_active: false }, u.id));
-        await Promise.all(promises);
+        await bulkEdit(
+          users.map((u) => ({ id: u.id, data: { is_active: false } }))
+        );
       }
       if (selectedAction === "becar") {
-        const promises = users.map((u) => editUser({ is_granted: true }, u.id));
-        await Promise.all(promises);
+        await bulkEdit(
+          users.map((u) => ({ id: u.id, data: { is_granted: true } }))
+        );
       }
       if (selectedAction === "modificar_rama") {
-        const promises = users.map((u) => editUser({ id_rama: rama }, u.id));
-        await Promise.all(promises);
+        await bulkEdit(
+          users.map((u) => ({ id: u.id, data: { id_rama: rama } }))
+        );
       }
 
       showAlert({
@@ -64,8 +64,6 @@ export function SelectUsersAction({ users }: { users: TUser[] }) {
           "Ocurrió un error al realizar la acción. Inténtalo de nuevo.",
         type: "error",
       });
-    } finally {
-      setLoading(false);
     }
   };
   return (
@@ -150,7 +148,7 @@ export function SelectUsersAction({ users }: { users: TUser[] }) {
                     <SelectValue placeholder="Selecciona una rama" />
                   </SelectTrigger>
                   <SelectContent>
-                    {inmutableRamas.map((rama) => (
+                    {ramas?.map((rama) => (
                       <SelectItem key={rama.id} value={rama.id.toString()}>
                         {rama.name}
                       </SelectItem>
@@ -172,7 +170,7 @@ export function SelectUsersAction({ users }: { users: TUser[] }) {
                 (selectedAction === "modificar_rama" && !rama)
               }
               onClick={submitAction}
-              isLoading={loading}
+              isLoading={isPending}
             >
               Confirmar
             </Button>

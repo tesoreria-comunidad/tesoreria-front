@@ -7,7 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAppSelector } from "@/store/hooks";
+import { useCuotasQuery } from "@/queries/cuota.queries";
+import { useFamiliesQuery } from "@/queries/family.queries";
+import { useUsersQuery } from "@/queries/user.queries";
 import { formatCurrency } from "@/utils";
 import { formatDate } from "@/utils/format-date";
 import { Navigation } from "lucide-react";
@@ -24,10 +26,12 @@ interface DashboardCardProps {
   type: TDashboardCard;
 }
 export function DashboardCard({ type }: DashboardCardProps) {
-  const { users } = useAppSelector((s) => s.users);
-  const { families } = useAppSelector((s) => s.family);
-  const { currentCuota } = useAppSelector((s) => s.cuota);
+  const { data: families } = useFamiliesQuery();
+  const { data: cuotas } = useCuotasQuery();
+  const currentCuota = cuotas?.find((c) => c.is_active);
 
+  const { data: users } = useUsersQuery();
+  if (!users) return null;
   const Config: Record<TDashboardCard, TDashboardCardData> = {
     cuota: {
       amount: currentCuota?.value ? formatCurrency(currentCuota?.value) : "-",
@@ -38,7 +42,7 @@ export function DashboardCard({ type }: DashboardCardProps) {
       path: "/cuotas",
     },
     family: {
-      amount: `${families.length}`,
+      amount: `${families?.length}`,
       title: "Familias",
       descriptcion: `Número total de familias.`,
       path: "/family",

@@ -7,13 +7,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useUserQueries } from "@/queries/user.queries";
+import { useEditUserMutation } from "@/queries/user.queries";
 import { useState } from "react";
 import { useAlert } from "@/context/AlertContext";
 import { UserCircle, UserPlus } from "lucide-react";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { useAppSelector } from "@/store/hooks";
-import { useFamilyQueries } from "@/queries/family.queries";
+import {
+  useCreateFamilyMutation,
+  useFamiliesQuery,
+} from "@/queries/family.queries";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
@@ -26,47 +28,60 @@ import {
 } from "@/components/ui/select";
 
 export function UserEditFamilyDialog({ user }: { user: TUser }) {
-  const [loading, setLoading] = useState(false);
-  const { editUser } = useUserQueries();
+  const { mutate, isPending } = useEditUserMutation();
   const { showAlert } = useAlert();
   const [createNewFamily, setCreateNewFamily] = useState(false);
   const [newFamilyName, setNewFamilyName] = useState("");
   const [selectedFamilyId, setSelectedFamilyId] = useState("");
-
-  const { inmutableFamilies } = useAppSelector((s) => s.family);
-  const { createFamily } = useFamilyQueries();
-  const prevFamily = inmutableFamilies.find((f) => f.id === user.id_family);
+  const { data: families } = useFamiliesQuery();
+  const { mutateAsync: createFamily } = useCreateFamilyMutation();
+  const prevFamily = families?.find((f) => f.id === user.id_family);
   const submitChanges = async () => {
     if (!prevFamily) return;
-    try {
-      setLoading(true);
-      let familyId = selectedFamilyId;
 
-      if (createNewFamily) {
-        const newFamilyResponse = await createFamily({
+    let familyId = selectedFamilyId;
+
+    if (createNewFamily) {
+      const newFamilyResponse = await createFamily(
+        {
           name: newFamilyName,
           phone: "",
           manage_by: prevFamily.manage_by,
-        });
-        familyId = newFamilyResponse.id;
-      }
-      await editUser({ id_family: familyId }, user.id);
-      showAlert({
-        title: `Usuario dado de ${
-          user.is_active ? "baja" : "alta"
-        } exitosamente`,
-        description: "POR FAVOR ACTUALICE LA PAGINA",
-        type: "success",
-      });
-    } catch (error) {
-      showAlert({
-        title: "Hubo un error al dar de baja el usuario",
-        description: "Vuelva a intentarlo mas tarde",
-        type: "error",
-      });
-    } finally {
-      setLoading(false);
+        },
+        {
+          onError(error) {
+            console.log("Error creating family", error);
+          },
+        }
+      );
+      familyId = newFamilyResponse.id;
     }
+
+    mutate(
+      {
+        body: { id_family: familyId },
+        userId: user.id,
+      },
+      {
+        onSuccess: () => {
+          showAlert({
+            title: `Usuario dado de ${
+              user.is_active ? "baja" : "alta"
+            } exitosamente`,
+            description: "POR FAVOR ACTUALICE LA PAGINA",
+            type: "success",
+          });
+        },
+        onError: (error) => {
+          console.log("Error editing family", error);
+          showAlert({
+            title: "Hubo un error al dar de baja el usuario",
+            description: "Vuelva a intentarlo mas tarde",
+            type: "error",
+          });
+        },
+      }
+    );
   };
 
   const user_fullName = `${user.name} ${user.last_name}`;
@@ -87,7 +102,7 @@ export function UserEditFamilyDialog({ user }: { user: TUser }) {
           <SelectValue placeholder="Seleccionar una familia" />
         </SelectTrigger>
         <SelectContent>
-          {inmutableFamilies.map((family) => (
+          {families?.map((family) => (
             <SelectItem key={family.id} value={family.id.toString()}>
               {family.name}
             </SelectItem>
@@ -142,11 +157,11 @@ export function UserEditFamilyDialog({ user }: { user: TUser }) {
 
       <DialogFooter>
         <DialogClose>
-          <Button isLoading={loading} variant={"secondary"}>
+          <Button disabled={isPending} variant={"secondary"}>
             cancelar
           </Button>
         </DialogClose>
-        <Button onClick={submitChanges} isLoading={loading}>
+        <Button onClick={submitChanges} isLoading={isPending}>
           Confirmar
         </Button>
       </DialogFooter>
