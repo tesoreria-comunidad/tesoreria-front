@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useFamilyQueries } from "@/queries/family.queries";
+import { useCreateFamilyMutation } from "@/queries/family.queries";
 import {
   Select,
   SelectContent,
@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/select";
 import { useRamasQuery } from "@/queries/ramas.queries";
 export function CreateFamilyForm() {
-  const [loading, setLoading] = useState(false);
   const { data: ramas } = useRamasQuery();
   const [ramaId, setRamaId] = useState<string>("");
   const form = useForm<TCreateFamily>({
@@ -34,23 +33,22 @@ export function CreateFamilyForm() {
     },
   });
 
-  const { createFamily } = useFamilyQueries();
+  const { mutate: createFamily, isPending: loading } =
+    useCreateFamilyMutation();
   const onSubmit = async (values: TCreateFamily) => {
-    try {
-      setLoading(true);
-
-      const body = {
-        name: values.name,
-        phone: values.phone,
-        manage_by: values.manage_by,
-      };
-      await createFamily(body);
-      form.reset();
-    } catch (error) {
-      console.log("Error creating user", error);
-    } finally {
-      setLoading(false);
-    }
+    const body = {
+      name: values.name,
+      phone: values.phone,
+      manage_by: values.manage_by,
+    };
+    createFamily(body, {
+      onSuccess() {
+        form.reset();
+      },
+      onError(error) {
+        console.log("Error creating user", error);
+      },
+    });
   };
 
   const handleRamaChange = (value: string) => {

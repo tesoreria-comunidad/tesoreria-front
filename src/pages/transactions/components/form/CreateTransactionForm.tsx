@@ -31,14 +31,14 @@ import {
   DIRECTIONS_OPTIONS,
   type TDirectionOfTransaction,
 } from "@/constants/transactions.constatns";
-import { useAppSelector } from "@/store/hooks";
 import { CategoryField } from "./compoents/CategoryField";
 import { useAlert } from "@/context/AlertContext";
 import { DatePickerField } from "@/components/common/DatePickerField";
 import { useCreateTransactionMutation } from "@/queries/transactions.queries";
+import { useFamiliesQuery } from "@/queries/family.queries";
 
 export function CreateTransactionForm() {
-  const { families } = useAppSelector((s) => s.family);
+  const { data: families } = useFamiliesQuery();
   const form = useForm<TCreateTransaction>({
     resolver: zodResolver(CreateTransactionSchema),
     defaultValues: {
@@ -225,7 +225,7 @@ export function CreateTransactionForm() {
                         <SelectValue placeholder="Familia " />
                       </SelectTrigger>
                       <SelectContent>
-                        {families.map((family) => (
+                        {families?.map((family) => (
                           <SelectItem key={family.id} value={family.id}>
                             {family.name}
                           </SelectItem>

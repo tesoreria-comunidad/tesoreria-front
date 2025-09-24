@@ -90,7 +90,6 @@ export function useCreateTransactionCuotaFamilyMutation() {
   return useMutation({
     mutationFn: createTransactionCuotaFamily,
     onSuccess: (_, variables) => {
-      // variables.familyId podría venir en el body si lo incluiste
       if ((variables as any).familyId) {
         queryClient.invalidateQueries({
           queryKey: ["transactions", (variables as any).familyId],

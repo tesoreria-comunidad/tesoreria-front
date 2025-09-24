@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useFamiliesQuery } from "@/queries/family.queries";
 import { useUsersQuery } from "@/queries/user.queries";
 import { useAppSelector } from "@/store/hooks";
 import { formatCurrency } from "@/utils";
@@ -25,7 +26,7 @@ interface DashboardCardProps {
   type: TDashboardCard;
 }
 export function DashboardCard({ type }: DashboardCardProps) {
-  const { families } = useAppSelector((s) => s.family);
+  const { data: families } = useFamiliesQuery();
   const { currentCuota } = useAppSelector((s) => s.cuota);
 
   const { data: users } = useUsersQuery();
@@ -40,7 +41,7 @@ export function DashboardCard({ type }: DashboardCardProps) {
       path: "/cuotas",
     },
     family: {
-      amount: `${families.length}`,
+      amount: `${families?.length}`,
       title: "Familias",
       descriptcion: `Número total de familias.`,
       path: "/family",

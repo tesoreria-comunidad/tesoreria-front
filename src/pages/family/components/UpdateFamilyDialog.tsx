@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useFamilyQueries } from "@/queries/family.queries";
+import { useEditFamilyMutation } from "@/queries/family.queries";
 import {
   useBalanceByIdQuery,
   useUpdateBalanceMutation,
@@ -54,49 +54,49 @@ export function UpdateFamilyDialog({
   const [customCuotaValue, setCustomCuotaValue] = useState(
     balance?.custom_cuota ? balance.custom_cuota : 0
   );
-  const [loading, setLoading] = useState(false);
   const { showAlert } = useAlert();
-  const { editFamily } = useFamilyQueries();
-
+  const { mutate: editFamily, isPending: loading } = useEditFamilyMutation();
   const balanceMutationQuery = useUpdateBalanceMutation();
   const handleSubmit = async () => {
-    try {
-      setLoading(true);
-
-      if (
-        balance.is_custom_cuota !== isCustomCuota ||
-        balance.custom_cuota !== customCuotaValue
-      ) {
-        await balanceMutationQuery.mutateAsync({
-          body: {
-            is_custom_cuota: isCustomCuota,
-            custom_cuota: customCuotaValue,
-          },
-          id: family.id_balance!,
-        });
-      }
-
-      await editFamily(family.id, {
-        name: familyName,
-        manage_by: selectedRamaId,
-        phone: "+54",
+    if (
+      balance.is_custom_cuota !== isCustomCuota ||
+      balance.custom_cuota !== customCuotaValue
+    ) {
+      await balanceMutationQuery.mutateAsync({
+        body: {
+          is_custom_cuota: isCustomCuota,
+          custom_cuota: customCuotaValue,
+        },
+        id: family.id_balance!,
       });
-
-      showAlert({
-        type: "success",
-        title: "Familia actualizada",
-        description: " La familia ha sido actualizada exitosamente.",
-      });
-    } catch (error) {
-      console.error("Error updating family:", error);
-      showAlert({
-        type: "error",
-        title: "Error actualizando la familia",
-        description: " Por favor intenta de nuevo.",
-      });
-    } finally {
-      setLoading(false);
     }
+    editFamily(
+      {
+        body: {
+          name: familyName,
+          manage_by: selectedRamaId,
+          phone: "+54",
+        },
+        familyId: family.id,
+      },
+      {
+        onSuccess() {
+          showAlert({
+            type: "success",
+            title: "Familia actualizada",
+            description: " La familia ha sido actualizada exitosamente.",
+          });
+        },
+        onError(error) {
+          console.error("Error updating family:", error);
+          showAlert({
+            type: "error",
+            title: "Error actualizando la familia",
+            description: " Por favor intenta de nuevo.",
+          });
+        },
+      }
+    );
   };
 
   const areChanges =

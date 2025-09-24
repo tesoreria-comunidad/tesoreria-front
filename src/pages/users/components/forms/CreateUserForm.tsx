@@ -30,10 +30,11 @@ import { useCreateUserMutation } from "@/queries/user.queries";
 import { DatePickerField } from "@/components/common/DatePickerField";
 import { useAppSelector } from "@/store/hooks";
 import { useRamasQuery } from "@/queries/ramas.queries";
+import { useFamiliesQuery } from "@/queries/family.queries";
 
 export function CreateUserForm({ idRama }: { idRama?: string }) {
   const { user } = useAppSelector((s) => s.session);
-  const { families } = useAppSelector((s) => s.family);
+  const { data: families } = useFamiliesQuery();
   const { data: ramas } = useRamasQuery();
   const createUserMutation = useCreateUserMutation();
   const form = useForm<TCreateUser>({
@@ -450,7 +451,7 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
                         <SelectValue placeholder="Seleccionar familia" />
                       </SelectTrigger>
                       <SelectContent>
-                        {families.map((family) => (
+                        {families?.map((family) => (
                           <SelectItem key={family.id} value={family.id}>
                             {family.name}
                           </SelectItem>

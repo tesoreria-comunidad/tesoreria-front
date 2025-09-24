@@ -1,5 +1,4 @@
 import { useTransactionsByFamilyIdQuery } from "@/queries/transactions.queries";
-import { useAppSelector } from "@/store/hooks";
 
 import { useParams } from "react-router";
 import FamilyTransactionsTable from "./components/table/FamilyTransactionsTable";
@@ -19,6 +18,7 @@ import { AddMemberAside } from "./components/aside/AddMemberAside";
 import { UpdateFamilyDialog } from "./components/UpdateFamilyDialog";
 import { UploadTransactionAside } from "./components/UploadTransactionAside";
 import { useRamasQuery } from "@/queries/ramas.queries";
+import { useFamiliesQuery } from "@/queries/family.queries";
 
 interface BalanceCardProps {
   balanceValue: number;
@@ -39,11 +39,11 @@ function BalanceCard({ balanceValue }: BalanceCardProps) {
 }
 export default function FamilyByIdPage() {
   const { familyId } = useParams();
-  const { families } = useAppSelector((state) => state.family);
+  const { data: families } = useFamiliesQuery();
 
   const { data: ramas } = useRamasQuery();
   const familyTransactionsQuery = useTransactionsByFamilyIdQuery(familyId!);
-  const family = families.find((f) => f.id === familyId);
+  const family = families?.find((f) => f.id === familyId);
 
   if (familyTransactionsQuery.isLoading) {
     return <PageLoader />;
