@@ -1,33 +1,44 @@
 import { cuotaAdapter } from "@/adapters";
+import { setAuthInterceptor } from "@/config/axios.config";
 import type { TCreateCuota } from "@/models";
 import { CuotaServices } from "@/services/cuota.service";
-import { addCuota, setCuotas } from "@/store/features/cuota/cuotaSlice";
-import { useAppDispatch } from "@/store/hooks";
-export function useCuotaQueries() {
-  const dispatch = useAppDispatch();
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-  const fetchCuotas = async () => {
-    try {
-      const apiCuotasResponse = await CuotaServices.getAll();
-      const adaptedCuotas = apiCuotasResponse.map((apiCuota) =>
-        cuotaAdapter(apiCuota)
-      );
-      dispatch(setCuotas(adaptedCuotas));
-    } catch (error) {
-      console.log("error fetchin families", error);
-      throw error;
-    }
-  };
-  const createCuota = async (body: TCreateCuota) => {
-    try {
-      const apiCuotaRes = await CuotaServices.create(body);
+/* ============================
+ * Fetchers
+ * ============================ */
 
-      dispatch(addCuota(apiCuotaRes));
-    } catch (error) {
-      console.log("error fetchin families", error);
-      throw error;
-    }
-  };
+export const fetchCuotas = async () => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  const apiCuotasResponse = await CuotaServices.getAll();
+  return apiCuotasResponse.map((apiCuota) => cuotaAdapter(apiCuota));
+};
+export const createCuota = async (body: TCreateCuota) => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  return await CuotaServices.create(body);
+};
 
-  return { fetchCuotas, createCuota };
+/* ============================
+ * Queries
+ * ============================ */
+export function useCuotasQuery() {
+  return useQuery({
+    queryKey: ["cuotoas"],
+    queryFn: fetchCuotas,
+  });
+}
+
+/* ============================
+ * Mutations
+ * ============================ */
+export function useCreateCuotaMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createCuota,
+    onSuccess: () => {
+      // Refresca lista de usuarios al crear uno nuevo
+      queryClient.invalidateQueries({ queryKey: ["cuotoas"] });
+    },
+  });
 }

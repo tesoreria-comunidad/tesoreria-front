@@ -1,7 +1,6 @@
 import { CreateCuotaSchema, type TCreateCuota } from "@/models";
-import { useCuotaQueries } from "@/queries/cuota.queries";
+import { useCreateCuotaMutation } from "@/queries/cuota.queries";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import { formatCurrency } from "@/utils";
 import { useAlert } from "@/context/AlertContext";
 export function CreateCuotaForm() {
-  const [loading, setLoading] = useState(false);
   const form = useForm<TCreateCuota>({
     resolver: zodResolver(CreateCuotaSchema),
     defaultValues: {
@@ -26,26 +24,25 @@ export function CreateCuotaForm() {
   });
 
   const { showAlert } = useAlert();
-  const { createCuota } = useCuotaQueries();
-  async function onSubmit(values: TCreateCuota) {
-    try {
-      setLoading(true);
-      await createCuota(values);
-      showAlert({
-        title: "Nueva cuota creada",
-        description: "El valor de la cuota se actualizó",
-        type: "success",
-      });
-    } catch (error) {
-      showAlert({
-        title: "Error al crear cuota",
-        description: "",
-        type: "error",
-      });
-      console.log("Error creating rama", error);
-    } finally {
-      setLoading(false);
-    }
+  const { mutate: createCuota, isPending: loading } = useCreateCuotaMutation();
+  function onSubmit(values: TCreateCuota) {
+    createCuota(values, {
+      onSuccess() {
+        showAlert({
+          title: "Nueva cuota creada",
+          description: "El valor de la cuota se actualizó",
+          type: "success",
+        });
+      },
+      onError(error) {
+        console.log("Error creating rama", error);
+        showAlert({
+          title: "Error al crear cuota",
+          description: "",
+          type: "error",
+        });
+      },
+    });
   }
 
   const handleInputChange = (name: keyof TCreateCuota, value: string) => {

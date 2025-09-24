@@ -1,5 +1,6 @@
 import type { TMonthlyStat } from "@/adapters/api_models/transaction.schema";
 import { transactionAdapter } from "@/adapters/transaction.adapter";
+import { setAuthInterceptor } from "@/config/axios.config";
 import type {
   TCreateTransaction,
   TTransaction,
@@ -12,11 +13,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
  * ============================ */
 
 export const fetchTransactions = async (): Promise<TTransaction[]> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
   const apiRes = await TransactionService.getAll();
   return apiRes.map((apiData) => transactionAdapter(apiData));
 };
 
 export const fetchTransactionsStats = async (): Promise<TMonthlyStat[]> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
   const apiRes = await TransactionService.getStatsMonthly();
   return apiRes;
 };
@@ -24,6 +27,7 @@ export const fetchTransactionsStats = async (): Promise<TMonthlyStat[]> => {
 export const fetchFamilyTransactions = async (
   familyId: string
 ): Promise<TTransaction[]> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
   const apiRes = await TransactionService.getFamilyTransactions(familyId);
   return apiRes.map((apiData) => transactionAdapter(apiData));
 };
@@ -31,6 +35,7 @@ export const fetchFamilyTransactions = async (
 export const createTransaction = async (
   body: TCreateTransaction
 ): Promise<TTransaction> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
   const newTransaction = await TransactionService.create(body);
   return transactionAdapter(newTransaction);
 };
@@ -38,6 +43,7 @@ export const createTransaction = async (
 export const createTransactionCuotaFamily = async (
   body: TCreateTransaction
 ): Promise<TTransaction> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
   const newTransaction = await TransactionService.familyCuota(body);
   return transactionAdapter(newTransaction);
 };

@@ -11,10 +11,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { useRamasQueries } from "@/queries/ramas.queries";
+import { useCreateRamaMutation } from "@/queries/ramas.queries";
 export function CreateRamaForm() {
-  const [loading, setLoading] = useState(false);
   const form = useForm<TCreateRama>({
     resolver: zodResolver(CreateRamaSchema),
     defaultValues: {
@@ -22,16 +20,16 @@ export function CreateRamaForm() {
     },
   });
 
-  const { createRama } = useRamasQueries();
-  async function onSubmit(values: TCreateRama) {
-    try {
-      setLoading(true);
-      await createRama(values);
-    } catch (error) {
-      console.log("Error creating rama", error);
-    } finally {
-      setLoading(false);
-    }
+  const { mutate: createRama, isPending: loading } = useCreateRamaMutation();
+  function onSubmit(values: TCreateRama) {
+    createRama(values, {
+      onSuccess() {
+        form.reset();
+      },
+      onError(error) {
+        console.log("Error creating rama", error);
+      },
+    });
   }
   return (
     <Form {...form}>

@@ -7,9 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useCuotasQuery } from "@/queries/cuota.queries";
 import { useFamiliesQuery } from "@/queries/family.queries";
 import { useUsersQuery } from "@/queries/user.queries";
-import { useAppSelector } from "@/store/hooks";
 import { formatCurrency } from "@/utils";
 import { formatDate } from "@/utils/format-date";
 import { Navigation } from "lucide-react";
@@ -27,7 +27,8 @@ interface DashboardCardProps {
 }
 export function DashboardCard({ type }: DashboardCardProps) {
   const { data: families } = useFamiliesQuery();
-  const { currentCuota } = useAppSelector((s) => s.cuota);
+  const { data: cuotas } = useCuotasQuery();
+  const currentCuota = cuotas?.find((c) => c.is_active);
 
   const { data: users } = useUsersQuery();
   if (!users) return null;

@@ -1,41 +1,25 @@
 import { balanceAdapter } from "@/adapters";
+import { setAuthInterceptor } from "@/config/axios.config";
 import type { TBalance } from "@/models";
 import { BalanceServices } from "@/services/balance.service";
-import { setBalances } from "@/store/features/balance/balanceSlice";
-import { useAppDispatch } from "@/store/hooks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-export function useBalanceQueries() {
-  const dispatch = useAppDispatch();
-
-  const fetchBalances = async () => {
-    try {
-      const apiBalancesResponse = await BalanceServices.getAll();
-      const adapatedBalances = apiBalancesResponse.map((apiBalance) =>
-        balanceAdapter(apiBalance)
-      );
-      dispatch(setBalances(adapatedBalances));
-    } catch (error) {
-      console.log("error fetchin balances", error);
-      throw error;
-    }
-  };
-
-  return { fetchBalances };
-}
 
 /* ============================
  * Fetchers
  * ============================ */
 
 export const fetchBalances = async () => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
   const apiBalancesResponse = await BalanceServices.getAll();
   return apiBalancesResponse.map((apiBalance) => balanceAdapter(apiBalance));
 };
 export const fetchBalanceById = async (id: string) => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
   const apiBalance = await BalanceServices.getById(id);
   return balanceAdapter(apiBalance);
 };
 export const updateBalance = async (id: string, body: Partial<TBalance>) => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
   const apiBalance = await BalanceServices.edit(id, body);
   return balanceAdapter(apiBalance);
 };

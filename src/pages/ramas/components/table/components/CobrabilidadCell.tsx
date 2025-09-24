@@ -1,5 +1,4 @@
 import type { TRama } from "@/models";
-import { useAppSelector } from "@/store/hooks";
 import {
   Dialog,
   DialogContent,
@@ -16,11 +15,12 @@ import { formatCurrency } from "@/utils";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
 import { useFamiliesQuery } from "@/queries/family.queries";
+import { useCPHQuery } from "@/queries/cuotaPorHermano.queries";
 
 export function CobrabilidadCell({ rama }: { rama: TRama }) {
   const ramaId = rama.id;
   const { data: families } = useFamiliesQuery();
-  const { cuotasPorHemano } = useAppSelector((s) => s.cuotaPorHerman);
+  const { data: cuotasPorHemano } = useCPHQuery();
   const familiesFromRama = families?.filter((f) => f.manage_by === ramaId);
 
   const activeFamilies = familiesFromRama?.filter(
@@ -33,7 +33,7 @@ export function CobrabilidadCell({ rama }: { rama: TRama }) {
     const usersCount = family.users.length;
     const transactions = family.transactions;
     const cuotaValue =
-      cuotasPorHemano.find((cuota) => cuota.cantidad === usersCount)?.valor ||
+      cuotasPorHemano?.find((cuota) => cuota.cantidad === usersCount)?.valor ||
       0;
 
     const monthTransactions = transactions.filter(

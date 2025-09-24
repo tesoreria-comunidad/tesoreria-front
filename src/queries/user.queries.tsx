@@ -18,6 +18,7 @@ export const fetchUsers = async (): Promise<TUser[]> => {
 export const createUser = async (
   body: Omit<TCreateUser, "confirmPassword">
 ): Promise<TUser> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
   const newUser = await AuthServices.register(body);
   return userAdapter(newUser);
 };
@@ -26,6 +27,7 @@ export const editUser = async (
   body: Partial<TUser>,
   userId: string
 ): Promise<TUser> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
   const updatedUser = await UserServices.update(body, userId);
   return userAdapter(updatedUser);
 };
