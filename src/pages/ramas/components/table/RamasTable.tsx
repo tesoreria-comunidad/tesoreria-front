@@ -48,7 +48,7 @@ export function RamasTable() {
       ),
     },
     {
-      accessorKey: "id",
+      accessorKey: "xd",
       header: "Cobrabilidad",
       size: 50,
       cell: ({ row }) => <CobrabilidadCell rama={row.original} />,

@@ -1,13 +1,12 @@
 import { FormatedDate } from "@/components/common/FormatedDate";
-import { RootTable } from "@/components/common/table";
+import { RootTable, type TColumnDef } from "@/components/common/table";
 import type { TCuota } from "@/models";
 import { useCuotasQuery } from "@/queries/cuota.queries";
 import { formatCurrency } from "@/utils";
-import type { ColumnDef } from "@tanstack/react-table";
 
 export default function CuotasTable() {
   const { data: cuotas } = useCuotasQuery();
-  const columns: ColumnDef<TCuota>[] = [
+  const columns: TColumnDef<TCuota>[] = [
     {
       accessorKey: "value",
       header: "Valor de cuota",
@@ -41,6 +40,10 @@ export default function CuotasTable() {
       accessorKey: "createdAt",
       header: "Fecha de creación",
       cell: ({ getValue }) => <FormatedDate date={getValue<string>()} />,
+    },
+    {
+      accessorKey: "id",
+      hidden: true,
     },
   ];
   return <RootTable columns={columns} data={cuotas || []} />;

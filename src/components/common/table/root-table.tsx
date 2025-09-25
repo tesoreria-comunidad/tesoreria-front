@@ -99,6 +99,9 @@ export function RootTable<TData, TValue>({
       rowSelection: rowSelection ?? {}, // 👈 usa el estado externo si existe
       sorting,
     },
+    getRowId: (row, index) => {
+      return (row as any).id ?? `${index}`;
+    },
     onColumnVisibilityChange: setColumnVisibility,
     defaultColumn: {
       size: 200,
@@ -122,7 +125,7 @@ export function RootTable<TData, TValue>({
   return (
     <div className="w-full flex flex-col gap-2">
       {tableHeader ? (
-        <section className="flex items-center justify-end">
+        <section className="flex items-center justify-end ">
           <ColumnVisibility table={table} />
         </section>
       ) : null}

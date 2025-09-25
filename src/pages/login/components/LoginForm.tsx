@@ -70,7 +70,7 @@ export function LoginForm() {
     <div className="w-full space-y-4 text-gray-800 ">
       <section className="flex items-center gap-4 justify-center">
         <p className="text-2xl ">
-          Bienvenido a <strong className="text-primary">Mi Pelicano</strong>{" "}
+          Bienvenido a <strong className="text-primary">Mi Pelícano</strong>{" "}
         </p>
         <img src={Logo} alt="comunidad guia scout" className="size-[40px] " />
       </section>

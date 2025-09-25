@@ -28,6 +28,7 @@ export default function RamasDetailPage() {
         {rama.users.length ? (
           <UsersTable
             usersInput={users?.filter((user) => user.id_rama === rama.id)}
+            ramaId={rama.id}
           />
         ) : (
           <EmptyPage />
