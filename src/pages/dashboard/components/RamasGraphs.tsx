@@ -19,15 +19,15 @@ import { useRamasQuery } from "@/queries/ramas.queries";
 const chartConfig = {
   altas: {
     label: "Activos",
-    color: "#348862",
+    color: "var(--income)",
   },
   bajas: {
     label: "Bajas",
-    color: "#e7000b",
+    color: "var(--expense)",
   },
   becas: {
     label: "Becados",
-    color: "#fe9a00",
+    color: "var(--beca)",
   },
 } satisfies ChartConfig;
 
@@ -74,15 +74,15 @@ export function RamasGraphs() {
               <span className="font-medium">{rama.name}</span>
               <div className="flex flex-col items-start gap-1 text-xs">
                 <div className="flex  items-center gap-2  leading-none">
-                  <div className="bg-[#348862] size-2 rounded"></div>
+                  <div className="bg-income size-2 rounded"></div>
                   <span> {rama.altas} activos</span>
                 </div>
                 <div className="flex  items-center gap-2  leading-none">
-                  <div className="bg-[#fe9a00] size-2 rounded"></div>
+                  <div className="bg-beca size-2 rounded"></div>
                   <span>{rama.becas} becados</span>
                 </div>
                 <div className="flex  items-center gap-2  leading-none">
-                  <div className="bg-[#e7000b] size-2 rounded"></div>
+                  <div className="bg-expense size-2 rounded"></div>
                   <span>{rama.bajas} bajas</span>
                 </div>
               </div>

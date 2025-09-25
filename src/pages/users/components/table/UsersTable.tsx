@@ -19,10 +19,6 @@ export function UsersTable({ usersInput, ramaId }: UsersTableProps) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const columns: TColumnDef<TUser>[] = [
     {
-      accessorKey: "id",
-      hidden: true,
-    },
-    {
       accessorKey: "is_active",
       header: "Estado",
       size: 70,
@@ -67,11 +63,7 @@ export function UsersTable({ usersInput, ramaId }: UsersTableProps) {
       header: "Rama",
       cell: ({ getValue }) => <RamaCell id_rama={getValue<string>()} />,
     },
-    {
-      accessorKey: "address",
-      cell: ({ getValue }) => <p className="truncate">{getValue<string>()}</p>,
-      hidden: true,
-    },
+
     {
       accessorKey: "birthdate",
       header: "Fecha de Nacimiento",
@@ -80,6 +72,7 @@ export function UsersTable({ usersInput, ramaId }: UsersTableProps) {
           {new Date(getValue<string>()).toLocaleDateString()}
         </div>
       ),
+      hidden: true,
     },
     {
       accessorKey: "balance",
@@ -87,6 +80,11 @@ export function UsersTable({ usersInput, ramaId }: UsersTableProps) {
       cell: ({ row }) => (
         <UserBalanceCell user={row.original} ramaId={ramaId} />
       ),
+    },
+    {
+      accessorKey: "address",
+      cell: ({ getValue }) => <p className="truncate">{getValue<string>()}</p>,
+      hidden: true,
     },
     {
       accessorKey: "citizenship",
@@ -126,20 +124,16 @@ export function UsersTable({ usersInput, ramaId }: UsersTableProps) {
       ),
     },
     {
-      accessorKey: "updated_at",
+      accessorKey: "updatedAt",
+      header: "Fecha de modificacion",
       hidden: true,
+      cell: ({ getValue }) => (
+        <p>{new Date(getValue<string>()).toLocaleDateString()}</p>
+      ),
     },
     {
-      accessorKey: "deleted_at",
-      hidden: true,
-    },
-    {
-      accessorKey: "notes",
-      hidden: true,
-    },
-    {
-      accessorKey: "name",
-      header: "",
+      accessorKey: "id",
+      header: "-",
       hidden: false,
       size: 50,
       cell: ({ row: { original: user } }) => (

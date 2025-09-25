@@ -42,12 +42,12 @@ export function TransactionsTable({
       cell: ({ getValue }) => (
         <>
           {getValue<TDirectionOfTransaction>() === "EXPENSE" ? (
-            <div className="flex items-center gap-2 bg-orange-200 text-orange-600 justify-center rounded-md">
-              <BanknoteArrowDown className="size-4" /> <span>egreso</span>
+            <div className="flex items-center gap-2 bg-expense/25 text-expense justify-center rounded-md font-medium">
+              <BanknoteArrowDown className="size" /> <span>egreso</span>
             </div>
           ) : (
-            <div className="flex items-center gap-2 bg-green-200 text-green-600 justify-center rounded-md">
-              <BanknoteArrowUp className="size-4" /> <span>ingreso</span>
+            <div className="flex items-center gap-2 bg-income/25 text-income justify-center rounded-md font-medium">
+              <BanknoteArrowUp className="size" /> <span>ingreso</span>
             </div>
           )}
         </>

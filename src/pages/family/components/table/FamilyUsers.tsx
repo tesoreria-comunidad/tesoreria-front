@@ -103,11 +103,11 @@ export function FamilyUsersTable({
       hidden: true,
     },
     {
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       hidden: true,
     },
     {
-      accessorKey: "updated_at",
+      accessorKey: "updatedAt",
       hidden: true,
     },
     {

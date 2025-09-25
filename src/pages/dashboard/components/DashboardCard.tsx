@@ -64,16 +64,13 @@ export function DashboardCard({ type }: DashboardCardProps) {
     <Card className="w-2xs">
       <CardHeader>
         <CardDescription>{title}</CardDescription>
-        <CardTitle className="  md:text-3xl text-2xl font-semibold  ">
+        <CardTitle className="  md:text-3xl text-2xl font-semibold text-primary  ">
           {amount}
         </CardTitle>
         <CardAction>
           {path ? (
             <Link to={path}>
-              <Badge
-                variant="outline"
-                className="hover:bg-primary hover:text-white transition-all duration-200"
-              >
+              <Badge>
                 <Navigation />
                 ver
               </Badge>

@@ -15,15 +15,15 @@ const chartConfig = {
   },
   activos: {
     label: "activos",
-    color: "#348862;",
+    color: "var(--income)",
   },
   inactivos: {
     label: "inactivos",
-    color: "#e7000b",
+    color: "var(--expense)",
   },
   becados: {
     label: "becados",
-    color: "#fe9a00",
+    color: "var(--beca)",
   },
 } satisfies ChartConfig;
 
