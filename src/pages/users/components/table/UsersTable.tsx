@@ -10,13 +10,21 @@ import { useState } from "react";
 import { SelectUsersAction } from "./components/SelectUsersAction";
 import { useUsersQuery } from "@/queries/user.queries";
 
-export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
+interface UsersTableProps {
+  usersInput?: TUser[];
+  ramaId?: string; // esto se usa cuando la tabla se usa en la vista de una rama
+}
+export function UsersTable({ usersInput, ramaId }: UsersTableProps) {
   const { data: users } = useUsersQuery();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const columns: TColumnDef<TUser>[] = [
     {
+      accessorKey: "id",
+      hidden: true,
+    },
+    {
       accessorKey: "is_active",
-      header: "",
+      header: "Estado",
       size: 70,
       cell: ({ getValue }) => (
         <div
@@ -76,7 +84,9 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
     {
       accessorKey: "balance",
       header: "Balance",
-      cell: ({ row }) => <UserBalanceCell user={row.original} />,
+      cell: ({ row }) => (
+        <UserBalanceCell user={row.original} ramaId={ramaId} />
+      ),
     },
     {
       accessorKey: "citizenship",
@@ -93,6 +103,10 @@ export function UsersTable({ usersInput }: { usersInput?: TUser[] }) {
     },
     {
       accessorKey: "email",
+      hidden: true,
+    },
+    {
+      accessorKey: "username",
       hidden: true,
     },
     {

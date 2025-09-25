@@ -35,6 +35,10 @@ export function BulkUsersTable({ users }: { users: TBulkCreateUser[] }) {
       size: 80,
       hidden: true,
     },
+    {
+      accessorKey: "id",
+      hidden: true,
+    },
   ];
   return <RootTable data={users} columns={columns} tableHeader />;
 }

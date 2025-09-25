@@ -55,9 +55,9 @@ export function UsersGraphs() {
   ];
 
   return (
-    <Card className="size-full">
+    <Card className="">
       <CardContent className="flex-1 pb-0 size-full">
-        <ChartContainer config={chartConfig} className="mx-auto aspect-square ">
+        <ChartContainer config={chartConfig} className="mx-auto   h-[300px]">
           <PieChart>
             <ChartTooltip
               cursor={false}
@@ -68,7 +68,7 @@ export function UsersGraphs() {
               dataKey="visitors"
               nameKey="browser"
               innerRadius={80}
-              strokeWidth={5}
+              strokeWidth={100}
             >
               <Label
                 content={({ viewBox }) => {

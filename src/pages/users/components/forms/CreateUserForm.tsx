@@ -80,116 +80,253 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
 
   const userRole = user?.role;
 
-  console.log("dirigente123", form.formState.errors);
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6"
+        className=" relative "
         autoComplete="off"
       >
-        {/* Sección: Credenciales */}
-        <div className="space-y-4 rounded-xl border p-4">
-          <h3 className="text-sm font-semibold text-muted-foreground">
-            Credenciales
-          </h3>
+        <section className="max-h-[80vh] overflow-auto space-y-6">
+          {/* Sección: Credenciales */}
+          <div className="space-y-4 rounded-xl border p-4">
+            <h3 className="text-sm font-semibold text-muted-foreground">
+              Credenciales
+            </h3>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nombre de usuario</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="usuario.ejemplo"
-                      {...field}
-                      autoComplete="username"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Correo electrónico</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="example@mail.com"
-                      {...field}
-                      autoComplete="email"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Contraseña</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="********"
-                      {...field}
-                      type="password"
-                      autoComplete="new-password"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirmar contraseña</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="********"
-                      {...field}
-                      type="password"
-                      autoComplete="new-password"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {userRole === "MASTER" && (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
-                name="role"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Rol</FormLabel>
+                    <FormLabel>Nombre de usuario</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="usuario.ejemplo"
+                        {...field}
+                        autoComplete="username"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Correo electrónico</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="example@mail.com"
+                        {...field}
+                        autoComplete="email"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Contraseña</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="********"
+                        {...field}
+                        type="password"
+                        autoComplete="new-password"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirmar contraseña</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="********"
+                        {...field}
+                        type="password"
+                        autoComplete="new-password"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {userRole === "MASTER" && (
+                <FormField
+                  control={form.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Rol</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(value as TRole)
+                          }
+                          value={field.value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Seleccionar rol" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {ROLE_VALUES.map((role) => (
+                              <SelectItem key={role} value={role}>
+                                {role}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              {userRole === "MASTER" && (
+                <FormField
+                  control={form.control}
+                  name="id_rama"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Rama</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={(value) => field.onChange(value)}
+                          value={field.value || ""}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Rama" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {ramas?.map((rama) => (
+                              <SelectItem key={rama.id} value={rama.id}>
+                                {rama.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* Sección: Datos personales */}
+          <div className="space-y-4 rounded-xl border p-4">
+            <h3 className="text-sm font-semibold text-muted-foreground">
+              Datos personales
+            </h3>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Nombre"
+                        {...field}
+                        autoComplete="given-name"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="last_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Apellido</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Apellido"
+                        {...field}
+                        autoComplete="family-name"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="dni"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>DNI</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Documento"
+                        {...field}
+                        inputMode="numeric"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="birthdate"
+                render={() => (
+                  <DatePickerField
+                    control={form.control}
+                    name="birthdate"
+                    label="Fecha de nacimiento"
+                    placeholder="Seleccionar fecha"
+                    disableFuture
+                  />
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="gender"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Género</FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={(value) =>
-                          field.onChange(value as TRole)
+                          field.onChange(value as TGender)
                         }
                         value={field.value}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar rol" />
+                          <SelectValue placeholder="Seleccionar género" />
                         </SelectTrigger>
                         <SelectContent>
-                          {ROLE_VALUES.map((role) => (
-                            <SelectItem key={role} value={role}>
-                              {role}
+                          {GENDER_OPTIONS.map((g) => (
+                            <SelectItem key={g} value={g}>
+                              {g}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -199,26 +336,124 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
                   </FormItem>
                 )}
               />
-            )}
-            {userRole === "MASTER" && (
+
               <FormField
                 control={form.control}
-                name="id_rama"
+                name="citizenship"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Rama</FormLabel>
+                    <FormLabel>Nacionalidad</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Argentina" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          {/* Sección: Contacto y domicilio */}
+          <div className="space-y-4 rounded-xl border p-4">
+            <h3 className="text-sm font-semibold text-muted-foreground">
+              Contacto y domicilio
+            </h3>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Teléfono</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="+54 9 ..."
+                        {...field}
+                        inputMode="tel"
+                        autoComplete="tel"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2">
+                    <FormLabel>Dirección</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Calle, número, ciudad, provincia"
+                        {...field}
+                        autoComplete="street-address"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          {/* Sección: Grupo familiar */}
+          <div className="space-y-4 rounded-xl border p-4">
+            <h3 className="text-sm font-semibold text-muted-foreground">
+              Grupo familiar
+            </h3>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="family_role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Rol en la familia</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={(value) =>
+                          field.onChange(value as TFamilyRole)
+                        }
+                        value={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar rol familiar" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {FAMILY_ROLE_VALUES.map((fr) => (
+                            <SelectItem key={fr} value={fr}>
+                              {fr}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="id_family"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Familia (opcional)</FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={(value) => field.onChange(value)}
                         value={field.value || ""}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Rama" />
+                          <SelectValue placeholder="Seleccionar familia" />
                         </SelectTrigger>
                         <SelectContent>
-                          {ramas?.map((rama) => (
-                            <SelectItem key={rama.id} value={rama.id}>
-                              {rama.name}
+                          {families?.map((family) => (
+                            <SelectItem key={family.id} value={family.id}>
+                              {family.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -228,245 +463,11 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
                   </FormItem>
                 )}
               />
-            )}
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* Sección: Datos personales */}
-        <div className="space-y-4 rounded-xl border p-4">
-          <h3 className="text-sm font-semibold text-muted-foreground">
-            Datos personales
-          </h3>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nombre</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Nombre"
-                      {...field}
-                      autoComplete="given-name"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="last_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Apellido</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Apellido"
-                      {...field}
-                      autoComplete="family-name"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="dni"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>DNI</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Documento"
-                      {...field}
-                      inputMode="numeric"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="birthdate"
-              render={() => (
-                <DatePickerField
-                  control={form.control}
-                  name="birthdate"
-                  label="Fecha de nacimiento"
-                  placeholder="Seleccionar fecha"
-                  disableFuture
-                />
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="gender"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Género</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) =>
-                        field.onChange(value as TGender)
-                      }
-                      value={field.value}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar género" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {GENDER_OPTIONS.map((g) => (
-                          <SelectItem key={g} value={g}>
-                            {g}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="citizenship"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nacionalidad</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Argentina" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-
-        {/* Sección: Contacto y domicilio */}
-        <div className="space-y-4 rounded-xl border p-4">
-          <h3 className="text-sm font-semibold text-muted-foreground">
-            Contacto y domicilio
-          </h3>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Teléfono</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="+54 9 ..."
-                      {...field}
-                      inputMode="tel"
-                      autoComplete="tel"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem className="sm:col-span-2">
-                  <FormLabel>Dirección</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Calle, número, ciudad, provincia"
-                      {...field}
-                      autoComplete="street-address"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-
-        {/* Sección: Grupo familiar */}
-        <div className="space-y-4 rounded-xl border p-4">
-          <h3 className="text-sm font-semibold text-muted-foreground">
-            Grupo familiar
-          </h3>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="family_role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Rol en la familia</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) =>
-                        field.onChange(value as TFamilyRole)
-                      }
-                      value={field.value}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar rol familiar" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {FAMILY_ROLE_VALUES.map((fr) => (
-                          <SelectItem key={fr} value={fr}>
-                            {fr}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="id_family"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Familia (opcional)</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) => field.onChange(value)}
-                      value={field.value || ""}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar familia" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {families?.map((family) => (
-                          <SelectItem key={family.id} value={family.id}>
-                            {family.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-end gap-3 absolute -bottom-10 w-full">
           <Button
             type="button"
             variant="outline"

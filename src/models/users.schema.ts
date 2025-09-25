@@ -26,20 +26,62 @@ export const UserSchema = BaseSchema.extend({
 });
 export const CreateUserSchema = z
   .object({
-    name: z.string(),
-    last_name: z.string(),
-    username: z.string(),
-    password: z.string(),
+    name: z
+      .string()
+      .min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
+    last_name: z
+      .string()
+      .min(2, { message: "El apellido debe tener al menos 2 caracteres" }),
+    username: z
+      .string()
+      .min(4, { message: "El usuario debe tener al menos 4 caracteres" }),
+    password: z.string().min(1, { message: "La contraseña debe completarse" }),
     confirmPassword: z.string().optional(),
     email: z.string().optional(),
     role: RoleSchema,
     family_role: FamilyRoleSchema,
     birthdate: z.string().optional(),
-    address: z.string().optional(),
+    address: z
+      .string()
+      .optional()
+      .refine(
+        (val) => {
+          if (!val) return true;
+          return val.length >= 5;
+        },
+        {
+          message: "La dirección debe tener al menos 5 caracteres",
+          path: ["address"],
+        }
+      ),
     phone: z.string().optional(),
     gender: GenderSchema,
-    dni: z.string().optional(),
-    citizenship: z.string().optional(),
+    dni: z
+      .string()
+      .optional()
+      .refine(
+        (val) => {
+          if (!val) return true;
+          return val.length === 8;
+        },
+        {
+          message: "El DNI debe tener al menos 8 caracteres",
+          path: ["dni"],
+        }
+      ),
+    citizenship: z
+      .string()
+      .optional()
+      .refine(
+        (val) => {
+          if (!val) return true;
+          return val.length >= 3;
+        },
+        {
+          message: "La nacionalidad debe tener al menos 3 caracteres",
+          path: ["citizenship"],
+        }
+      ),
     is_granted: z.boolean().optional(),
     is_active: z.boolean().optional(),
     id_family: z.string().nullable().optional(),
