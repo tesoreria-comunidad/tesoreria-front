@@ -91,7 +91,7 @@ export function ExpensesByCategory() {
             <Bar
               dataKey="value"
               layout="vertical"
-              fill="var(--color-value)"
+              fill="var(--expense)"
               radius={4}
             >
               <LabelList

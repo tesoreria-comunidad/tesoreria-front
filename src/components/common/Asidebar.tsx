@@ -32,10 +32,10 @@ export function Asidebar({ children }: PropsWithChildren) {
             route.sidebarContent ? (
               <Link to={route.path}>
                 <div
-                  className={`flex items-center gap-2 transition-all duration-300   pl-4 ${
+                  className={`flex items-center gap-2 font-light transition-all duration-300 h-10  pl-4 ${
                     pathname === route.path
-                      ? "font-medium text-primary  py-2  bg-gradient-to-r   from-primary/10 to-transparent"
-                      : "font-medium text-gray-500 bg-transparent"
+                      ? "font-medium text-primary  bg-primary-2/10 "
+                      : " text-primary-2  "
                   }`}
                 >
                   {route.icon}

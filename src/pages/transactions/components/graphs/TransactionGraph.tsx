@@ -21,11 +21,11 @@ export const description = "A multiple bar chart";
 const chartConfig = {
   income: {
     label: "Ingresos",
-    color: "var(--chart-2)",
+    color: "var(--income)",
   },
   expense: {
     label: "Egresos",
-    color: "var(--chart-1)",
+    color: "var(--expense)",
   },
 } satisfies ChartConfig;
 

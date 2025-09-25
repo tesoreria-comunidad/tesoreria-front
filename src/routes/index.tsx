@@ -33,7 +33,7 @@ export const routes: TRoute[] = [
   {
     path: "/",
     name: "",
-    icon: <HomeIcon className="size-4" />,
+    icon: <HomeIcon className="size-5" />,
     element: <DashboardPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
     sidebarContent: false,
@@ -41,7 +41,7 @@ export const routes: TRoute[] = [
   {
     path: "/dashboard",
     name: "Panel",
-    icon: <LayoutDashboard className="size-4" />,
+    icon: <LayoutDashboard className="size-5" />,
     element: <DashboardPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
     sidebarContent: true,
@@ -49,7 +49,7 @@ export const routes: TRoute[] = [
   {
     path: "/users",
     name: "Usuarios",
-    icon: <Users className="size-4" />,
+    icon: <Users className="size-5" />,
     element: <UsersPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
     sidebarContent: true,
@@ -57,7 +57,7 @@ export const routes: TRoute[] = [
   {
     path: "/ramas",
     name: "Ramas",
-    icon: <Trees className="size-4" />,
+    icon: <Trees className="size-5" />,
     element: <RamasPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
     sidebarContent: true,
@@ -65,7 +65,7 @@ export const routes: TRoute[] = [
   {
     path: "/ramas/:ramaId",
     name: "Ramas",
-    icon: <Trees className="size-4" />,
+    icon: <Trees className="size-5" />,
     element: <RamasDetailPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
     sidebarContent: false,
@@ -73,7 +73,7 @@ export const routes: TRoute[] = [
   {
     path: "/beneficiario",
     name: "Beneficiarios",
-    icon: <Trees className="size-4" />,
+    icon: <Trees className="size-5" />,
     element: <BeneficiarioPage />,
     rolesAccess: ["BENEFICIARIO"],
     sidebarContent: true,
@@ -81,7 +81,7 @@ export const routes: TRoute[] = [
   {
     path: "/family",
     name: "Familias",
-    icon: <UserCog2Icon className="size-4" />,
+    icon: <UserCog2Icon className="size-5" />,
     element: <FamilyPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
     sidebarContent: true,
@@ -89,7 +89,7 @@ export const routes: TRoute[] = [
   {
     path: "/family/:familyId",
     name: "Familia",
-    icon: <Users className="size-4" />,
+    icon: <Users className="size-5" />,
     element: <FamilyByIdPage />,
     rolesAccess: ["MASTER", "DIRIGENTE"],
     sidebarContent: false,
@@ -97,7 +97,7 @@ export const routes: TRoute[] = [
   {
     path: "/family/:familyId",
     name: "Familia",
-    icon: <Users className="size-4" />,
+    icon: <Users className="size-5" />,
     element: <FamilyByIdPage />,
     rolesAccess: ["FAMILY", "BENEFICIARIO"],
     sidebarContent: true,
@@ -105,7 +105,7 @@ export const routes: TRoute[] = [
   {
     path: "/cuotas",
     name: "Cuotas",
-    icon: <CircleDollarSign className="size-4" />,
+    icon: <CircleDollarSign className="size-5" />,
     element: <CuotasPage />,
     rolesAccess: ["MASTER"],
     sidebarContent: true,
@@ -113,7 +113,7 @@ export const routes: TRoute[] = [
   {
     path: "/transactions",
     name: "Movimientos",
-    icon: <ChartArea className="size-4" />,
+    icon: <ChartArea className="size-5" />,
     element: <TransactionsPage />,
     rolesAccess: ["MASTER"],
     sidebarContent: true,
