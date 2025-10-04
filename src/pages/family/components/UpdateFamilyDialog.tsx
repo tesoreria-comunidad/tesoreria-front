@@ -46,7 +46,6 @@ export function UpdateFamilyDialog({
   const { data: balance } = useBalanceByIdQuery(id_balance);
   const { data: ramas } = useRamasQuery();
 
-  if (!ramas || !balance) return null;
   const familyRama = ramas?.find((r) => r.id === family.manage_by);
   const [isCustomCuota, setIsCustomCuota] = useState(balance?.is_custom_cuota);
   const [selectedRamaId, setSelectedRamaId] = useState(family.manage_by);
@@ -54,22 +53,47 @@ export function UpdateFamilyDialog({
   const [customCuotaValue, setCustomCuotaValue] = useState(
     balance?.custom_cuota ? balance.custom_cuota : 0
   );
+  const [balanceValue, setBalanceValue] = useState(
+    balance?.value ? balance.value : 0
+  );
   const { showAlert } = useAlert();
   const { mutate: editFamily, isPending: loading } = useEditFamilyMutation();
   const balanceMutationQuery = useUpdateBalanceMutation();
+  if (!ramas || !balance) return null;
   const handleSubmit = async () => {
     if (
       balance.is_custom_cuota !== isCustomCuota ||
-      balance.custom_cuota !== customCuotaValue
+      balance.custom_cuota !== customCuotaValue ||
+      balance.value !== balanceValue
     ) {
-      await balanceMutationQuery.mutateAsync({
-        body: {
-          is_custom_cuota: isCustomCuota,
-          custom_cuota: customCuotaValue,
+      await balanceMutationQuery.mutateAsync(
+        {
+          body: {
+            is_custom_cuota: isCustomCuota,
+            custom_cuota: customCuotaValue,
+            value: balanceValue,
+          },
+          id: family.id_balance!,
         },
-        id: family.id_balance!,
-      });
+        {
+          onSuccess() {
+            if (
+              family.name === familyName &&
+              family.manage_by === selectedRamaId
+            ) {
+              showAlert({
+                type: "success",
+                title: "Balance Actualizado",
+                description: ` El balance de la familia ${family.name} ha sido actualizado a ${balanceValue}.`,
+              });
+            }
+          },
+        }
+      );
     }
+
+    if (family.name === familyName && family.manage_by === selectedRamaId)
+      return;
     editFamily(
       {
         body: {
@@ -103,6 +127,7 @@ export function UpdateFamilyDialog({
     family.name !== familyName ||
     balance?.is_custom_cuota !== isCustomCuota ||
     balance?.custom_cuota !== customCuotaValue ||
+    balance?.value !== balanceValue ||
     family.manage_by !== selectedRamaId;
 
   const familyUsersIdRamas = family.users.map((u) => u.id_rama);
@@ -180,6 +205,24 @@ export function UpdateFamilyDialog({
                   <Label>Configuracion de balances y cuota</Label>
                   <section className=" z-10  flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm has-[[aria-checked=true]]:border-blue-600 has-[[aria-checked=true]]:bg-blue-50 dark:has-[[aria-checked=true]]:border-blue-900 ">
                     <div className="space-y-0.5">
+                      <Label>Ajustar Balance</Label>
+                      <span className="text-xs text-muted-foreground">
+                        Aquí puedes modificar el balance para ajustarlo al valor
+                        correcto
+                      </span>
+                    </div>
+
+                    <Input
+                      value={balanceValue}
+                      type="number"
+                      className="data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700"
+                      onChange={(e) =>
+                        setBalanceValue(parseInt(e.target.value))
+                      }
+                    />
+                  </section>
+                  <section className=" z-10  flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm has-[[aria-checked=true]]:border-blue-600 has-[[aria-checked=true]]:bg-blue-50 dark:has-[[aria-checked=true]]:border-blue-900 ">
+                    <div className="space-y-0.5">
                       <Label>Cuota Personalizada</Label>
                       <span className="text-xs text-muted-foreground">
                         Activando esto podras definir una cuota personalizada
@@ -235,7 +278,7 @@ export function UpdateFamilyDialog({
               </DialogClose>
               <Button
                 onClick={handleSubmit}
-                isLoading={loading}
+                isLoading={loading || balanceMutationQuery.isPending}
                 disabled={!areChanges}
               >
                 Guardar Cambios

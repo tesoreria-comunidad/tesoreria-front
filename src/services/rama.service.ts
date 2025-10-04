@@ -7,6 +7,10 @@ export class RamaServices {
     const res = await axiosInstance.get(`${BASE_URL}/rama`);
     return res.data;
   }
+  static async getRamaById(id: string): Promise<TApiRama> {
+    const res = await axiosInstance.get(`${BASE_URL}/rama/${id}`);
+    return res.data;
+  }
 
   static async createRama(body: TCreateRama): Promise<TApiRama> {
     const res = await axiosInstance.post(`${BASE_URL}/rama`, body);

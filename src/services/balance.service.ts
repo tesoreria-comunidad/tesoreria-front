@@ -12,12 +12,13 @@ export class BalanceServices {
     const res = await axiosInstance.get(`${BASE_URL}/balance/${id}`);
     return res.data;
   }
-  static async updateAllBalances(): Promise<{
-    message: string;
-    timestamp: string;
-  }> {
+  static async getByFamilyId(id: string): Promise<TApiBalance> {
+    const res = await axiosInstance.get(`${BASE_URL}/balance/${id}`);
+    return res.data;
+  }
+  static async updateFamilyBalance(id: string) {
     const res = await axiosInstance.post(
-      `${BASE_URL}/cron-jobs/run-monthly-update`
+      `${BASE_URL}/balance/update-family/${id}`
     );
     return res.data;
   }
@@ -26,7 +27,7 @@ export class BalanceServices {
     return res.data;
   }
   static async delete() {}
-  static async updateAll() {
+  static async updateAllBalances() {
     const res = await axiosInstance.post(`${BASE_URL}/balance/update-all`);
     return res.data;
   }

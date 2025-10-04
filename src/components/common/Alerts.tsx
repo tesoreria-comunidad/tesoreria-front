@@ -10,7 +10,7 @@ import {
 const typeStyles = {
   success: {
     icon: <CheckCircle2Icon className="text-green-600" />,
-    alertClass: "bg-green-50 border-green-600 text-green-800",
+    alertClass: "bg-green-100 border-green-600 text-green-800",
   },
   error: {
     icon: <XCircleIcon className="text-red-600" />,
@@ -35,8 +35,8 @@ export function Alerts() {
 
   return (
     <section
-      className={`absolute z-50 right-0 top-0 m-4 transition-all duration-200 ${
-        visible ? "translate-x-0 scale-100" : "translate-x-1000 scale-50"
+      className={`absolute z-50 left-1/2 top-0 transform -translate-x-1/2 m-4  transition-all duration-200 ${
+        visible ? "scale-100" : "scale-50 opacity-0"
       }`}
     >
       <Alert className={alertClass}>
