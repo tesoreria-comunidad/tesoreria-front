@@ -13,6 +13,11 @@ export const fetchRamas = async () => {
   const apiRes = await RamaServices.getAllRamas();
   return apiRes.map((rama) => ramaAdapter(rama));
 };
+export const fetchRamaById = async (ramaId: string) => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  const apiRes = await RamaServices.getRamaById(ramaId);
+  return ramaAdapter(apiRes);
+};
 export const createRama = async (body: TCreateRama) => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
   const apiRes = await RamaServices.createRama(body);
@@ -27,6 +32,13 @@ export function useRamasQuery() {
   return useQuery({
     queryKey: ["ramas"],
     queryFn: fetchRamas,
+  });
+}
+export function useRamasByIdQuery(ramaId: string) {
+  return useQuery({
+    queryKey: ["ramas", ramaId],
+    queryFn: () => fetchRamaById(ramaId),
+    enabled: !!ramaId,
   });
 }
 

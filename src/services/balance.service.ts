@@ -12,21 +12,25 @@ export class BalanceServices {
     const res = await axiosInstance.get(`${BASE_URL}/balance/${id}`);
     return res.data;
   }
-  static async updateAllBalances(): Promise<{
-    message: string;
-    timestamp: string;
-  }> {
-    const res = await axiosInstance.post(
-      `${BASE_URL}/cron-jobs/run-monthly-update`
-    );
+  static async getByFamilyId(id: string): Promise<TApiBalance> {
+    const res = await axiosInstance.get(`${BASE_URL}/balance/${id}`);
     return res.data;
   }
+  // static async updateAllBalances(): Promise<{
+  //   message: string;
+  //   timestamp: string;
+  // }> {
+  //   const res = await axiosInstance.post(
+  //     `${BASE_URL}/cron-jobs/run-monthly-update`
+  //   );
+  //   return res.data;
+  // }
   static async edit(id: string, body: Partial<TBalance>) {
     const res = await axiosInstance.patch(`${BASE_URL}/balance/${id}`, body);
     return res.data;
   }
   static async delete() {}
-  static async updateAll() {
+  static async updateAllBalances() {
     const res = await axiosInstance.post(`${BASE_URL}/balance/update-all`);
     return res.data;
   }
