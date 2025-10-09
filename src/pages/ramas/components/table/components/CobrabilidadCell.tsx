@@ -14,45 +14,34 @@ import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/utils";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
-import { useFamiliesQuery } from "@/queries/family.queries";
-import { useCPHQuery } from "@/queries/cuotaPorHermano.queries";
+import { useCobrabilidadQuery } from "@/queries/cobrabilidad.queries";
+import { LoaderSpinner } from "@/components/common/LoaderSpinner";
 
 export function CobrabilidadCell({ rama }: { rama: TRama }) {
-  const ramaId = rama.id;
-  const { data: families } = useFamiliesQuery();
-  const { data: cuotasPorHemano } = useCPHQuery();
-  const familiesFromRama = families?.filter((f) => f.manage_by === ramaId);
-
-  const activeFamilies = familiesFromRama?.filter(
-    (f) => f.users.filter((u) => u.is_active && !u.is_granted).length > 0
-  );
-  let suma = 0;
-  let transactionsSuma = 0;
-  const currentMotnh = new Date().getMonth();
-  activeFamilies?.forEach((family) => {
-    const usersCount = family.users.length;
-    const transactions = family.transactions;
-    const cuotaValue =
-      cuotasPorHemano?.find((cuota) => cuota.cantidad === usersCount)?.valor ||
-      0;
-
-    const monthTransactions = transactions.filter(
-      (t) => new Date(t.payment_date).getMonth() === currentMotnh
-    );
-    if (monthTransactions.length) {
-      transactionsSuma =
-        transactionsSuma + monthTransactions.reduce((a, b) => a + b.amount, 0);
-    }
-    suma = suma + cuotaValue || 0;
+  const { data, isLoading } = useCobrabilidadQuery({
+    month: (new Date().getMonth() + 1).toString(),
+    year: new Date().getFullYear().toString(),
   });
 
-  const cobrabilidad = (transactionsSuma / suma) * 100;
+  const ramaId = rama.id;
 
+  const cobrabilidadRama = data?.find((e) => e.id_rama === ramaId);
+  const cobrabilidad =
+    data?.find((e) => e.id_rama === ramaId)?.cobrabilidad || 0;
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center bg-orange-200  w-1/4 mx-auto p-1 rounded-md">
+        <LoaderSpinner />
+      </div>
+    );
+  if (!data) return "-";
+  if (!cobrabilidadRama) return "-";
   return (
     <Dialog>
       <DialogTrigger asChild>
         <div className="uppercase text-center cursor-pointer  bg-orange-200 hover:bg-orange-300 text-orange-600 font-semibold w-1/4 mx-auto p-1 rounded-md hover:p-2 transition-all duration-150">
-          {cobrabilidad.toFixed(2)}%
+          {cobrabilidad}%
         </div>
       </DialogTrigger>
       <DialogContent>
@@ -77,7 +66,10 @@ export function CobrabilidadCell({ rama }: { rama: TRama }) {
               <div className="flex flex-col gap-2  p-2 rounded-md bg-accent">
                 <div className="flex justify-between items-center ">
                   <span> Total espeardo a cobrar</span>
-                  <span> {formatCurrency(suma)}</span>
+                  <span>
+                    {" "}
+                    {formatCurrency(cobrabilidadRama?.totalEsperado)}
+                  </span>
                 </div>
                 <DialogDescription>
                   Este valor es el monto total esperado a cobrar de cada familia
@@ -87,7 +79,7 @@ export function CobrabilidadCell({ rama }: { rama: TRama }) {
               <div className="flex flex-col gap-2  p-2 rounded-md bg-accent">
                 <div className="flex justify-between items-center ">
                   <span> Total cobrado este mes</span>
-                  <span> {formatCurrency(transactionsSuma)}</span>
+                  <span> {formatCurrency(cobrabilidadRama.totalCobrado)}</span>
                 </div>
                 <DialogDescription>
                   Este valor se obtiene de la suma de los pagos de cada familia
