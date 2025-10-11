@@ -5,7 +5,6 @@ import { useFamiliesQuery } from "@/queries/family.queries";
 import { useCuotasQuery } from "@/queries/cuota.queries";
 import { AppLoader } from "../common/AppLoader";
 import { useCPHQuery } from "@/queries/cuotaPorHermano.queries";
-import { useCobrabilidadQuery } from "@/queries/cobrabilidad.queries";
 
 export function DataProvider({ children }: PropsWithChildren) {
   const ramaQuery = useRamasQuery();
