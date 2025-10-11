@@ -10,7 +10,10 @@ export class UserServices {
     const res = await axiosInstance.post(`${BASE_URL}/user`, body);
     return res.data;
   }
-  static async getById() {}
+  static async getById(id: string): Promise<TApiUser> {
+    const res = await axiosInstance.get(`${BASE_URL}/user/${id}`);
+    return res.data;
+  }
   static async update(body: Partial<TUser>, id: string) {
     const res = await axiosInstance.patch(`${BASE_URL}/user/${id}`, body);
     return res.data;

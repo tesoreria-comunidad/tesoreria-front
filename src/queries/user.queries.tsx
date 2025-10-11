@@ -14,6 +14,11 @@ export const fetchUsers = async (): Promise<TUser[]> => {
   const apiUserResponse = await UserServices.getAll();
   return apiUserResponse.map((apiUser) => userAdapter(apiUser));
 };
+export const fetchUserById = async (id: string): Promise<TUser> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  const apiUser = await UserServices.getById(id);
+  return userAdapter(apiUser);
+};
 
 export const createUser = async (
   body: Omit<TCreateUser, "confirmPassword">
@@ -39,6 +44,13 @@ export function useUsersQuery() {
   return useQuery({
     queryKey: ["users"],
     queryFn: fetchUsers,
+  });
+}
+export function useUserQueryById(id: string) {
+  return useQuery({
+    queryKey: ["users", id],
+    queryFn: () => fetchUserById(id),
+    enabled: !!id,
   });
 }
 
