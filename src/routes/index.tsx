@@ -1,4 +1,5 @@
 import type { TRole } from "@/constants/role.constants";
+import ActionLogsPage from "@/pages/action-logs/ActionLogsPage";
 import { BeneficiarioPage } from "@/pages/beneficiario/BeneficiarioPage";
 import { CuotasPage } from "@/pages/cuotas/CuotasPage";
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
@@ -13,6 +14,7 @@ import {
   CircleDollarSign,
   HomeIcon,
   LayoutDashboard,
+  Logs,
   Trees,
   UserCog2Icon,
   Users,
@@ -115,6 +117,14 @@ export const routes: TRoute[] = [
     name: "Movimientos",
     icon: <ChartArea className="size-5" />,
     element: <TransactionsPage />,
+    rolesAccess: ["MASTER"],
+    sidebarContent: true,
+  },
+  {
+    path: "/logs",
+    name: "Acciones",
+    icon: <Logs className="size-5" />,
+    element: <ActionLogsPage />,
     rolesAccess: ["MASTER"],
     sidebarContent: true,
   },
