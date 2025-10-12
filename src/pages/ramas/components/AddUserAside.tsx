@@ -23,7 +23,7 @@ export function AddUserAside({ rama }: IAddUserAsideProps) {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Agregar usuarios a la {rama.name}</SheetTitle>
+          <SheetTitle>Agregar usuarios a la rama {rama.name}</SheetTitle>
           <SheetDescription>
             Selecciona todos los usuarios que quieras agregar a la {rama.name}
           </SheetDescription>
@@ -31,7 +31,7 @@ export function AddUserAside({ rama }: IAddUserAsideProps) {
           <br />
 
           <div>
-            <CreateUserForm />
+            <CreateUserForm rama={rama} />
           </div>
         </SheetHeader>
       </SheetContent>

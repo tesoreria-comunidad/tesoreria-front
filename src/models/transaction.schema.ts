@@ -20,5 +20,8 @@ export const CreateTransactionSchema = TransactionSchema.omit({
   updatedAt: true,
 });
 
+export const EditTransactionSchema = CreateTransactionSchema.partial();
+
 export type TTransaction = z.infer<typeof TransactionSchema>;
 export type TCreateTransaction = z.infer<typeof CreateTransactionSchema>;
+export type TEditTransaction = Partial<TTransaction>;

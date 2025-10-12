@@ -25,6 +25,14 @@ type DatePickerFieldProps<T extends FieldValues> = {
   className?: string;
 };
 
+const formatToYMD = (value: string) => {
+  console.log("value", value);
+  const date = new Date(value);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = (date.getDate() + 1).toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 export function DatePickerField<T extends FieldValues>({
   control,
   name,
@@ -42,10 +50,12 @@ export function DatePickerField<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => {
-        const value = (field.value as DatePickerValue) ?? undefined;
+        const value =
+          (formatToYMD(field.value) as DatePickerValue) ?? undefined;
         return (
           <FormItem className={className}>
             {label ? <FormLabel>{label}</FormLabel> : null}
+
             <FormControl>
               <DatePicker
                 value={value}

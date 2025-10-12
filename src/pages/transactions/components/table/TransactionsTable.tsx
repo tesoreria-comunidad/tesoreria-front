@@ -8,6 +8,7 @@ import type { TTransaction } from "@/models/transaction.schema";
 import { FamilyCell } from "@/pages/users/components/table/FamilyCell";
 import { formatCurrency } from "@/utils";
 import { BanknoteArrowDown, BanknoteArrowUp } from "lucide-react";
+import EditTransactionAside from "./components/EditTransactionAside";
 
 export function TransactionsTable({
   transactions,
@@ -73,9 +74,7 @@ export function TransactionsTable({
       size: 250,
       enableSorting: true,
       cell: ({ getValue }) => (
-        <p className="text-center">
-          {new Date(getValue<string>()).toLocaleDateString()}
-        </p>
+        <p className="text-center">{getValue<string>().split("T")[0]}</p>
       ),
     },
     {
@@ -98,6 +97,11 @@ export function TransactionsTable({
       size: 500,
       hidden: true,
       cell: ({ getValue }) => <p className=" truncate">{getValue<string>()}</p>,
+    },
+    {
+      header: "Acciones",
+      size: 100,
+      cell: ({ row }) => <EditTransactionAside transaction={row.original} />,
     },
   ];
   return <RootTable columns={columns} data={transactions} tableHeader />;

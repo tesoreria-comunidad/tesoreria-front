@@ -1,5 +1,11 @@
+import {
+  EditTransactionSchema,
+  type TEditTransaction,
+  type TTransaction,
+} from "@/models/transaction.schema";
+import { useEditTransactionMutation } from "@/queries/transactions.queries";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,10 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  CreateTransactionSchema,
-  type TCreateTransaction,
-} from "@/models/transaction.schema";
+
 import {
   PAYMENT_METHODS_OPTIONS,
   type TPaymentMethod,
@@ -34,36 +37,36 @@ import {
 import { CategoryField } from "./compoents/CategoryField";
 import { useAlert } from "@/context/AlertContext";
 import { DatePickerField } from "@/components/common/DatePickerField";
-import { useCreateTransactionMutation } from "@/queries/transactions.queries";
 import { useFamiliesQuery } from "@/queries/family.queries";
+import { useForm } from "react-hook-form";
 
-export function CreateTransactionForm() {
+interface EditTransactionFormProps {
+  transaction: TTransaction;
+}
+export function EditTransactionForm({ transaction }: EditTransactionFormProps) {
+  const { mutate: editTransction, isPending } = useEditTransactionMutation();
   const { data: families } = useFamiliesQuery();
-
-  const form = useForm<TCreateTransaction>({
-    resolver: zodResolver(CreateTransactionSchema),
-    defaultValues: {
-      amount: 0,
-      category: "",
-      concept: "",
-      description: "",
-      direction: "EXPENSE",
-      id_family: null,
-      payment_date: new Date().toISOString(),
-      payment_method: "TRANSFERENCIA",
-    },
+  const form = useForm<TEditTransaction>({
+    resolver: zodResolver(EditTransactionSchema),
+    defaultValues: transaction,
   });
 
   const { showAlert } = useAlert();
-  const createTransactionMutation = useCreateTransactionMutation();
+  const handleInputChange = (name: keyof TEditTransaction, value: string) => {
+    if (isNaN(Number(value))) return;
+    form.setValue(name, Number(value));
+  };
 
-  function onSubmit(values: TCreateTransaction) {
-    createTransactionMutation.mutate(
+  function onSubmit(values: TEditTransaction) {
+    editTransction(
       {
-        ...values,
-        payment_date: values.payment_date
-          ? new Date(values.payment_date).toISOString()
-          : new Date().toISOString(),
+        id: transaction.id,
+        data: {
+          ...values,
+          payment_date: values.payment_date
+            ? new Date(values.payment_date).toISOString()
+            : new Date().toISOString(),
+        },
       },
       {
         onSuccess: () => {
@@ -84,12 +87,6 @@ export function CreateTransactionForm() {
       }
     );
   }
-
-  const handleInputChange = (name: keyof TCreateTransaction, value: string) => {
-    if (isNaN(Number(value))) return;
-    form.setValue(name, Number(value));
-  };
-
   return (
     <Form {...form}>
       <form
@@ -114,7 +111,7 @@ export function CreateTransactionForm() {
                     />
                   </FormControl>
                   <FormDescription>
-                    {formatCurrency(form.getValues("amount"))}
+                    {formatCurrency(form.getValues("amount")!)}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -135,7 +132,9 @@ export function CreateTransactionForm() {
                     />
                   </FormControl>
                   <FormDescription>
-                    Fecha en la que se realizó esta transacción
+                    {field.value
+                      ? field.value.split("T")[0]
+                      : "Fecha en la que se realizó esta transacción"}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -270,8 +269,8 @@ export function CreateTransactionForm() {
             )}
           />
         </section>
-        <Button type="submit" isLoading={createTransactionMutation.isPending}>
-          Crear
+        <Button type="submit" isLoading={isPending}>
+          Actualizar
         </Button>
       </form>
     </Form>
