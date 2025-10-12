@@ -17,6 +17,10 @@ export const fetchTransactions = async (): Promise<TTransaction[]> => {
   const apiRes = await TransactionService.getAll();
   return apiRes.map((apiData) => transactionAdapter(apiData));
 };
+export const fetchTransactionsCategories = async (): Promise<string[]> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  return await TransactionService.getCategories();
+};
 
 export const fetchTransactionsStats = async (): Promise<TMonthlyStat[]> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
@@ -48,6 +52,14 @@ export const createTransactionCuotaFamily = async (
   return transactionAdapter(newTransaction);
 };
 
+export const editTransction = async (
+  id: string,
+  body: Partial<TTransaction>
+) => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  const editedTransaction = await TransactionService.edit(id, body);
+  return transactionAdapter(editedTransaction);
+};
 /* ============================
  * Queries
  * ============================ */
@@ -63,6 +75,12 @@ export function useTransactionsStatsQuery() {
   return useQuery({
     queryKey: ["transactions_stats"],
     queryFn: fetchTransactionsStats,
+  });
+}
+export function useTransactionsCategoriesQuery() {
+  return useQuery({
+    queryKey: ["transactions_categories"],
+    queryFn: fetchTransactionsCategories,
   });
 }
 
@@ -101,6 +119,19 @@ export function useCreateTransactionCuotaFamilyMutation() {
           queryKey: ["transactions", (variables as any).familyId],
         });
       }
+      queryClient.invalidateQueries({ queryKey: ["transactions_stats"] });
+    },
+  });
+}
+
+export function useEditTransactionMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<TTransaction> }) =>
+      editTransction(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["transactions_stats"] });
     },
   });

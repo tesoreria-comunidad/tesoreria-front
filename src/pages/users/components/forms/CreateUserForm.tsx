@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { CreateUserSchema, type TCreateUser } from "@/models";
+import { CreateUserSchema, type TCreateUser, type TRama } from "@/models";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,7 +32,7 @@ import { useAppSelector } from "@/store/hooks";
 import { useRamasQuery } from "@/queries/ramas.queries";
 import { useFamiliesQuery } from "@/queries/family.queries";
 
-export function CreateUserForm({ idRama }: { idRama?: string }) {
+export function CreateUserForm({ rama }: { rama?: TRama }) {
   const { user } = useAppSelector((s) => s.session);
   const { data: families } = useFamiliesQuery();
   const { data: ramas } = useRamasQuery();
@@ -55,7 +55,7 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
       birthdate: "", // si preferís Date -> cambia el schema
       citizenship: "Argentina",
       id_family: "", // lo convertimos a null si viene vacío
-      id_rama: idRama,
+      id_rama: rama ? rama.id : "",
     },
   });
 
@@ -211,9 +211,11 @@ export function CreateUserForm({ idRama }: { idRama?: string }) {
                         <Select
                           onValueChange={(value) => field.onChange(value)}
                           value={field.value || ""}
+                          disabled={!!rama && !!rama.id}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Rama" />
+                            {/* {field.value} */}
+                            <SelectValue placeholder={field.value || "Rama"} />
                           </SelectTrigger>
                           <SelectContent>
                             {ramas?.map((rama) => (

@@ -3,11 +3,20 @@ import type {
   TMonthlyStat,
 } from "@/adapters/api_models/transaction.schema";
 import { axiosInstance, BASE_URL } from "@/config/axios.config";
-import type { TCreateTransaction } from "@/models/transaction.schema";
+import type {
+  TCreateTransaction,
+  TTransaction,
+} from "@/models/transaction.schema";
 
 export class TransactionService {
   static async getAll(): Promise<TApiTransaction[]> {
     const res = await axiosInstance.get(`${BASE_URL}/transactions`);
+    return res.data;
+  }
+  static async getCategories(): Promise<string[]> {
+    const res = await axiosInstance.get(
+      `${BASE_URL}/transactions/categroy-list`
+    );
     return res.data;
   }
   static async getFamilyTransactions(
@@ -27,6 +36,17 @@ export class TransactionService {
 
   static async create(body: TCreateTransaction): Promise<TApiTransaction> {
     const res = await axiosInstance.post(`${BASE_URL}/transactions`, body);
+    return res.data;
+  }
+
+  static async edit(
+    id: string,
+    body: Partial<TTransaction>
+  ): Promise<TApiTransaction> {
+    const res = await axiosInstance.patch(
+      `${BASE_URL}/transactions/${id}`,
+      body
+    );
     return res.data;
   }
   static async familyCuota(body: TCreateTransaction): Promise<TApiTransaction> {
