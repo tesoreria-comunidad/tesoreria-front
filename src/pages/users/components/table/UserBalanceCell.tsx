@@ -1,13 +1,10 @@
-import { familyAdapter } from "@/adapters";
-import BalanceCard from "@/components/common/BalanceCard";
 import { LoaderSpinner } from "@/components/common/LoaderSpinner";
 import { TooltipComponent } from "@/components/common/TooltipComponent";
 import { Badge } from "@/components/ui/badge";
-import type { TFamily, TUser } from "@/models";
-import { useFamiliesQuery } from "@/queries/family.queries";
+import type { TUser } from "@/models";
+import BalanceCell from "@/pages/family/components/table/BalanceCell";
+import { useFamilyByIdQuery } from "@/queries/family.queries";
 import { useRamasQuery } from "@/queries/ramas.queries";
-import { FamilyServices } from "@/services/family.service";
-import { useEffect, useState } from "react";
 
 export function UserBalanceCell({
   user,
@@ -17,32 +14,11 @@ export function UserBalanceCell({
   ramaId?: string;
 }) {
   const { data: ramas } = useRamasQuery();
-  const { data: families } = useFamiliesQuery();
+  const { data: family, isLoading: loading } = useFamilyByIdQuery(
+    user.id_family!
+  );
+
   if (!user.id_family) return "-";
-
-  const familyStore = families?.find((f) => f.id === user.id_family);
-  const [family, setFamily] = useState<TFamily>();
-
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    if (familyStore) {
-      setFamily(familyStore);
-      return;
-    }
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const res = await FamilyServices.getById(user.id_family as string);
-
-        setFamily(familyAdapter(res));
-      } catch (error) {
-        console.log("Error fetching family details: ", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [user]);
 
   if (loading) return <LoaderSpinner />;
 
@@ -56,9 +32,11 @@ export function UserBalanceCell({
       </TooltipComponent>
     );
   }
+
+  if (!family) return "-";
   return (
     <div>
-      <BalanceCard balanceValue={family?.balance.value || 0} />
+      <BalanceCell family={family} />
     </div>
   );
 }

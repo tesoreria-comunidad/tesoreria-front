@@ -6,13 +6,15 @@ import { IsCustomCuotaTooltip } from "@/components/common/IsCustomCuotaTooltip";
 
 import { UpdateFamilyDialog } from "../UpdateFamilyDialog";
 import { useBalanceByIdQuery } from "@/queries/balance.queries";
+import { UploadTransactionAside } from "../UploadTransactionAside";
 
 interface BalanceCellProps {
-  id_balance: string;
   family: TFamily;
 }
-export default function BalanceCell({ id_balance, family }: BalanceCellProps) {
-  const { data: balance, isLoading: loading } = useBalanceByIdQuery(id_balance);
+export default function BalanceCell({ family }: BalanceCellProps) {
+  const { data: balance, isLoading: loading } = useBalanceByIdQuery(
+    family.id_balance
+  );
 
   if (loading) {
     return (
@@ -29,10 +31,11 @@ export default function BalanceCell({ id_balance, family }: BalanceCellProps) {
       <section className="flex items-center gap-1">
         {balance.is_custom_cuota && <IsCustomCuotaTooltip />}
         <UpdateFamilyDialog
-          id_balance={id_balance}
+          id_balance={family.id_balance}
           family={family}
           viewBalanceData
         />
+        <UploadTransactionAside family={family} balance={balance} size="sm" />
       </section>
     </div>
   );

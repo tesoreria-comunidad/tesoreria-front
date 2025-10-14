@@ -33,9 +33,7 @@ export function FamilyTable({ families }: { families: TFamily[] }) {
       accessorKey: "id_balance",
       header: "Balance",
       size: 100,
-      cell: ({ getValue, row }) => (
-        <BalanceCell id_balance={getValue<string>()} family={row.original} />
-      ),
+      cell: ({ row }) => <BalanceCell family={row.original} />,
     },
     {
       accessorKey: "manage_by",

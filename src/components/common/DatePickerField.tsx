@@ -26,7 +26,6 @@ type DatePickerFieldProps<T extends FieldValues> = {
 };
 
 const formatToYMD = (value: string) => {
-  console.log("value", value);
   const date = new Date(value);
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");

@@ -1,6 +1,7 @@
 import type { TMonthlyStat } from "@/adapters/api_models/transaction.schema";
 import { transactionAdapter } from "@/adapters/transaction.adapter";
 import { setAuthInterceptor } from "@/config/axios.config";
+import type { TFamily } from "@/models";
 import type {
   TCreateTransaction,
   TTransaction,
@@ -114,12 +115,24 @@ export function useCreateTransactionCuotaFamilyMutation() {
   return useMutation({
     mutationFn: createTransactionCuotaFamily,
     onSuccess: (_, variables) => {
-      if ((variables as any).familyId) {
+      const familyData = queryClient.getQueryData([
+        "families",
+        (variables as any).id_family,
+      ]) as TFamily;
+
+      if ((variables as any).id_family) {
         queryClient.invalidateQueries({
-          queryKey: ["transactions", (variables as any).familyId],
+          queryKey: ["transactions", (variables as any).id_family],
+        });
+      }
+
+      if (familyData.manage_by) {
+        queryClient.invalidateQueries({
+          queryKey: ["cobrabilidad", familyData.manage_by],
         });
       }
       queryClient.invalidateQueries({ queryKey: ["transactions_stats"] });
+      queryClient.invalidateQueries({ queryKey: ["balances"] });
     },
   });
 }

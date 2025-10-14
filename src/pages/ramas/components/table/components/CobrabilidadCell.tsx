@@ -14,20 +14,17 @@ import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/utils";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
-import { useCobrabilidadQuery } from "@/queries/cobrabilidad.queries";
+import { useCobrabilidadByRamaQuery } from "@/queries/cobrabilidad.queries";
 import { LoaderSpinner } from "@/components/common/LoaderSpinner";
 
 export function CobrabilidadCell({ rama }: { rama: TRama }) {
-  const { data, isLoading } = useCobrabilidadQuery({
-    month: (new Date().getMonth() + 1).toString(),
-    year: new Date().getFullYear().toString(),
-  });
-
-  const ramaId = rama.id;
-
-  const cobrabilidadRama = data?.find((e) => e.id_rama === ramaId);
-  const cobrabilidad =
-    data?.find((e) => e.id_rama === ramaId)?.cobrabilidad || 0;
+  const { data: cobrabilidadRama, isLoading } = useCobrabilidadByRamaQuery(
+    {
+      month: (new Date().getMonth() + 1).toString(),
+      year: new Date().getFullYear().toString(),
+    },
+    rama.id
+  );
 
   if (isLoading)
     return (
@@ -35,8 +32,9 @@ export function CobrabilidadCell({ rama }: { rama: TRama }) {
         <LoaderSpinner />
       </div>
     );
-  if (!data) return "-";
-  if (!cobrabilidadRama) return "-";
+
+  if (!cobrabilidadRama) return "n/a";
+  const cobrabilidad = cobrabilidadRama?.cobrabilidad ?? 0;
   return (
     <Dialog>
       <DialogTrigger asChild>

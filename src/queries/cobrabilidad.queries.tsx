@@ -25,3 +25,14 @@ export function useCobrabilidadQuery(params: TQueryParams) {
     enabled: !!params,
   });
 }
+export function useCobrabilidadByRamaQuery(
+  params: TQueryParams,
+  ramaId: string
+) {
+  return useQuery({
+    queryKey: ["cobrabilidad", ramaId],
+    queryFn: () => fetchCobrabilidad(params),
+    enabled: !!params,
+    select: (data) => data.filter((item) => item.id_rama === ramaId)[0],
+  });
+}
