@@ -3,7 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* @custom-variant dark (&:is(.dark *)); */
 /* Scrollbar styles */
 ::-webkit-scrollbar {
   width: 10px;
@@ -11,74 +10,87 @@
   background: var(--input);
   border-radius: 8px;
 }
-
 ::-webkit-scrollbar-thumb {
   background: var(--primary);
   border-radius: 8px;
   border: 2px solid var(--input);
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-2);
 }
-
 ::-webkit-scrollbar-corner {
   background: var(--input);
 }
 
-/* Firefox */
-
+/* Base (light) */
 :root {
-font-family: "Poppins", sans-serif;
+  font-family: "Poppins", sans-serif;
   line-height: 1.5;
   font-weight: 400;
   font-optical-sizing: auto;
   overflow-x: hidden;
   color-scheme: light dark;
   color: rgba(0, 0, 0, 0.87);
-  background-color: #f8f8f8;
+  background-color: #f7f9f8;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
   --radius: 0.625rem;
-  --foreground: oklch(0.145 0 0);
-  --background: oklch(1 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+
+  /* Neutrales */
+  --foreground: oklch(0.18 0 0);        /* texto principal */
+  --background: oklch(0.985 0 0);       /* fondo app */
+  --card: oklch(0.99 0 0);              /* cards claras */
+  --card-foreground: var(--foreground);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #175ba2;
-  --primary-2: #154f8d;
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --popover-foreground: var(--foreground);
+
+  /* Marca */
+  --primary: #166534;                   /* verde bosque (btns, énfasis) */
+  --primary-2: #115e30;                 /* hover/active */
+  --primary-foreground: #ffffff;        /* texto sobre primary */
+
+  /* Secundarios / UI surfaces */
+  --secondary: oklch(0.98 0 0);
+  --secondary-foreground: oklch(0.24 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(0.56 0 0);
   --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: #e7000b;
-  --border: oklch(68.949% 0.00008 271.152);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --income:#17a245;
-  --expense:#a22717;
-  --beca:#fe9a00;
-  --chart-1: #fdab4e;
-  --chart-2:#4dfa89;
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --x: linear-gradient(90deg, #347474 0%, #348862 100%);
+  --accent-foreground: oklch(0.24 0 0);
+
+  /* Estado/alertas */
+  --destructive: #dc2626;               /* rojo accesible */
+  --border: oklch(0.92 0 0);
+  --input: oklch(0.97 0 0);
+  --ring: oklch(0.78 0 0);
+
+  /* Finanzas */
+  --income: #16a34a;                    /* ingresos (verde) */
+  --expense: #dc2626;                   /* egresos (rojo) */
+  --beca: #f59e0b;                      /* becas/avisos (ámbar) */
+
+  /* Charts (accesibles y distinguibles) */
+  --chart-1: #22c55e;                   /* verde */
+  --chart-2: #3b82f6;                   /* azul */
+  --chart-3: #f59e0b;                   /* ámbar */
+  --chart-4: #ef4444;                   /* rojo */
+  --chart-5: #a855f7;                   /* violeta */
+
+  /* Sidebar */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1f2937;
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: oklch(0.78 0 0);
+
+  /* Gradientes / decorativos */
+  --x: linear-gradient(90deg, #166534 0%, #0ea5a0 100%);
 }
 
 @theme inline {
@@ -86,33 +98,40 @@ font-family: "Poppins", sans-serif;
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
   --color-primary: var(--primary);
   --color-primary-2: var(--primary-2);
   --color-primary-foreground: var(--primary-foreground);
+
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
   --color-destructive: var(--destructive);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
   --color-income: var(--income);
   --color-expense: var(--expense);
   --color-beca: var(--beca);
+
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -120,53 +139,53 @@ font-family: "Poppins", sans-serif;
   --color-sidebar-accent: var(--sidebar-accent);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
-  --color-bg-gradient: linear-gradient(90deg, #347474 0%, #348862 100%);
+
+  --color-bg-gradient: linear-gradient(90deg, #166534 0%, #0ea5a0 100%);
 }
 
+/* Dark mode */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: #00bc7d;
-  --chart-3: #fe9a00;
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #0b1210;                /* negro verdoso */
+  --foreground: #f8fafc;                /* texto claro */
+  --card: #111614;                      /* tarjetas */
+  --card-foreground: #f8fafc;
+  --popover: #111614;
+  --popover-foreground: #f8fafc;
+
+  --primary: #34d399;                   /* emerald 400 (destaca en dark) */
+  --primary-foreground: #052e1a;        /* texto sobre primary */
+
+  --secondary: #0f172a;                 /* gris azulado muy oscuro */
+  --secondary-foreground: #e5e7eb;
+  --muted: #0f172a;
+  --muted-foreground: #9aa4b2;
+  --accent: #0f172a;
+  --accent-foreground: #e5e7eb;
+
+  --destructive: #f87171;               /* rojo claro para dark */
+  --border: #1f2937;
+  --input: #0d1412;
+  --ring: #334155;
+
+  --chart-1: #22c55e;
+  --chart-2: #60a5fa;
+  --chart-3: #fbbf24;
+  --chart-4: #f87171;
+  --chart-5: #c084fc;
+
+  --sidebar: #0e1513;                   /* sidebar más oscuro que card */
+  --sidebar-foreground: #e5e7eb;
+  --sidebar-primary: #34d399;
+  --sidebar-primary-foreground: #052e1a;
+  --sidebar-accent: #0f1a18;
+  --sidebar-accent-foreground: #e5e7eb;
+  --sidebar-border: #1b2421;
+  --sidebar-ring: #334155;
 }
 
-button:hover{
-  cursor: pointer;
-}
+button:hover { cursor: pointer; }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; }
 }
-
