@@ -13,6 +13,10 @@ export class TransactionService {
     const res = await axiosInstance.get(`${BASE_URL}/transactions`);
     return res.data;
   }
+  static async getById(id: string): Promise<TApiTransaction> {
+    const res = await axiosInstance.get(`${BASE_URL}/transactions/${id}`);
+    return res.data;
+  }
   static async getCategories(): Promise<string[]> {
     const res = await axiosInstance.get(
       `${BASE_URL}/transactions/categroy-list`

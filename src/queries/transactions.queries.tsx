@@ -36,6 +36,13 @@ export const fetchFamilyTransactions = async (
   const apiRes = await TransactionService.getFamilyTransactions(familyId);
   return apiRes.map((apiData) => transactionAdapter(apiData));
 };
+export const fetchTransactionsById = async (
+  id: string
+): Promise<TTransaction> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  const apiRes = await TransactionService.getById(id);
+  return transactionAdapter(apiRes);
+};
 
 export const createTransaction = async (
   body: TCreateTransaction
@@ -90,6 +97,13 @@ export function useTransactionsByFamilyIdQuery(familyId: string) {
     queryKey: ["transactions", familyId],
     queryFn: () => fetchFamilyTransactions(familyId),
     enabled: !!familyId, // evita ejecutar si familyId es null/undefined
+  });
+}
+export function useTransaccionById(id: string) {
+  return useQuery({
+    queryKey: ["transactions", id],
+    queryFn: () => fetchTransactionsById(id),
+    enabled: !!id,
   });
 }
 

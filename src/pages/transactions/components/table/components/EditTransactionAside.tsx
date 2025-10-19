@@ -10,6 +10,7 @@ import type { TTransaction } from "@/models/transaction.schema";
 import { EditTransactionForm } from "../../form/EditTransactionForm";
 import { Button } from "@/components/ui/button";
 import { PenIcon } from "lucide-react";
+import { TransactionPreview } from "@/pages/dashboard/components/TransactionPreview";
 
 interface EditTransactionAsideProps {
   transaction: TTransaction;
@@ -26,8 +27,10 @@ export default function EditTransactionAside({
       </SheetTrigger>
       <SheetContent>
         <SheetHeader className="h-full">
-          <SheetTitle>Are you absolutely sure?</SheetTitle>
-          <SheetDescription></SheetDescription>
+          <SheetTitle>Modificar transaccion</SheetTitle>
+          <SheetDescription className="w-full">
+            <TransactionPreview transactionId={transaction.id} />
+          </SheetDescription>
           <section className="flex-1 ">
             <EditTransactionForm transaction={transaction} />
           </section>

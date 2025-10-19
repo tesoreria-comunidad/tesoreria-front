@@ -7,6 +7,14 @@ import {
   ActionTargetTable,
 } from "@/models/logs.schema";
 import { UserCell } from "./UserCell";
+import { TransactionPreview } from "@/pages/dashboard/components/TransactionPreview";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 
 function Pill({
   children,
@@ -43,6 +51,46 @@ const actionClass: Partial<Record<keyof typeof ActionType, string>> = {
 export function ActionLogsTable({ logs }: { logs: TLog[] }) {
   const columns: TColumnDef<TLog>[] = [
     { accessorKey: "id", hidden: true },
+    {
+      accessorKey: "target_table",
+      header: "Detalle",
+      size: 80,
+      cell: ({ row }) => {
+        const t = row.original.target_table as
+          | keyof typeof ActionTargetTable
+          | undefined;
+        const id = row.original.target_id ?? "—";
+        const extras =
+          row.original.id_family || row.original.id_transaction
+            ? ` · fam: ${row.original.id_family ?? "—"} | txn: ${
+                row.original.id_transaction ?? "—"
+              }`
+            : "";
+
+        if (row.original.target_table === "TRANSACTIONS")
+          return (
+            <Popover>
+              <PopoverTrigger>
+                <Button size={"icon"} variant={"ghost"}>
+                  <Eye className="size-3.5" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full  ">
+                <TransactionPreview transactionId={id!} />
+              </PopoverContent>
+            </Popover>
+          );
+        return (
+          <div className="text-xs">
+            <div className="text-gray-700">{t ?? "—"}</div>
+            <div className="font-mono break-all">{id}</div>
+            {extras && (
+              <div className="text-[11px] text-gray-500">{extras}</div>
+            )}
+          </div>
+        );
+      },
+    },
     {
       accessorKey: "createdAt",
       header: "Fecha",
@@ -100,33 +148,7 @@ export function ActionLogsTable({ logs }: { logs: TLog[] }) {
         </span>
       ),
     },
-    {
-      accessorKey: "target_table",
-      header: "Target",
-      size: 280,
-      hidden: true,
-      cell: ({ row }) => {
-        const t = row.original.target_table as
-          | keyof typeof ActionTargetTable
-          | undefined;
-        const id = row.original.target_id ?? "—";
-        const extras =
-          row.original.id_family || row.original.id_transaction
-            ? ` · fam: ${row.original.id_family ?? "—"} | txn: ${
-                row.original.id_transaction ?? "—"
-              }`
-            : "";
-        return (
-          <div className="text-xs">
-            <div className="text-gray-700">{t ?? "—"}</div>
-            <div className="font-mono break-all">{id}</div>
-            {extras && (
-              <div className="text-[11px] text-gray-500">{extras}</div>
-            )}
-          </div>
-        );
-      },
-    },
+
     {
       accessorKey: "message",
       header: "Mensaje",
