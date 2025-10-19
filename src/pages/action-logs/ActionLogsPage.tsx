@@ -11,7 +11,6 @@ import { ActionLogsTable } from "./components/table/ActionLogsTable";
 
 export default function ActionLogsPage() {
   const { isLoading, data } = useLogsQuery();
-
   const [actionType, setActionType] = useState<keyof typeof ActionType | "">(
     ""
   );

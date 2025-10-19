@@ -14,20 +14,22 @@ import { CuotaPaymentForm } from "./CuotaPaymentForm";
 export function UploadTransactionAside({
   family,
   balance,
+  size = "md",
 }: {
   family: TFamily;
   balance: TBalance;
+  size?: "sm" | "md" | "lg";
 }) {
   return (
     <Sheet>
       <SheetTrigger>
         <Button className="flex items-center gap-2">
           <UploadCloudIcon />
-          <span>Cargar Pago</span>
+          {size !== "sm" && <span>Cargar Pago</span>}
         </Button>
       </SheetTrigger>
       <SheetContent>
-        <SheetHeader>
+        <SheetHeader className="flex-1">
           <SheetTitle>Cargar Pago</SheetTitle>
           <SheetDescription>Cargar pago de cuota</SheetDescription>
           <CuotaPaymentForm family={family} balance={balance} />

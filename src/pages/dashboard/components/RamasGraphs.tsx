@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -67,29 +66,6 @@ export function RamasGraphs() {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter>
-        <div className="flex justify-between w-full">
-          {data.map((rama) => (
-            <div key={rama.name} className="flex flex-col items-center gap-2">
-              <span className="font-medium">{rama.name}</span>
-              <div className="flex flex-col items-start gap-1 text-xs">
-                <div className="flex  items-center gap-2  leading-none">
-                  <div className="bg-income size-2 rounded"></div>
-                  <span> {rama.altas} activos</span>
-                </div>
-                <div className="flex  items-center gap-2  leading-none">
-                  <div className="bg-beca size-2 rounded"></div>
-                  <span>{rama.becas} becados</span>
-                </div>
-                <div className="flex  items-center gap-2  leading-none">
-                  <div className="bg-expense size-2 rounded"></div>
-                  <span>{rama.bajas} bajas</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </CardFooter>
     </Card>
   );
 }

@@ -1,6 +1,7 @@
 import type { TMonthlyStat } from "@/adapters/api_models/transaction.schema";
 import { transactionAdapter } from "@/adapters/transaction.adapter";
 import { setAuthInterceptor } from "@/config/axios.config";
+import type { TFamily } from "@/models";
 import type {
   TCreateTransaction,
   TTransaction,
@@ -34,6 +35,13 @@ export const fetchFamilyTransactions = async (
   await setAuthInterceptor(localStorage.getItem("accessToken"));
   const apiRes = await TransactionService.getFamilyTransactions(familyId);
   return apiRes.map((apiData) => transactionAdapter(apiData));
+};
+export const fetchTransactionsById = async (
+  id: string
+): Promise<TTransaction> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  const apiRes = await TransactionService.getById(id);
+  return transactionAdapter(apiRes);
 };
 
 export const createTransaction = async (
@@ -91,6 +99,13 @@ export function useTransactionsByFamilyIdQuery(familyId: string) {
     enabled: !!familyId, // evita ejecutar si familyId es null/undefined
   });
 }
+export function useTransaccionById(id: string) {
+  return useQuery({
+    queryKey: ["transactions", id],
+    queryFn: () => fetchTransactionsById(id),
+    enabled: !!id,
+  });
+}
 
 /* ============================
  * Mutations
@@ -114,12 +129,24 @@ export function useCreateTransactionCuotaFamilyMutation() {
   return useMutation({
     mutationFn: createTransactionCuotaFamily,
     onSuccess: (_, variables) => {
-      if ((variables as any).familyId) {
+      const familyData = queryClient.getQueryData([
+        "families",
+        (variables as any).id_family,
+      ]) as TFamily;
+
+      if ((variables as any).id_family) {
         queryClient.invalidateQueries({
-          queryKey: ["transactions", (variables as any).familyId],
+          queryKey: ["transactions", (variables as any).id_family],
+        });
+      }
+
+      if (familyData.manage_by) {
+        queryClient.invalidateQueries({
+          queryKey: ["cobrabilidad", familyData.manage_by],
         });
       }
       queryClient.invalidateQueries({ queryKey: ["transactions_stats"] });
+      queryClient.invalidateQueries({ queryKey: ["balances"] });
     },
   });
 }

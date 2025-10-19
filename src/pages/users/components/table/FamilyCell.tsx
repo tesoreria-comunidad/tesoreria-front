@@ -13,7 +13,7 @@ export function FamilyCell({ id_family }: { id_family: string }) {
         className="hover:underline flex items-center gap-1"
       >
         <Navigation className="size-4" />
-        <p className=""> {family.name}</p>
+        <p className="text-sm"> {family.name}</p>
       </Link>
     </div>
   );

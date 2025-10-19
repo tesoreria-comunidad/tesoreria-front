@@ -12,7 +12,7 @@ export function CreateRamaAside() {
   return (
     <Sheet>
       <SheetTrigger>
-        <Button>
+        <Button variant={"secondary"}>
           <Plus />
           Nueva Cuota
         </Button>

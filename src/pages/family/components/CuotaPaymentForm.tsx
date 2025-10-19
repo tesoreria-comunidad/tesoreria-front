@@ -31,6 +31,7 @@ import { useAlert } from "@/context/AlertContext";
 import { DatePickerField } from "@/components/common/DatePickerField";
 import type { TBalance, TFamily } from "@/models";
 import { useCreateTransactionCuotaFamilyMutation } from "@/queries/transactions.queries";
+import { CuotaUploadInformation } from "./CuotaUploadInformation";
 
 export function CuotaPaymentForm({
   family,
@@ -95,112 +96,128 @@ export function CuotaPaymentForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className="p-4 flex flex-col justify-between gap-4 h-full"
       >
-        <section className="space-y-8">
-          <div className="flex flex-col w-full gap-8">
+        <div className="space-y-6 flex flex-col flex-1">
+          <section className="space-y-8">
+            <div className="flex flex-col w-full gap-8">
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Monto</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Monto"
+                        {...field}
+                        onChange={(e) =>
+                          handleInputChange(field.name, e.target.value)
+                        }
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {formatCurrency(form.getValues("amount"))}
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="payment_date"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <DatePickerField
+                        control={form.control}
+                        name={field.name}
+                        label="Fecha"
+                        placeholder="Seleccionar fecha"
+                        disableFuture
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Fecha en la que se realizó esta transacción
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="payment_method"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Método de pago</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={(value) =>
+                          form.setValue(
+                            "payment_method",
+                            value as TPaymentMethod
+                          )
+                        }
+                        value={field.value}
+                      >
+                        <SelectTrigger
+                          className="w-[180px]"
+                          value={field.value}
+                        >
+                          <SelectValue placeholder="Role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {PAYMENT_METHODS_OPTIONS.map((role) => (
+                            <SelectItem key={role} value={role}>
+                              {role}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
-              name="amount"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Monto</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Monto"
-                      {...field}
-                      onChange={(e) =>
-                        handleInputChange(field.name, e.target.value)
-                      }
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    {formatCurrency(form.getValues("amount"))}
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="payment_date"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormControl>
-                    <DatePickerField
-                      control={form.control}
-                      name={field.name}
-                      label="Fecha"
-                      placeholder="Seleccionar fecha"
-                      disableFuture
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Fecha en la que se realizó esta transacción
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="payment_method"
+              name="concept"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Método de pago</FormLabel>
+                  <FormLabel>Concepto</FormLabel>
                   <FormControl>
-                    <Select
-                      onValueChange={(value) =>
-                        form.setValue("payment_method", value as TPaymentMethod)
-                      }
-                      value={field.value}
-                    >
-                      <SelectTrigger className="w-[180px]" value={field.value}>
-                        <SelectValue placeholder="Role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {PAYMENT_METHODS_OPTIONS.map((role) => (
-                          <SelectItem key={role} value={role}>
-                            {role}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      placeholder="Concepto de este movimiento"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Descripción</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Descripción de este movimiento"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </section>
 
-          <FormField
-            control={form.control}
-            name="concept"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Concepto</FormLabel>
-                <FormControl>
-                  <Input placeholder="Concepto de este movimiento" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Descripción</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Descripción de este movimiento"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </section>
+          <hr />
+          <section className="flex-1 p-8">
+            <CuotaUploadInformation values={form.watch()} />
+          </section>
+        </div>
         <Button type="submit" isLoading={createCuotaMutation.isPending}>
           Cargar Cuota
         </Button>

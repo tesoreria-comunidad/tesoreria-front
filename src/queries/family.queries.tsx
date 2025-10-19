@@ -13,6 +13,11 @@ export const fetchFamilies = async () => {
   const res = await FamilyServices.getAll();
   return res.map((apiFamily) => familyAdapter(apiFamily));
 };
+export const fetchFamilyById = async (id: string) => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  const res = await FamilyServices.getById(id);
+  return familyAdapter(res);
+};
 export const createFamily = async (body: TCreateFamily) => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
   const res = await FamilyServices.create(body);
@@ -31,6 +36,12 @@ export function useFamiliesQuery() {
   return useQuery({
     queryKey: ["families"],
     queryFn: fetchFamilies,
+  });
+}
+export function useFamilyByIdQuery(id: string) {
+  return useQuery({
+    queryKey: ["families", id],
+    queryFn: () => fetchFamilyById(id),
   });
 }
 

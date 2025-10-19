@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Calculator } from "lucide-react";
+import { Calculator, Users } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -29,8 +29,9 @@ export function CuotasPorHermanoAside() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant={"outline"}>
+                <Button variant={"secondary"}>
                   <Calculator />
+                  <Users />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>

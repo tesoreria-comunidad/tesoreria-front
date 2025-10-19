@@ -10,13 +10,15 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Banknote, FileDown } from "lucide-react";
+import { Banknote, FileDown, Info } from "lucide-react";
 import { formatCurrency } from "@/utils";
 import { BalanceServices } from "@/services/balance.service";
 import { useMemo, useState } from "react";
 import { useAlert } from "@/context/AlertContext";
 import { useFamiliesQuery } from "@/queries/family.queries";
 import { useCuotasQuery } from "@/queries/cuota.queries";
+import { useMonthBalanceLogQuery } from "@/queries/logs.queries";
+import { TooltipComponent } from "@/components/common/TooltipComponent";
 type RowResult = {
   id: string;
   name: string;
@@ -29,6 +31,7 @@ export function UpdateBalanceButton() {
   const { user } = useAppSelector((s) => s.session);
   const { data: cuotas } = useCuotasQuery();
   const currentCuota = cuotas?.find((c) => c.is_active);
+  const balanceLogsQuery = useMonthBalanceLogQuery();
   const { data: families } = useFamiliesQuery();
   const { showAlert } = useAlert();
 
@@ -114,12 +117,29 @@ export function UpdateBalanceButton() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="default">
-          <Banknote className="h-4 w-4" />
-          <span className="ml-2">Actualizar balances</span>
-        </Button>
-      </DialogTrigger>
+      <div className="flex items-center gap-2">
+        <DialogTrigger asChild>
+          <Button
+            variant="default"
+            disabled={!!balanceLogsQuery.data}
+            title="xxxxxx"
+          >
+            <Banknote className="h-4 w-4" />
+            <span className="ml-2">Actualizar balances </span>
+          </Button>
+        </DialogTrigger>
+        {!!balanceLogsQuery.data && (
+          <TooltipComponent
+            text={`Los balances ya fueron actualizados este mes ${new Date(
+              balanceLogsQuery.data.createdAt
+            ).toLocaleString()}`}
+          >
+            <div className="text-primary cursor-pointer ">
+              <Info />
+            </div>
+          </TooltipComponent>
+        )}
+      </div>
 
       <DialogContent className="sm:max-w-[640px]">
         <DialogHeader>

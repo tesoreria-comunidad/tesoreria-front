@@ -2,6 +2,8 @@ import { DashboardCard } from "./components/DashboardCard";
 import { UsersGraphs } from "./components/UsersGraphs";
 import { RamasGraphs } from "./components/RamasGraphs";
 import { ExpensesByCategory } from "../transactions/components/graphs/ExpensesByCategory";
+import { TransactionGraph } from "../transactions/components/graphs/TransactionGraph";
+import { ActionLogsList } from "./components/ActionLogsList";
 export function DashboardPage() {
   return (
     <div className=" size-full flex flex-col gap-4    ">
@@ -12,12 +14,16 @@ export function DashboardPage() {
       </section>
 
       <section className=" h-[90%] max-h-[90%] ">
-        <section className="max-h-full grid grid-cols-[2fr_4fr] gap-4 ">
-          <div className="flex-1 flex flex-col gap-4   ">
+        <section className="flex flex-col gap-4">
+          <div className=" grid grid-cols-3  gap-4   ">
             <UsersGraphs />
             <ExpensesByCategory />
+            <TransactionGraph />
           </div>
-          <RamasGraphs />
+          <div className="grid grid-cols-[2fr_1fr] gap-4  ">
+            <RamasGraphs />
+            <ActionLogsList />
+          </div>
         </section>
       </section>
     </div>
