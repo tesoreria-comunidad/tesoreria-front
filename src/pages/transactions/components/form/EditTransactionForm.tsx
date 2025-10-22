@@ -39,6 +39,7 @@ import { useAlert } from "@/context/AlertContext";
 import { DatePickerField } from "@/components/common/DatePickerField";
 import { useFamiliesQuery } from "@/queries/family.queries";
 import { useForm } from "react-hook-form";
+import { PenIcon } from "lucide-react";
 
 interface EditTransactionFormProps {
   transaction: TTransaction;
@@ -91,10 +92,10 @@ export function EditTransactionForm({ transaction }: EditTransactionFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="pt-8 flex flex-col justify-between h-full"
+        className=" flex flex-col gap-10 "
       >
-        <section className="space-y-8">
-          <div className="flex items-start gap-2">
+        <section className="space-y-8  ">
+          <div className="flex flexc items-start gap-2">
             <FormField
               control={form.control}
               name="amount"
@@ -117,29 +118,7 @@ export function EditTransactionForm({ transaction }: EditTransactionFormProps) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="payment_date"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormControl>
-                    <DatePickerField
-                      control={form.control}
-                      name={field.name}
-                      label="Fecha"
-                      placeholder="Seleccionar fecha"
-                      disableFuture
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    {field.value
-                      ? field.value.split("T")[0]
-                      : "Fecha en la que se realizó esta transacción"}
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="payment_method"
@@ -171,6 +150,31 @@ export function EditTransactionForm({ transaction }: EditTransactionFormProps) {
             />
           </div>
 
+          <div>
+            <FormField
+              control={form.control}
+              name="payment_date"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormControl>
+                    <DatePickerField
+                      control={form.control}
+                      name={field.name}
+                      label="Fecha"
+                      placeholder="Seleccionar fecha"
+                      disableFuture
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    {field.value
+                      ? field.value.split("T")[0]
+                      : "Fecha en la que se realizó esta transacción"}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <div className="flex gap-2">
             <CategoryField form={form} />
             <FormField
@@ -270,6 +274,7 @@ export function EditTransactionForm({ transaction }: EditTransactionFormProps) {
           />
         </section>
         <Button type="submit" isLoading={isPending}>
+          <PenIcon />
           Actualizar
         </Button>
       </form>

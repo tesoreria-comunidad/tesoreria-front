@@ -17,9 +17,13 @@ export class TransactionService {
     const res = await axiosInstance.get(`${BASE_URL}/transactions/${id}`);
     return res.data;
   }
+  static async delete(id: string) {
+    const res = await axiosInstance.delete(`${BASE_URL}/transactions/${id}`);
+    return res.data;
+  }
   static async getCategories(): Promise<string[]> {
     const res = await axiosInstance.get(
-      `${BASE_URL}/transactions/categroy-list`
+      `${BASE_URL}/transactions/category-list`
     );
     return res.data;
   }
