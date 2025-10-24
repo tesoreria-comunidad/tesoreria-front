@@ -83,7 +83,7 @@ export function TransactionPreview({
   }
 
   return (
-    <div className="w-lg ">
+    <div className="w-lg  border p-4 rounded">
       {/* header monto + direction + método */}
       <div className="mb-3 flex items-center justify-between">
         <div className="text-lg font-semibold">{formatCurrency(tx.amount)}</div>

@@ -10,7 +10,6 @@ import {
 import { FamilyCell } from "@/pages/users/components/table/FamilyCell";
 import { BanknoteArrowDown, BanknoteArrowUp, Filter } from "lucide-react";
 import { formatCurrency } from "@/utils";
-import EditTransactionAside from "./components/EditTransactionAside";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTransactionsCategoriesQuery } from "@/queries/transactions.queries";
@@ -26,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/common/DatePicker";
+import { ActionCell } from "./components/ActionCell";
 
 // Opcional: para mostrar el select de familias
 type FamilyOption = { id: string; name: string };
@@ -168,7 +168,7 @@ export function TransactionsTable({
     {
       header: "Acciones",
       size: 100,
-      cell: ({ row }) => <EditTransactionAside transaction={row.original} />,
+      cell: ({ row }) => <ActionCell transaction={row.original} />,
     },
   ];
 

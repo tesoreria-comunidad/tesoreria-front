@@ -1,6 +1,7 @@
 import type { TMonthlyStat } from "@/adapters/api_models/transaction.schema";
 import { transactionAdapter } from "@/adapters/transaction.adapter";
 import { setAuthInterceptor } from "@/config/axios.config";
+import { useAlert } from "@/context/AlertContext";
 import type { TFamily } from "@/models";
 import type {
   TCreateTransaction,
@@ -42,6 +43,12 @@ export const fetchTransactionsById = async (
   await setAuthInterceptor(localStorage.getItem("accessToken"));
   const apiRes = await TransactionService.getById(id);
   return transactionAdapter(apiRes);
+};
+export const fetchDeleteTransaction = async (
+  id: string
+): Promise<TTransaction> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  return await TransactionService.delete(id);
 };
 
 export const createTransaction = async (
@@ -160,6 +167,51 @@ export function useEditTransactionMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["transactions_stats"] });
+    },
+  });
+}
+
+export function useDeleteTransactionMutation() {
+  const queryClient = useQueryClient();
+  const { showAlert } = useAlert();
+  return useMutation({
+    mutationFn: (id: string) => fetchDeleteTransaction(id),
+    onSuccess: (deleted) => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["transactions_stats"] });
+      queryClient.invalidateQueries({ queryKey: ["balances"] });
+
+      if (deleted?.id_family) {
+        queryClient.invalidateQueries({
+          queryKey: ["transactions", deleted.id_family],
+        });
+
+        const familyData = queryClient.getQueryData([
+          "families",
+          deleted.id_family,
+        ]) as TFamily | undefined;
+
+        if (familyData?.manage_by) {
+          queryClient.invalidateQueries({
+            queryKey: ["cobrabilidad", familyData.manage_by],
+          });
+        }
+      }
+
+      const parts: string[] = [];
+      if (deleted?.id) parts.push(`ID: ${deleted.id}`);
+      if (deleted?.id_family) parts.push(`Familia: ${deleted.id_family}`);
+      if ((deleted as any)?.amount != null)
+        parts.push(`Monto: ${(deleted as any).amount}`);
+      const description = parts.length
+        ? parts.join(" • ")
+        : "La transacción se eliminó correctamente.";
+
+      showAlert({
+        title: "Transacción eliminada",
+        description,
+        type: "success",
+      });
     },
   });
 }
