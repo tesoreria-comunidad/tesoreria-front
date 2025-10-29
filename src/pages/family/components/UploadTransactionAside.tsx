@@ -28,12 +28,15 @@ export function UploadTransactionAside({
           {size !== "sm" && <span>Cargar Pago</span>}
         </Button>
       </SheetTrigger>
-      <SheetContent>
-        <SheetHeader className="flex-1">
+      <SheetContent className="flex flex-col h-full">
+        <SheetHeader className="p-4 pb-2">
           <SheetTitle>Cargar Pago</SheetTitle>
           <SheetDescription>Cargar pago de cuota</SheetDescription>
-          <CuotaPaymentForm family={family} balance={balance} />
         </SheetHeader>
+
+        <div className="flex-1 overflow-y-auto px-4">
+          <CuotaPaymentForm family={family} balance={balance} />
+        </div>
       </SheetContent>
     </Sheet>
   );
