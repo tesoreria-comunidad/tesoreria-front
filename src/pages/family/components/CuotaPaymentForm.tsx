@@ -94,7 +94,7 @@ export function CuotaPaymentForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="p-4 flex flex-col justify-between gap-4 h-full"
+        className="p-4 flex flex-col gap-6"
       >
         <div className="space-y-6 flex flex-col flex-1">
           <section className="space-y-8">
@@ -214,7 +214,7 @@ export function CuotaPaymentForm({
           </section>
 
           <hr />
-          <section className="flex-1 p-8">
+          <section>
             <CuotaUploadInformation values={form.watch()} />
           </section>
         </div>
