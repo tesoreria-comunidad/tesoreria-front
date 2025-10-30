@@ -9,14 +9,16 @@ import {
 } from "@/components/ui/sheet";
 import { UserRoundPlus } from "lucide-react";
 import { CreateFamilyForm } from "./forms/CreateFamilyForm";
+import { useMobile } from "@/context/MobileContext";
 
 export function CreatFamilyAside() {
+  const { isMobile } = useMobile();
   return (
     <Sheet>
       <SheetTrigger>
         <Button className="flex items-center gap-2">
           <UserRoundPlus />
-          <span>Crear familia</span>
+          {!isMobile && <span>Crear familia</span>}
         </Button>
       </SheetTrigger>
       <SheetContent>

@@ -143,7 +143,7 @@ export function UpdateFamilyDialog({
               <Settings />
             </Button>
           </DialogTrigger>
-          <DialogContent className="lg:max-w-[50vw] max-md:min-w-[90vw] max-md:max-h-[90vh] overflow-auto">
+          <DialogContent className="lg:max-w-[50dvw]  max-md:max-h-[90dvh] overflow-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <PenBoxIcon className="size-5" /> Familia

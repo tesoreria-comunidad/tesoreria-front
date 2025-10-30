@@ -30,7 +30,7 @@ export function FamilyPage() {
           </div>
 
           <span className="text-gray-600 text-sm">
-            ({filteredFamilies?.length} resultados)
+            ({filteredFamilies?.length})
           </span>
         </div>
         <CreatFamilyAside />

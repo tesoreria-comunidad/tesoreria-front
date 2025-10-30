@@ -10,7 +10,7 @@ import { RamaCell } from "@/pages/users/components/table/RamaCell";
 import BalanceCell from "./table/BalanceCell";
 export function FamilyList({ families }: { families: TFamily[] }) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 ">
       {families.map((family) => (
         <FamilyCard family={family} />
       ))}

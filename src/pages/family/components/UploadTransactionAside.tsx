@@ -38,7 +38,9 @@ export function UploadTransactionAside({
       </SheetTrigger>
       <SheetContent
         side={isMobile ? "bottom" : "right"}
-        className={isMobile ? "h-[95vh] rounded-t-2xl p-4 overflow-y-auto" : ""}
+        className={
+          isMobile ? "h-[90dvh] rounded-t-2xl p-4 overflow-y-auto" : ""
+        }
       >
         <SheetHeader>
           <SheetTitle>Cargar Pago</SheetTitle>
