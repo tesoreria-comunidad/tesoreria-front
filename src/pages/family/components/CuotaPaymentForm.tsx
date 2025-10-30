@@ -33,6 +33,12 @@ import type { TBalance, TFamily } from "@/models";
 import { useCreateTransactionCuotaFamilyMutation } from "@/queries/transactions.queries";
 import { CuotaUploadInformation } from "./CuotaUploadInformation";
 import { useMobile } from "@/context/MobileContext";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { UnfoldVertical } from "lucide-react";
 
 export function CuotaPaymentForm({
   family,
@@ -228,12 +234,19 @@ export function CuotaPaymentForm({
           </section>
 
           {!isMobile && (
-            <>
-              <hr />
-              <section className="flex-1 p-8">
-                <CuotaUploadInformation values={form.watch()} />
-              </section>
-            </>
+            <div className="p-4">
+              <Collapsible>
+                <CollapsibleTrigger className="flex items-center justify-between w-full bg-accent/50 p-2 rounded">
+                  <p>Ver Detalle</p>
+                  <UnfoldVertical className="size-4" />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <section>
+                    <CuotaUploadInformation values={form.watch()} />
+                  </section>
+                </CollapsibleContent>
+              </Collapsible>
+            </div>
           )}
         </div>
 
