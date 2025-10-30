@@ -56,7 +56,7 @@ export function UsersGraphs() {
 
   return (
     <Card className="">
-      <CardContent className="flex-1 pb-0 size-full  flex items-center justify-center">
+      <CardContent className="flex-1 pb-0 size-full  flex items-center justify-center  ">
         <ChartContainer config={chartConfig} className="mx-auto   h-[300px]">
           <PieChart>
             <ChartTooltip
@@ -103,7 +103,7 @@ export function UsersGraphs() {
           </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex justify-center  items-center gap-2 text-xs">
+      <CardFooter className="flex justify-center  items-center gap-2 text-xs ">
         <div className="flex  items-center gap-2 font-medium leading-none">
           <div className="bg-[#348862] size-4 rounded"></div>
           <span> {activeUsers.length} activos</span>
