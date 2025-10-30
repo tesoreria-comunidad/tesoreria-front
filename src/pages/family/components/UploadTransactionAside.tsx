@@ -23,12 +23,15 @@ export function UploadTransactionAside({
   size?: "sm" | "md" | "lg";
 }) {
   const { isMobile } = useMobile();
-  const [open, setOpen] = useState(false); 
+  const [open, setOpen] = useState(false);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button className="flex items-center gap-2" onClick={() => setOpen(true)}>
+        <Button
+          className="flex items-center gap-2"
+          onClick={() => setOpen(true)}
+        >
           <UploadCloudIcon />
           {size !== "sm" && <span>Cargar Pago</span>}
         </Button>
@@ -37,15 +40,21 @@ export function UploadTransactionAside({
         side={isMobile ? "bottom" : "right"}
         className={isMobile ? "h-[95vh] rounded-t-2xl p-4 overflow-y-auto" : ""}
       >
-        <SheetHeader className="flex-1">
+        <SheetHeader>
           <SheetTitle>Cargar Pago</SheetTitle>
           <SheetDescription>
-            {isMobile ? "Versión simplificada para móvil" : "Cargar pago de cuota completo"}
+            {isMobile
+              ? "Versión simplificada para móvil"
+              : "Cargar pago de cuota completo"}
           </SheetDescription>
         </SheetHeader>
 
-        <div className="pt-4">
-          <CuotaPaymentForm family={family} balance={balance} onSuccess={() => setOpen(false)} />
+        <div className="pt-4 h-full ">
+          <CuotaPaymentForm
+            family={family}
+            balance={balance}
+            onSuccess={() => setOpen(false)}
+          />
         </div>
       </SheetContent>
     </Sheet>

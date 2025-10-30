@@ -32,7 +32,7 @@ import { DatePickerField } from "@/components/common/DatePickerField";
 import type { TBalance, TFamily } from "@/models";
 import { useCreateTransactionCuotaFamilyMutation } from "@/queries/transactions.queries";
 import { CuotaUploadInformation } from "./CuotaUploadInformation";
-import { useMobile } from "@/context/MobileContext"; 
+import { useMobile } from "@/context/MobileContext";
 
 export function CuotaPaymentForm({
   family,
@@ -99,13 +99,17 @@ export function CuotaPaymentForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={`p-4 flex flex-col gap-4 ${
-          isMobile ? "h-auto" : "justify-between h-full"
-        }`}
+        className={`p-4 flex flex-col gap-4 h-full`}
       >
-        <div className={`flex flex-col flex-1 ${isMobile ? "gap-4" : "space-y-6"}`}>
+        <div
+          className={`flex flex-col flex-1 ${
+            isMobile ? "gap-4 " : "space-y-6  max-h-[90%] overflow-auto"
+          }`}
+        >
           <section className={`${isMobile ? "space-y-4" : "space-y-8"}`}>
-            <div className={`flex flex-col w-full ${isMobile ? "gap-4" : "gap-8"}`}>
+            <div
+              className={`flex flex-col w-full ${isMobile ? "gap-4" : "gap-8"}`}
+            >
               <FormField
                 control={form.control}
                 name="amount"
@@ -174,7 +178,9 @@ export function CuotaPaymentForm({
                         value={field.value}
                       >
                         <SelectTrigger
-                          className={`${isMobile ? "h-12 text-lg" : "w-[180px]"}`}
+                          className={`${
+                            isMobile ? "h-12 text-lg" : "w-[180px]"
+                          }`}
                           value={field.value}
                         >
                           <SelectValue placeholder="Seleccionar" />
@@ -232,21 +238,15 @@ export function CuotaPaymentForm({
             )}
           </section>
 
-          {!isMobile && (
-            <>
-              <hr />
-              <section className="flex-1 p-8">
-                <CuotaUploadInformation values={form.watch()} />
-              </section>
-            </>
-          )}
+          <>
+            <hr />
+            <section className="flex-1 p-8">
+              <CuotaUploadInformation values={form.watch()} />
+            </section>
+          </>
         </div>
 
-        <Button
-          type="submit"
-          isLoading={createCuotaMutation.isPending}
-          className={isMobile ? "h-14 text-lg" : ""}
-        >
+        <Button type="submit" isLoading={createCuotaMutation.isPending}>
           Cargar Cuota
         </Button>
       </form>
