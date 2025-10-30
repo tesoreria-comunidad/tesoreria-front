@@ -33,7 +33,6 @@ export function UploadTransactionAside({
           {size !== "sm" && <span>Cargar Pago</span>}
         </Button>
       </SheetTrigger>
-
       <SheetContent
         side={isMobile ? "bottom" : "right"}
         className={isMobile ? "h-[95vh] rounded-t-2xl p-4 overflow-y-auto" : ""}
