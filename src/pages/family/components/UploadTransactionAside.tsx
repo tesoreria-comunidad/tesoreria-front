@@ -45,9 +45,7 @@ export function UploadTransactionAside({
         <SheetHeader>
           <SheetTitle>Cargar Pago</SheetTitle>
           <SheetDescription>
-            {isMobile
-              ? "Versión simplificada para móvil"
-              : "Cargar pago de cuota completo"}
+            Cargar pago de cuota para la familia {family.name}
           </SheetDescription>
         </SheetHeader>
 
