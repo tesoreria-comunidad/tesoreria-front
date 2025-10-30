@@ -1,5 +1,5 @@
 import { Label } from "@/components/ui/label";
-import { CreateRamaAside } from "./components/CreateRamaAside";
+import { CreateCuotaAside } from "./components/CreateCuotaAside";
 import { formatCurrency } from "@/utils";
 import CuotasTable from "./components/table/CuotasTable";
 import {
@@ -18,11 +18,11 @@ export function CuotasPage() {
   const { data: cuotas } = useCuotasQuery();
   const currentCuota = cuotas?.find((c) => c.is_active);
   return (
-    <div className="size-full   overflow-y-auto   ">
+    <div className="size-full   overflow-y-auto space-y-4   ">
       <section className="flex items-center justify-between  h-[5%]">
         <Label className="text-xl">Cuota</Label>
         <div className="flex items-center gap-2">
-          <CreateRamaAside />
+          <CreateCuotaAside />
           <UpdateBalanceButton />
           <CuotasPorHermanoAside />
         </div>

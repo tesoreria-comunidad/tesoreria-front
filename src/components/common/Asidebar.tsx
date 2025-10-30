@@ -18,7 +18,7 @@ export function Asidebar({ children }: PropsWithChildren) {
   const { pathname } = useLocation();
   const { open } = useSidebar();
   return (
-    <div className="flex h-screen bg-[#f1f1f1]">
+    <div className="flex h-screen bg-[#f1f1f1] ">
       <Sidebar>
         <SidebarHeader className="flex  justify-center items-center h-[10vh]  ">
           <img src="/logo.png" className="size-20 aspect-square object-cover" />
@@ -50,8 +50,8 @@ export function Asidebar({ children }: PropsWithChildren) {
         </SidebarFooter>
       </Sidebar>
       <main
-        className={` p-6  h-[100vh] max-h-[100vh]  flex-1  ${
-          open ? "max-w-[84vw]" : "max-w-[100vw]"
+        className={` p-6  h-[100vh] max-h-[100vh]  flex-1   ${
+          open ? "max-w-[84vw] max-md:max-w-[100vw]" : "max-w-[100vw]"
         } `}
       >
         {children}

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/sheet";
 import { Plus } from "lucide-react";
 import { CreateCuotaForm } from "./form/CreateCuotaForm";
-export function CreateRamaAside() {
+export function CreateCuotaAside() {
   return (
     <Sheet>
       <SheetTrigger>
