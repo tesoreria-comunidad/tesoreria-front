@@ -14,6 +14,7 @@ import type { TUser } from "@/models";
 import {
   ArrowBigDown,
   ArrowBigUp,
+  Coffee,
   EllipsisVertical,
   HeartHandshake,
   Users,
@@ -21,6 +22,7 @@ import {
 import { UserStatusUpdateDialog } from "./table/components/UserStatusUpdateDialog";
 import { UserGrantUpdateDialog } from "./table/components/UserGrantUpdateDialog";
 import { UserEditFamilyDialog } from "./table/components/UserEditFamilyDialog";
+import { UserEditInformationDialog } from "./table/components/UserEditInformationDialog";
 
 interface UsersActionsDropdownProps {
   user: TUser;
@@ -33,11 +35,11 @@ export default function UsersActionsDropdown({
 }: UsersActionsDropdownProps) {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [dialogType, setDialogType] = useState<"grant" | "status" | "family">(
+  const [dialogType, setDialogType] = useState<"grant" | "status" | "family" | "edit">(
     "status"
   );
 
-  const handleOpenDialog = (type: "grant" | "status" | "family") => {
+  const handleOpenDialog = (type: "grant" | "status" | "family" | "edit") => {
     setDialogType(type);
     setOpenDropdown(false); // cerramos el dropdown
     setOpenDialog(true); // abrimos el dialog
@@ -80,10 +82,10 @@ export default function UsersActionsDropdown({
               </>
             )}
           </DropdownMenuItem>
-
+      
           <DropdownMenuItem
             onSelect={(e) => {
-              e.preventDefault(); // prevenimos que se cierre antes
+              e.preventDefault(); 
               handleOpenDialog("grant");
             }}
           >
@@ -100,10 +102,19 @@ export default function UsersActionsDropdown({
             )}
           </DropdownMenuItem>
 
+          <DropdownMenuItem 
+            onSelect={(e) => {
+              e.preventDefault(); // prevenimos que se cierre antes
+              handleOpenDialog("edit"); // no sacar el <Coffee /> xq me gusta
+            }}>  
+            <Coffee />   
+            Editar 
+          </DropdownMenuItem>
+
           {showFamilyOptions && (
             <DropdownMenuItem
               onSelect={(e) => {
-                e.preventDefault(); // prevenimos que se cierre antes
+                e.preventDefault(); 
                 handleOpenDialog("family");
               }}
             >
@@ -118,6 +129,7 @@ export default function UsersActionsDropdown({
         {dialogType === "grant" && <UserGrantUpdateDialog user={user} />}
         {dialogType === "status" && <UserStatusUpdateDialog user={user} />}
         {dialogType === "family" && <UserEditFamilyDialog user={user} />}
+        {dialogType === "edit" && <UserEditInformationDialog user={user} />}
       </Dialog>
     </>
   );
