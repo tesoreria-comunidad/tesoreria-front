@@ -33,6 +33,8 @@ import {
   useUpdateBalanceMutation,
 } from "@/queries/balance.queries";
 import { useRamasQuery } from "@/queries/ramas.queries";
+import { useMobile } from "@/context/MobileContext";
+import { BenefriciarioCard } from "./BeneficiarioCard";
 interface UpdateFamilyDialogProps {
   family: TFamily;
   id_balance: string;
@@ -45,7 +47,7 @@ export function UpdateFamilyDialog({
 }: UpdateFamilyDialogProps) {
   const { data: balance } = useBalanceByIdQuery(id_balance);
   const { data: ramas } = useRamasQuery();
-
+  const { isMobile } = useMobile();
   const familyRama = ramas?.find((r) => r.id === family.manage_by);
   const [isCustomCuota, setIsCustomCuota] = useState(balance?.is_custom_cuota);
   const [selectedRamaId, setSelectedRamaId] = useState(family.manage_by);
@@ -148,7 +150,7 @@ export function UpdateFamilyDialog({
               <DialogTitle className="flex items-center gap-2">
                 <PenBoxIcon className="size-5" /> Familia
               </DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="text-start">
                 Cobrabilidad a cargo de la rama{" "}
                 <strong> {familyRama?.name}</strong>
               </DialogDescription>
@@ -195,7 +197,15 @@ export function UpdateFamilyDialog({
                   <Label>
                     Integrantes del grupo familiar ({family.users.length})
                   </Label>
-                  <FamilyUsersTable users={family.users} />
+                  {isMobile ? (
+                    <div className="flex flex-col gap-2">
+                      {family.users.map((user) => (
+                        <BenefriciarioCard user={user} />
+                      ))}
+                    </div>
+                  ) : (
+                    <FamilyUsersTable users={family.users} />
+                  )}
                 </div>
               </div>
 
