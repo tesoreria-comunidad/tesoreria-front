@@ -4,11 +4,13 @@ import { FamilyTable } from "./components/table/FamilyTable";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useFamiliesQuery } from "@/queries/family.queries";
+import { useMobile } from "@/context/MobileContext";
+import { FamilyList } from "./components/FamilyList";
 
 export function FamilyPage() {
   const { data: families } = useFamiliesQuery();
   const [search, setSearch] = useState("");
-
+  const { isMobile } = useMobile();
   const filteredFamilies = families?.filter((family) =>
     family.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -33,9 +35,15 @@ export function FamilyPage() {
         </div>
         <CreatFamilyAside />
       </section>
-      <section className="overflow-y-auto  max-h-[95%]">
-        {filteredFamilies && <FamilyTable families={filteredFamilies} />}
-      </section>
+      {filteredFamilies && (
+        <section className="overflow-y-auto  max-h-[95%]">
+          {isMobile ? (
+            <FamilyList families={filteredFamilies} />
+          ) : (
+            <FamilyTable families={filteredFamilies} />
+          )}
+        </section>
+      )}
     </div>
   );
 }

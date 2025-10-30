@@ -32,14 +32,18 @@ import { DatePickerField } from "@/components/common/DatePickerField";
 import type { TBalance, TFamily } from "@/models";
 import { useCreateTransactionCuotaFamilyMutation } from "@/queries/transactions.queries";
 import { CuotaUploadInformation } from "./CuotaUploadInformation";
+import { useMobile } from "@/context/MobileContext";
 
 export function CuotaPaymentForm({
   family,
   balance,
+  onSuccess,
 }: {
   family: TFamily;
   balance: TBalance;
+  onSuccess?: () => void;
 }) {
+  const { isMobile } = useMobile();
   const form = useForm<TCreateTransaction>({
     resolver: zodResolver(CreateTransactionSchema),
     defaultValues: {
@@ -72,7 +76,8 @@ export function CuotaPaymentForm({
             description: "",
             type: "success",
           });
-          form.reset(); // limpiar form si querés
+          form.reset();
+          onSuccess?.();
         },
         onError: () => {
           showAlert({
@@ -94,11 +99,17 @@ export function CuotaPaymentForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="p-4 flex flex-col gap-6"
+        className={`p-4 flex flex-col gap-4 h-full`}
       >
-        <div className="space-y-6 flex flex-col flex-1">
-          <section className="space-y-8">
-            <div className="flex flex-col w-full gap-8">
+        <div
+          className={`flex flex-col flex-1 ${
+            isMobile ? "gap-4 " : "space-y-6  max-h-[90%] overflow-auto"
+          }`}
+        >
+          <section className={`${isMobile ? "space-y-4" : "space-y-8"}`}>
+            <div
+              className={`flex flex-col w-full ${isMobile ? "gap-4" : "gap-8"}`}
+            >
               <FormField
                 control={form.control}
                 name="amount"
@@ -108,40 +119,48 @@ export function CuotaPaymentForm({
                     <FormControl>
                       <Input
                         placeholder="Monto"
+                        type="number"
                         {...field}
                         onChange={(e) =>
                           handleInputChange(field.name, e.target.value)
                         }
+                        className={isMobile ? "text-lg h-12" : ""}
                       />
                     </FormControl>
-                    <FormDescription>
-                      {formatCurrency(form.getValues("amount"))}
-                    </FormDescription>
+                    {!isMobile && (
+                      <FormDescription>
+                        {formatCurrency(form.getValues("amount"))}
+                      </FormDescription>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="payment_date"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormControl>
-                      <DatePickerField
-                        control={form.control}
-                        name={field.name}
-                        label="Fecha"
-                        placeholder="Seleccionar fecha"
-                        disableFuture
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Fecha en la que se realizó esta transacción
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
+              {!isMobile && (
+                <FormField
+                  control={form.control}
+                  name="payment_date"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <DatePickerField
+                          control={form.control}
+                          name={field.name}
+                          label="Fecha"
+                          placeholder="Seleccionar fecha"
+                          disableFuture
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Fecha en la que se realizó esta transacción
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
               <FormField
                 control={form.control}
                 name="payment_method"
@@ -159,10 +178,12 @@ export function CuotaPaymentForm({
                         value={field.value}
                       >
                         <SelectTrigger
-                          className="w-[180px]"
+                          className={`${
+                            isMobile ? "h-12 text-lg" : "w-[180px]"
+                          }`}
                           value={field.value}
                         >
-                          <SelectValue placeholder="Role" />
+                          <SelectValue placeholder="Seleccionar" />
                         </SelectTrigger>
                         <SelectContent>
                           {PAYMENT_METHODS_OPTIONS.map((role) => (
@@ -187,37 +208,44 @@ export function CuotaPaymentForm({
                   <FormLabel>Concepto</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Concepto de este movimiento"
+                      placeholder="Concepto del pago"
                       {...field}
+                      className={isMobile ? "h-12 text-lg" : ""}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Descripción</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Descripción de este movimiento"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
+            {!isMobile && (
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Descripción</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Descripción del movimiento"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
           </section>
 
-          <hr />
-          <section>
-            <CuotaUploadInformation values={form.watch()} />
-          </section>
+          <>
+            <hr />
+            <section className="flex-1 p-8">
+              <CuotaUploadInformation values={form.watch()} />
+            </section>
+          </>
         </div>
+
         <Button type="submit" isLoading={createCuotaMutation.isPending}>
           Cargar Cuota
         </Button>

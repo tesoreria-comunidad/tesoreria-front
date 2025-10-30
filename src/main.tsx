@@ -6,12 +6,15 @@ import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
 import { AlertProvider } from "./context/AlertContext.tsx";
 import { SidebarProvider } from "./components/ui/sidebar.tsx";
+import { MobileProvider } from "./context/MobileContext.tsx";
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <BrowserRouter>
       <AlertProvider>
         <SidebarProvider>
-          <App />
+          <MobileProvider>
+            <App />
+          </MobileProvider>
         </SidebarProvider>
       </AlertProvider>
     </BrowserRouter>

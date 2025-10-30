@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -10,6 +11,7 @@ import {
 import { UploadCloudIcon } from "lucide-react";
 import type { TBalance, TFamily } from "@/models";
 import { CuotaPaymentForm } from "./CuotaPaymentForm";
+import { useMobile } from "@/context/MobileContext";
 
 export function UploadTransactionAside({
   family,
@@ -20,22 +22,39 @@ export function UploadTransactionAside({
   balance: TBalance;
   size?: "sm" | "md" | "lg";
 }) {
+  const { isMobile } = useMobile();
+  const [open, setOpen] = useState(false);
+
   return (
-    <Sheet>
-      <SheetTrigger>
-        <Button className="flex items-center gap-2">
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button
+          className="flex items-center gap-2"
+          onClick={() => setOpen(true)}
+        >
           <UploadCloudIcon />
           {size !== "sm" && <span>Cargar Pago</span>}
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex flex-col h-full">
-        <SheetHeader className="p-4 pb-2">
+      <SheetContent
+        side={isMobile ? "bottom" : "right"}
+        className={isMobile ? "h-[95vh] rounded-t-2xl p-4 overflow-y-auto" : ""}
+      >
+        <SheetHeader>
           <SheetTitle>Cargar Pago</SheetTitle>
-          <SheetDescription>Cargar pago de cuota</SheetDescription>
+          <SheetDescription>
+            {isMobile
+              ? "Versión simplificada para móvil"
+              : "Cargar pago de cuota completo"}
+          </SheetDescription>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto px-4">
-          <CuotaPaymentForm family={family} balance={balance} />
+        <div className="pt-4 h-full ">
+          <CuotaPaymentForm
+            family={family}
+            balance={balance}
+            onSuccess={() => setOpen(false)}
+          />
         </div>
       </SheetContent>
     </Sheet>
