@@ -38,14 +38,14 @@ export function UploadTransactionAside({
       </SheetTrigger>
       <SheetContent
         side={isMobile ? "bottom" : "right"}
-        className={isMobile ? "h-[95vh] rounded-t-2xl p-4 overflow-y-auto" : ""}
+        className={
+          isMobile ? "h-[90dvh] rounded-t-2xl p-4 overflow-y-auto" : ""
+        }
       >
         <SheetHeader>
           <SheetTitle>Cargar Pago</SheetTitle>
           <SheetDescription>
-            {isMobile
-              ? "Versión simplificada para móvil"
-              : "Cargar pago de cuota completo"}
+            Cargar pago de cuota para la familia {family.name}
           </SheetDescription>
         </SheetHeader>
 

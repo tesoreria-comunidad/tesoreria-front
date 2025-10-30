@@ -33,6 +33,12 @@ import type { TBalance, TFamily } from "@/models";
 import { useCreateTransactionCuotaFamilyMutation } from "@/queries/transactions.queries";
 import { CuotaUploadInformation } from "./CuotaUploadInformation";
 import { useMobile } from "@/context/MobileContext";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { UnfoldVertical } from "lucide-react";
 
 export function CuotaPaymentForm({
   family,
@@ -103,7 +109,7 @@ export function CuotaPaymentForm({
       >
         <div
           className={`flex flex-col flex-1 ${
-            isMobile ? "gap-4 " : "space-y-6  max-h-[90%] overflow-auto"
+            isMobile ? "gap-4 " : "gap-4 max-h-[90%] overflow-auto"
           }`}
         >
           <section className={`${isMobile ? "space-y-4" : "space-y-8"}`}>
@@ -124,7 +130,6 @@ export function CuotaPaymentForm({
                         onChange={(e) =>
                           handleInputChange(field.name, e.target.value)
                         }
-                        className={isMobile ? "text-lg h-12" : ""}
                       />
                     </FormControl>
                     {!isMobile && (
@@ -137,29 +142,27 @@ export function CuotaPaymentForm({
                 )}
               />
 
-              {!isMobile && (
-                <FormField
-                  control={form.control}
-                  name="payment_date"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormControl>
-                        <DatePickerField
-                          control={form.control}
-                          name={field.name}
-                          label="Fecha"
-                          placeholder="Seleccionar fecha"
-                          disableFuture
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Fecha en la que se realizó esta transacción
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
+              <FormField
+                control={form.control}
+                name="payment_date"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <DatePickerField
+                        control={form.control}
+                        name={field.name}
+                        label="Fecha"
+                        placeholder="Seleccionar fecha"
+                        disableFuture
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Fecha en la que se realizó esta transacción
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}
@@ -178,9 +181,7 @@ export function CuotaPaymentForm({
                         value={field.value}
                       >
                         <SelectTrigger
-                          className={`${
-                            isMobile ? "h-12 text-lg" : "w-[180px]"
-                          }`}
+                          className="w-[180px]"
                           value={field.value}
                         >
                           <SelectValue placeholder="Seleccionar" />
@@ -207,43 +208,46 @@ export function CuotaPaymentForm({
                 <FormItem>
                   <FormLabel>Concepto</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Concepto del pago"
-                      {...field}
-                      className={isMobile ? "h-12 text-lg" : ""}
-                    />
+                    <Input placeholder="Concepto del pago" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {!isMobile && (
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Descripción</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Descripción del movimiento"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Descripción</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Descripción del movimiento"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </section>
 
-          <>
-            <hr />
-            <section className="flex-1 p-8">
-              <CuotaUploadInformation values={form.watch()} />
-            </section>
-          </>
+          {!isMobile && (
+            <div className="p-4">
+              <Collapsible>
+                <CollapsibleTrigger className="flex items-center justify-between w-full bg-accent/50 p-2 rounded">
+                  <p>Ver Detalle</p>
+                  <UnfoldVertical className="size-4" />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <section>
+                    <CuotaUploadInformation values={form.watch()} />
+                  </section>
+                </CollapsibleContent>
+              </Collapsible>
+            </div>
+          )}
         </div>
 
         <Button type="submit" isLoading={createCuotaMutation.isPending}>

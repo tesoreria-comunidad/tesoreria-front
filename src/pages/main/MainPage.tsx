@@ -4,9 +4,11 @@ import { routes } from "@/routes";
 import { useAppSelector } from "@/store/hooks";
 import { Asidebar } from "@/components/common/Asidebar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useMobile } from "@/context/MobileContext";
 
 export function MainPage() {
   const { user } = useAppSelector((s) => s.session);
+  const { isMobile } = useMobile();
   return (
     <div className=" h-screen w-screen   ">
       <DataProvider>
@@ -16,7 +18,9 @@ export function MainPage() {
               <SidebarTrigger />
             </div>
             <section
-              className={`rounded-md p-4  max-h-[90%] h-[90%] w-full max-w-[1920px] mx-auto     overflow-y-auto `}
+              className={`rounded-md ${
+                isMobile ? "" : "p-4"
+              }   max-h-[90%] h-[90%] w-full max-w-[1920px] mx-auto     overflow-y-auto `}
             >
               <Routes>
                 {routes.map(
