@@ -8,7 +8,7 @@ import { useMobile } from "@/context/MobileContext";
 export function DashboardPage() {
   const { isMobile } = useMobile();
   return (
-    <div className=" size-full flex flex-col gap-4    ">
+    <div className=" size-full flex flex-col gap-4  max-md:overflow-x-hidden   ">
       <section className="flex  max-md:flex-col   gap-4">
         <DashboardCard type="users" />
         <DashboardCard type="family" />
