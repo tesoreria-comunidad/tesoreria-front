@@ -14,32 +14,42 @@ import { useLocation } from "react-router";
 
 export function Asidebar({ children }: PropsWithChildren) {
   const { user } = useAppSelector((s) => s.session);
-
   const { pathname } = useLocation();
   const { open } = useSidebar();
+
   return (
-    <div className="flex h-screen bg-[#f1f1f1] ">
-      <Sidebar>
-       <SidebarHeader className="flex flex-col justify-center items-center pt-6 h-[12vh]">
+    <div className="flex h-screen bg-background text-foreground transition-colors duration-300">
+      <Sidebar className="flex flex-col justify-between">
+        <SidebarHeader
+          className="
+            flex flex-col items-center justify-center
+            pt-6 pb-2 px-2
+            min-h-[110px]
+            md:min-h-[120px]
+          "
+        >
           <img
             src="/logo.png"
-            className="size-20 aspect-square object-cover mb-2"
+            className="w-20 h-20 md:w-24 md:h-24 object-contain mb-1 mt-2"
             alt="Logo Mi Pelícano"
           />
-          <strong className="text-primary">Mi Pelícano</strong>
+          <strong className="text-primary text-lg md:text-base mb-1">
+            Mi Pelícano
+          </strong>
+          <hr className="w-3/4 border-border" />
         </SidebarHeader>
-        <hr className="my-4 w-3/4 mx-auto" />
-        <SidebarContent className="flex flex-col gap-4  mt-4 pl-2">
+
+        <SidebarContent className="flex flex-col gap-3 flex-1 overflow-y-auto pl-2 mt-3">
           {routes.map((route) =>
             user?.role &&
             route.rolesAccess?.includes(user?.role) &&
             route.sidebarContent ? (
-              <Link to={route.path}>
+              <Link to={route.path} key={route.path}>
                 <div
-                  className={`flex items-center gap-2 font-light transition-all duration-300 h-10  pl-4 ${
+                  className={`flex items-center gap-2 font-light transition-all duration-300 h-10 pl-4 rounded-md ${
                     pathname === route.path
-                      ? "font-medium text-primary  bg-primary-2/10 "
-                      : " text-primary-2  "
+                      ? "font-medium text-primary bg-primary-2/10"
+                      : "text-primary-2 hover:bg-muted"
                   }`}
                 >
                   {route.icon}
@@ -49,12 +59,21 @@ export function Asidebar({ children }: PropsWithChildren) {
             ) : null
           )}
         </SidebarContent>
-        <SidebarFooter className="flex items-start">
+
+        <SidebarFooter
+          className="
+            flex flex-col items-center gap-3
+            pt-2 pb-6
+            border-t border-border
+            bg-sidebar
+            mt-auto
+          "
+        >
           <UserSessionCard />
         </SidebarFooter>
       </Sidebar>
       <main
-        className={` p-6  h-[100vh] max-h-[100vh]  flex-1   ${
+        className={`p-6 h-[100vh] flex-1 bg-background text-foreground transition-colors duration-300 ${
           open ? "max-w-[84vw] max-md:max-w-[100vw]" : "max-w-[100vw]"
         } `}
       >

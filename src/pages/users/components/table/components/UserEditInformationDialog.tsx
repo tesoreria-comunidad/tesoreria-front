@@ -60,7 +60,7 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
         },
         onError() {
           showAlert({
-            title: "Error al actualizar usuario",
+            title: `Error al actualizar a ${user.last_name}, ${user.name}`,
             description: "Ocurrió un problema al guardar los cambios.",
             type: "error",
           });
@@ -70,19 +70,19 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
   };
 
   return (
-    <DialogContent>
+    <DialogContent className="max-h-screen sm:max-h-[90vh] overflow-y-auto rounded-xl sm:rounded-2xl px-4 py-6 sm:px-6 sm:py-4">
       <DialogHeader>
-        <DialogTitle className="flex items-center gap-2">
+        <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
           <Edit /> Editar información
         </DialogTitle>
-        <DialogDescription>
-          Modificá los datos personales y de contacto del usuario seleccionado.
+        <DialogDescription className="text-sm sm:text-base">
+          Modificá los datos de {user.last_name}, {user.name}.
         </DialogDescription>
       </DialogHeader>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 gap-y-3">
             <FormField
               control={form.control}
               name="name"
@@ -90,7 +90,7 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
                 <FormItem>
                   <FormLabel>Nombre</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nombre" {...field} />
+                    <Input className="h-10 text-base" placeholder="Nombre" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -103,7 +103,7 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
                 <FormItem>
                   <FormLabel>Apellido</FormLabel>
                   <FormControl>
-                    <Input placeholder="Apellido" {...field} />
+                    <Input className="h-10 text-base" placeholder="Apellido" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -111,7 +111,7 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 gap-y-3">
             <FormField
               control={form.control}
               name="email"
@@ -119,7 +119,12 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
                 <FormItem>
                   <FormLabel>Correo electrónico</FormLabel>
                   <FormControl>
-                    <Input placeholder="usuario@mail.com" {...field} type="email" />
+                    <Input
+                      className="h-10 text-base"
+                      placeholder="JUS-L0VER@gmail.com"                 // ATENTOS ACA! //
+                      type="email"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -132,7 +137,7 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
                 <FormItem>
                   <FormLabel>Teléfono</FormLabel>
                   <FormControl>
-                    <Input placeholder="+54 9 ..." {...field} />
+                    <Input className="h-10 text-base" placeholder="+54 9 ..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,7 +145,7 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 gap-y-3">
             <FormField
               control={form.control}
               name="address"
@@ -148,13 +153,16 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
                 <FormItem>
                   <FormLabel>Dirección</FormLabel>
                   <FormControl>
-                    <Input placeholder="Calle, número, ciudad" {...field} />
+                    <Input
+                      className="h-10 text-base"
+                      placeholder="Calle, número, ciudad"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="gender"
@@ -163,7 +171,7 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
                   <FormLabel>Género</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger>
+                      <SelectTrigger className="h-10 text-base">
                         <SelectValue placeholder="Seleccionar género" />
                       </SelectTrigger>
                       <SelectContent>
@@ -190,7 +198,7 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
                   <FormLabel>Rama</FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <SelectTrigger>
+                      <SelectTrigger className="h-10 text-base">
                         <SelectValue placeholder="Seleccionar rama" />
                       </SelectTrigger>
                       <SelectContent>
@@ -215,15 +223,15 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
               <FormItem>
                 <FormLabel>Nacionalidad</FormLabel>
                 <FormControl>
-                  <Input placeholder="Argentina" {...field} />
+                  <Input className="h-10 text-base" placeholder="Argentina" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <DialogFooter className="pt-4">
-            <Button type="submit" isLoading={isPending}>
+          <DialogFooter className="pt-4 pb-2 sm:sticky sm:bottom-0 sm:bg-background">
+            <Button type="submit" isLoading={isPending} className="w-full sm:w-auto">
               Guardar cambios
             </Button>
           </DialogFooter>
@@ -231,4 +239,5 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
       </Form>
     </DialogContent>
   );
+
 }
