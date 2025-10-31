@@ -25,8 +25,9 @@ export default function UserSessionCard() {
           <div className="flex gap-1">
             <SquareUser className="size-10 " />
             <div className="flex flex-col items-start ">
-              <p className="font-semibold "> {user.name}</p>
-              <p className="text-xs font-light">m@example.com</p>
+              <p className="font-semibold "> {user.name}, {user.last_name}</p>
+              <p className="text-xs font-light">{user.email}</p>
+              <p className="text-xs font-light">{user.role}</p>
             </div>
           </div>
           <EllipsisVertical />
