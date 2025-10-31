@@ -20,9 +20,13 @@ export function Asidebar({ children }: PropsWithChildren) {
   return (
     <div className="flex h-screen bg-[#f1f1f1] ">
       <Sidebar>
-        <SidebarHeader className="flex  justify-center items-center h-[10vh]  ">
-          <img src="/logo.png" className="size-20 aspect-square object-cover" />
-          <strong className="text-primary">Mi Pelícano</strong>{" "}
+       <SidebarHeader className="flex flex-col justify-center items-center pt-6 h-[12vh]">
+          <img
+            src="/logo.png"
+            className="size-20 aspect-square object-cover mb-2"
+            alt="Logo Mi Pelícano"
+          />
+          <strong className="text-primary">Mi Pelícano</strong>
         </SidebarHeader>
         <hr className="my-4 w-3/4 mx-auto" />
         <SidebarContent className="flex flex-col gap-4  mt-4 pl-2">
