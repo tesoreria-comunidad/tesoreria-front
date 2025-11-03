@@ -36,7 +36,7 @@ export function Alerts() {
   return (
     <section
       className={`absolute z-50 left-1/2 top-0 transform -translate-x-1/2 m-4  transition-all duration-200 ${
-        visible ? "scale-100" : "scale-50 opacity-0"
+        visible ? "scale-100" : "scale-50 opacity-0 -translate-y-1/2"
       }`}
     >
       <Alert className={alertClass}>
