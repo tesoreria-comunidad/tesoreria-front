@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Moon, Sun } from "lucide-react";
+import { LogOut, Moon, Palette, Settings, Sun } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 export default function UserSessionCard() {
@@ -33,24 +33,28 @@ export default function UserSessionCard() {
           </Avatar>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent
-          align="end"
-          className="bg-card text-card-foreground border border-border"
-        >
+        <DropdownMenuContent align="end" className="w-80">
           <DropdownMenuLabel className="text-sm font-medium text-foreground">
-            {user.name}
+            {user.name}, {user.last_name}
+          </DropdownMenuLabel>
+          <DropdownMenuLabel className="text-xs font-medium text-foreground/80 ">
+            {user.email}
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-border" />
 
-          <DropdownMenuItem className="hover:bg-muted">Perfil</DropdownMenuItem>
-          <DropdownMenuItem className="hover:bg-muted">Rama</DropdownMenuItem>
+          <DropdownMenuItem className="hover:bg-muted">
+            <Settings /> Perfil
+          </DropdownMenuItem>
+          <DropdownMenuItem className="hover:bg-muted">
+            <Palette /> Preferencias
+          </DropdownMenuItem>
 
           <DropdownMenuItem
             onClick={toggleTheme}
-            className="hover:bg-muted flex justify-center items-center !p-2"
+            className="hover:bg-muted flex justify-start items-center !p-2"
           >
             {theme === "light" ? (
-              <Moon className="w-4 h-4 text-primary" />
+              <Moon className="w-4 h-4 " />
             ) : (
               <Sun className="w-4 h-4 text-yellow-400" />
             )}
@@ -60,7 +64,7 @@ export default function UserSessionCard() {
 
           <DropdownMenuItem
             onClick={handleLogout}
-            className="hover:bg-destructive hover:text-destructive-foreground flex items-center gap-2"
+            className=" hover:text-destructive-foreground flex items-center gap-2"
           >
             <p>Salir</p>
             <LogOut className="w-4 h-4" />
