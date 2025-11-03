@@ -11,6 +11,7 @@ import { routes } from "@/routes";
 import { useAppSelector } from "@/store/hooks";
 import UserSessionCard from "./UserSessionCard";
 import { useLocation } from "react-router";
+import { Logo } from "./Logo";
 
 export function Asidebar({ children }: PropsWithChildren) {
   const { user } = useAppSelector((s) => s.session);
@@ -28,15 +29,7 @@ export function Asidebar({ children }: PropsWithChildren) {
             md:min-h-[120px]
           "
         >
-          <img
-            src="/logo.png"
-            className="w-20 h-20 md:w-24 md:h-24 object-contain mb-1 mt-2"
-            alt="Logo Mi Pelícano"
-          />
-          <strong className="text-primary text-lg md:text-base mb-1">
-            Mi Pelícano
-          </strong>
-          <hr className="w-3/4 border-border" />
+          <Logo />
         </SidebarHeader>
 
         <SidebarContent className="flex flex-col gap-3 flex-1 overflow-y-auto pl-2 mt-3">
@@ -48,8 +41,8 @@ export function Asidebar({ children }: PropsWithChildren) {
                 <div
                   className={`flex items-center gap-2 font-light transition-all duration-300 h-10 pl-4 rounded-md ${
                     pathname === route.path
-                      ? "font-medium text-primary bg-primary-2/10"
-                      : "text-primary-2 hover:bg-muted"
+                      ? "font-medium  bg-primary-2/10"
+                      : " hover:bg-muted"
                   }`}
                 >
                   {route.icon}

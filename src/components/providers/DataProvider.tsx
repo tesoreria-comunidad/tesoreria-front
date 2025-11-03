@@ -3,8 +3,8 @@ import { useRamasQuery } from "@/queries/ramas.queries";
 import { useUsersQuery } from "@/queries/user.queries";
 import { useFamiliesQuery } from "@/queries/family.queries";
 import { useCuotasQuery } from "@/queries/cuota.queries";
-import { AppLoader } from "../common/AppLoader";
 import { useCPHQuery } from "@/queries/cuotaPorHermano.queries";
+import { LoaderOverlay } from "../common/Loaders/LoaderOverlay";
 
 export function DataProvider({ children }: PropsWithChildren) {
   const ramaQuery = useRamasQuery();
@@ -20,6 +20,6 @@ export function DataProvider({ children }: PropsWithChildren) {
     cuotasQuery.isLoading ||
     cphQuery.isLoading
   )
-    return <AppLoader />;
+    return <LoaderOverlay />;
   return <Fragment>{children}</Fragment>;
 }
