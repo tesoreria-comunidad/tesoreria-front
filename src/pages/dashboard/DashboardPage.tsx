@@ -17,10 +17,13 @@ export function DashboardPage() {
 
       <section className=" h-[90%] max-h-[90%] ">
         <section className="flex flex-col gap-4">
-          <div className=" grid grid-cols-3 max-md:grid-cols-1  gap-4   ">
+          <div className=" grid grid-cols-2 max-md:grid-cols-1  gap-4   ">
             <UsersGraphs />
-            <ExpensesByCategory />
+
             <TransactionGraph />
+          </div>
+          <div className="md:w-1/2">
+            <ExpensesByCategory />
           </div>
           {!isMobile && (
             <div className="grid grid-cols-[2fr_1fr] max-md:grid-cols-1 gap-4  ">

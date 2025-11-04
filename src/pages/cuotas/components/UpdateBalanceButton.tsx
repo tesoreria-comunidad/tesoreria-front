@@ -120,12 +120,12 @@ export function UpdateBalanceButton() {
       <div className="flex items-center gap-2">
         <DialogTrigger asChild>
           <Button
-            variant="default"
+            variant="secondary"
             disabled={!!balanceLogsQuery.data}
-            title="xxxxxx"
+            className="max-md:flex max-md:flex-col max-md:gap-2"
           >
             <Banknote className="h-4 w-4" />
-            <span className="ml-2">Actualizar balances </span>
+            <span className="ml-2 ">Actualizar balances </span>
           </Button>
         </DialogTrigger>
         {!!balanceLogsQuery.data && (

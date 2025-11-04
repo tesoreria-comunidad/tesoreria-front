@@ -19,9 +19,9 @@ export function CuotasPage() {
   const currentCuota = cuotas?.find((c) => c.is_active);
   return (
     <div className="size-full   overflow-y-auto space-y-4   ">
-      <section className="flex items-center justify-between  h-[5%]">
+      <section className="flex max-md:flex-col md:items-center justify-between gap-4 h-[5%]">
         <Label className="text-xl">Cuota</Label>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 max-md:justify-around ">
           <CreateCuotaAside />
           <UpdateBalanceButton />
           <CuotasPorHermanoAside />

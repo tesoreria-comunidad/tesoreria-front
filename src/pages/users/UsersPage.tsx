@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useUsersQuery } from "@/queries/user.queries";
+import { Label } from "@/components/ui/label";
 
 export function UsersPage() {
   const { data: users } = useUsersQuery();
@@ -18,6 +19,11 @@ export function UsersPage() {
 
   return (
     <div className="size-full  overflow-y-auto space-y-4  ">
+      <section className="flex items-center justify-between">
+        <Label className="text-xl">Usuarios</Label>
+
+        <CreateUserAside />
+      </section>
       <section className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="relative md:w-72">
@@ -34,7 +40,6 @@ export function UsersPage() {
             ({filteredUsers.length} resultados)
           </span>
         </div>
-        <CreateUserAside />
       </section>
       <UsersTable usersInput={filteredUsers} />
     </div>
