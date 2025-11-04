@@ -61,7 +61,7 @@ export function DashboardCard({ type }: DashboardCardProps) {
 
   const { amount, title, descriptcion, path } = Config[type];
   return (
-    <Card className="md:w-2xs">
+    <Card className="md:w-full">
       <CardHeader>
         <CardDescription>{title}</CardDescription>
         <CardTitle className="  md:text-3xl text-2xl font-semibold text-primary  ">
