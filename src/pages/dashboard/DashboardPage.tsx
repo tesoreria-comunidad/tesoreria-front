@@ -8,29 +8,29 @@ import { useMobile } from "@/context/MobileContext";
 export function DashboardPage() {
   const { isMobile } = useMobile();
   return (
-    <div className=" size-full flex flex-col gap-4  max-md:overflow-x-hidden   ">
+    <div className="  overflow-hidden flex flex-col gap-4  ">
       <section className="flex  max-md:flex-col   gap-4">
         <DashboardCard type="users" />
         <DashboardCard type="family" />
         <DashboardCard type="cuota" />
       </section>
 
-      <section className=" h-[90%] max-h-[90%] ">
+      <section className="">
         <section className="flex flex-col gap-4">
           <div className=" grid grid-cols-2 max-md:grid-cols-1  gap-4   ">
             <UsersGraphs />
 
             <TransactionGraph />
           </div>
-          <div className="md:w-1/2">
-            <ExpensesByCategory />
-          </div>
-          {!isMobile && (
-            <div className="grid grid-cols-[2fr_1fr] max-md:grid-cols-1 gap-4  ">
-              <RamasGraphs />
+          <section className="flex gap-4  h-[70vh] ">
+            <div className="md:w-1/2 h-full grid grid-rows-2 gap-4">
+              <ExpensesByCategory />
+              {!isMobile && <RamasGraphs />}
+            </div>
+            <div className="h-full bg-red-50 w-1/2">
               <ActionLogsList />
             </div>
-          )}
+          </section>
         </section>
       </section>
     </div>

@@ -56,15 +56,15 @@ export function ExpensesByCategory() {
     value: list[category],
   }));
   return (
-    <Card className="size-full ">
+    <Card>
       <CardHeader>
         <CardTitle>Gastos por categoría</CardTitle>
         <CardDescription>
           Gastos en el año {new Date().getFullYear()}
         </CardDescription>
       </CardHeader>
-      <CardContent className=" h-full">
-        <ChartContainer config={chartConfig} className=" size-full">
+      <CardContent>
+        <ChartContainer config={chartConfig} className=" w-[90%] mx-auto">
           <BarChart
             accessibilityLayer
             data={chartData}
