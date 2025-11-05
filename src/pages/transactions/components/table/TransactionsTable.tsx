@@ -8,7 +8,12 @@ import {
   type TPaymentMethod,
 } from "@/constants/transactions.constatns";
 import { FamilyCell } from "@/pages/users/components/table/FamilyCell";
-import { BanknoteArrowDown, BanknoteArrowUp, Filter } from "lucide-react";
+import {
+  BanknoteArrowDown,
+  BanknoteArrowUp,
+  Coins,
+  Filter,
+} from "lucide-react";
 import { formatCurrency } from "@/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,6 +31,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/common/DatePicker";
 import { ActionCell } from "./components/ActionCell";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useMobile } from "@/context/MobileContext";
 
 // Opcional: para mostrar el select de familias
 type FamilyOption = { id: string; name: string };
@@ -84,6 +95,7 @@ export function TransactionsTable({
   transactions,
   families,
 }: TransactionsTableProps) {
+  const { isMobile } = useMobile();
   const categoriesQuery = useTransactionsCategoriesQuery();
   const [filters, setFilters] = useState<TransactionsFilters>({
     q: "",
@@ -97,60 +109,112 @@ export function TransactionsTable({
     amountMax: "",
   });
 
+  const mobileColumns: TColumnDef<TTransaction>[] = [
+    { accessorKey: "id", hidden: true },
+
+    {
+      accessorKey: "category",
+      header: "Detalles",
+      cell: ({ getValue, row }) => {
+        const id_family = row.original.id_family;
+        const direction = row.original.direction;
+        const method = row.original.payment_method;
+        const amount = row.original.amount;
+
+        return (
+          <div className="flex  gap-2 items-start text-xs">
+            {direction === "EXPENSE" ? (
+              <div className="bg-expense/25 text-expense rounded-full p-1">
+                <BanknoteArrowDown className="size-4" />
+              </div>
+            ) : (
+              <div className="bg-income/25 text-income rounded-full p-1">
+                <BanknoteArrowUp className="size-4" />
+              </div>
+            )}
+            <div className="flex flex-col gap-2">
+              <p className="font-medium  text-lg">{formatCurrency(amount)}</p>
+
+              <div className="flex items-center gap-2">
+                <PaymentMethodBadge method={method} size="sm" />
+                <p>{getValue<string>()}</p>
+              </div>
+              {id_family ? <FamilyCell id_family={id_family} /> : <>-</>}
+            </div>
+          </div>
+        );
+      },
+    },
+
+    {
+      header: "-",
+      size: 50,
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          <ActionCell transaction={row.original} />
+        </div>
+      ),
+    },
+  ];
+
   const columns: TColumnDef<TTransaction>[] = [
     { accessorKey: "id", hidden: true },
     {
-      accessorKey: "amount",
-      header: "Monto",
-      size: 200,
+      accessorKey: "payment_method",
+      header: "Método ",
+      size: 30,
       cell: ({ getValue }) => (
-        <p className="font-medium">{formatCurrency(getValue<number>())}</p>
+        <div className="flex justify-center">
+          <PaymentMethodBadge method={getValue<TPaymentMethod>()} size="sm" />
+        </div>
       ),
     },
-    { accessorKey: "category", header: "Categoría" },
-    { accessorKey: "concept", header: "Concepto", hidden: true },
+    {
+      accessorKey: "category",
+      header: "Detalles",
+      size: 100,
+      cell: ({ getValue, row }) => {
+        const id_family = row.original.id_family;
+
+        const direction = row.original.direction;
+        return (
+          <div className="flex  gap-2 items-start">
+            <div>
+              {direction === "EXPENSE" ? (
+                <div className="bg-expense/25 text-expense rounded-full p-1">
+                  <BanknoteArrowDown className="size" />
+                </div>
+              ) : (
+                <div className="bg-income/25 text-income rounded-full p-1">
+                  <BanknoteArrowUp className="size" />
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <p>{getValue<string>()}</p>
+              {id_family ? <FamilyCell id_family={id_family} /> : <>-</>}
+            </div>
+          </div>
+        );
+      },
+    },
     {
       accessorKey: "direction",
       header: "Dirección",
-      cell: ({ getValue }) => (
-        <>
-          {getValue<TDirectionOfTransaction>() === "EXPENSE" ? (
-            <div className="flex items-center gap-2 bg-expense/25 text-expense justify-center rounded-md font-medium">
-              <BanknoteArrowDown className="size" /> <span>egreso</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 bg-income/25 text-income justify-center rounded-md font-medium">
-              <BanknoteArrowUp className="size" /> <span>ingreso</span>
-            </div>
-          )}
-        </>
-      ),
+      hidden: true,
     },
     {
       accessorKey: "id_family",
       header: "Familia",
       cell: ({ getValue }) => <FamilyCell id_family={getValue<string>()} />,
+      hidden: true,
     },
-    {
-      accessorKey: "payment_method",
-      header: "Método de pago",
-      cell: ({ getValue }) => (
-        <PaymentMethodBadge method={getValue<TPaymentMethod>()} />
-      ),
-    },
-    {
-      accessorKey: "payment_date",
-      header: "Fecha de Pago",
-      size: 250,
-      enableSorting: true,
-      cell: ({ getValue }) => (
-        <p className="text-center">{getValue<string>().split("T")[0]}</p>
-      ),
-    },
+
     {
       accessorKey: "createdAt",
       header: "Fecha de carga",
       size: 250,
+      hidden: true,
       cell: ({ getValue }) => (
         <p className="text-center">
           {new Date(getValue<string>()).toLocaleDateString()}
@@ -161,14 +225,32 @@ export function TransactionsTable({
     {
       accessorKey: "description",
       header: "Descripción",
-      size: 500,
-      hidden: true,
       cell: ({ getValue }) => <p className="truncate">{getValue<string>()}</p>,
     },
     {
-      header: "Acciones",
-      size: 100,
-      cell: ({ row }) => <ActionCell transaction={row.original} />,
+      accessorKey: "amount",
+      header: "Monto",
+      size: 60,
+      cell: ({ getValue, row }) => {
+        const direction = row.original.direction;
+        return (
+          <div className="flex  justify-end items-start">
+            <div>{direction === "EXPENSE" ? "-" : "+"}</div>
+            <p className="font-medium g">
+              {formatCurrency(getValue<number>())}
+            </p>
+          </div>
+        );
+      },
+    },
+    {
+      header: "-",
+      size: 50,
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          <ActionCell transaction={row.original} />
+        </div>
+      ),
     },
   ];
 
@@ -232,28 +314,11 @@ export function TransactionsTable({
   return (
     <div>
       {/* Toolbar de filtros */}
-      <Card className="border-none shadow my-2">
-        <CardContent>
-          <div className="flex flex-col gap-3 md:grid md:grid-cols-12">
-            {/* Búsqueda */}
-            <div className="md:col-span-4">
-              <Label className="block text-xs font-medium text-muted-foreground mb-1">
-                Buscar
-              </Label>
-              <Input
-                type="text"
-                placeholder="Concepto o descripción…"
-                className="w-full rounded-md border px-3 py-2"
-                value={filters.q}
-                onChange={(e) =>
-                  setFilters((f) => ({ ...f, q: e.target.value }))
-                }
-              />
-            </div>
-
+      <Card className="border-none shadow my-2 max-md:hidden">
+        <CardContent className="space-y-2">
+          <div className="grid grid-cols-6 gap-4">
             {/* Categoría (shadcn Select) */}
             <SelectField
-              className="md:col-span-2"
               label="Categoría"
               value={filters.category}
               disabled={!categoriesQuery.data?.length}
@@ -270,7 +335,6 @@ export function TransactionsTable({
 
             {/* Dirección (shadcn Select) */}
             <SelectField
-              className="md:col-span-2"
               label="Dirección"
               value={filters.direction}
               onChange={(v) =>
@@ -289,7 +353,6 @@ export function TransactionsTable({
 
             {/* Método de pago (shadcn Select) */}
             <SelectField
-              className="md:col-span-2"
               label="Método de pago"
               value={filters.paymentMethod}
               onChange={(v) =>
@@ -309,7 +372,6 @@ export function TransactionsTable({
             {/* Familia (opcional) (shadcn Select) */}
             {families?.length ? (
               <SelectField
-                className="md:col-span-4"
                 label="Familia"
                 value={filters.familyId}
                 onChange={(v) =>
@@ -327,7 +389,7 @@ export function TransactionsTable({
             ) : null}
 
             {/* Rango de fechas */}
-            <div className="md:col-span-2">
+            <div>
               <Label className="block text-xs font-medium text-muted-foreground mb-1">
                 Desde (fecha pago)
               </Label>
@@ -341,16 +403,8 @@ export function TransactionsTable({
                 }
                 placeholder="Seleccionar fecha"
               />
-              {/* <Input
-                type="date"
-                className="w-full rounded-md border px-3 py-2"
-                value={filters.dateFrom}
-                onChange={(e) =>
-                  setFilters((f) => ({ ...f, dateFrom: e.target.value }))
-                }
-              /> */}
             </div>
-            <div className="md:col-span-2">
+            <div>
               <Label className="block text-xs font-medium text-muted-foreground mb-1">
                 Hasta (fecha pago)
               </Label>
@@ -367,48 +421,62 @@ export function TransactionsTable({
             </div>
 
             {/* Rango de montos */}
-            <div className="md:col-span-2">
-              <Label className="block text-xs font-medium text-muted-foreground mb-1">
-                Monto mín
-              </Label>
-              <Input
-                type="number"
-                min="0"
-                step="0.01"
-                className="w-full rounded-md border px-3 py-2"
-                value={filters.amountMin}
-                onChange={(e) =>
-                  setFilters((f) => ({ ...f, amountMin: e.target.value }))
-                }
-              />
-            </div>
-            <div className="md:col-span-2">
-              <Label className="block text-xs font-medium text-muted-foreground mb-1">
-                Monto máx
-              </Label>
-              <Input
-                type="number"
-                min="0"
-                step="0.01"
-                className="w-full rounded-md border px-3 py-2"
-                value={filters.amountMax}
-                onChange={(e) =>
-                  setFilters((f) => ({ ...f, amountMax: e.target.value }))
-                }
-              />
-            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <div className="flex flex-col items-start w-full">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">
+                    {"Monto"}
+                  </label>
+                  <Button variant={"outline"} className="w-full">
+                    <Coins />
+                    Monto
+                  </Button>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="md:col-span-2">
+                  <Label className="block text-xs font-medium text-muted-foreground mb-1">
+                    Monto mín
+                  </Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    className="w-full rounded-md border px-3 py-2"
+                    value={filters.amountMin}
+                    onChange={(e) =>
+                      setFilters((f) => ({ ...f, amountMin: e.target.value }))
+                    }
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <Label className="block text-xs font-medium text-muted-foreground mb-1">
+                    Monto máx
+                  </Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    className="w-full rounded-md border px-3 py-2"
+                    value={filters.amountMax}
+                    onChange={(e) =>
+                      setFilters((f) => ({ ...f, amountMax: e.target.value }))
+                    }
+                  />
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
-
-          <div className="mt-3 flex flex-wrap gap-2 justify-between items-center">
+          <div className="flex items-center justify-between">
             <Label>{filtered.length} resultado/s</Label>
             <Button type="button" variant={"secondary"} onClick={clearFilters}>
-              Limpiar filtros <Filter />
+              Limpiar <Filter />
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      <RootTable columns={columns} data={filtered} tableHeader />
+      <RootTable columns={isMobile ? mobileColumns : columns} data={filtered} />
     </div>
   );
 }

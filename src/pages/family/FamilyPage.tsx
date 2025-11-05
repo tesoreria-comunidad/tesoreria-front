@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { useFamiliesQuery } from "@/queries/family.queries";
 import { useMobile } from "@/context/MobileContext";
 import { FamilyList } from "./components/FamilyList";
+import { Label } from "@/components/ui/label";
 
 export function FamilyPage() {
   const { data: families } = useFamiliesQuery();
@@ -16,8 +17,13 @@ export function FamilyPage() {
   );
 
   return (
-    <div className="size-full overflow-y-hidden   space-y-4">
-      <section className="flex items-center justify-between">
+    <div className="size-full overflow-y-hidden   space-y-2">
+      <section className="flex flex-col gap-2">
+        <section className="flex items-center justify-between">
+          <Label className="text-xl">Familias</Label>
+
+          <CreatFamilyAside />
+        </section>
         <div className="flex items-center gap-2">
           <div className="relative md:w-72">
             <Input
@@ -33,7 +39,6 @@ export function FamilyPage() {
             ({filteredFamilies?.length})
           </span>
         </div>
-        <CreatFamilyAside />
       </section>
       {filteredFamilies && (
         <section className="overflow-y-auto  max-h-[95%]">

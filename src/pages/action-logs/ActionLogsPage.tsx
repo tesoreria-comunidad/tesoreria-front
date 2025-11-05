@@ -91,7 +91,12 @@ export default function ActionLogsPage() {
       });
   }, [data, actionType, status, targetTable, targetId, userId, q, from, to]);
 
-  if (isLoading) return <PageLoader />;
+  if (isLoading)
+    return (
+      <div className="h-[80vh] overflow-hidden">
+        <PageLoader />;
+      </div>
+    );
 
   return (
     <div className="p-6 space-y-6   size-full rounded-lg ">

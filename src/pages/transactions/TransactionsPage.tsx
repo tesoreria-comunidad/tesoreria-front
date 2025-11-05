@@ -18,12 +18,17 @@ import { ChartAreaIcon, ChevronsUpDown } from "lucide-react";
 export function TransactionsPage() {
   const transaccitionsQuery = useTransactionsQuery();
 
-  if (transaccitionsQuery.isLoading) return <PageLoader />;
+  if (transaccitionsQuery.isLoading)
+    return (
+      <div className="h-[80vh] overflow-hidden">
+        <PageLoader />;
+      </div>
+    );
 
   return (
     <div className="size-full  overflow-y-auto space-y-4  ">
       <section className="flex items-center justify-between">
-        <Label className="text-xl">Movimientos</Label>
+        <Label className="text-xl">Transacciones</Label>
         <CreateTransactionAside />
       </section>
       <div className="flex flex-col gap-2">
@@ -42,7 +47,7 @@ export function TransactionsPage() {
           </span>
           <CollapsibleContent>
             {transaccitionsQuery.data ? (
-              <section className="w-full mx-auto grid grid-cols-2 gap-4  my-4">
+              <section className="w-full mx-auto grid grid-cols-2 max-md:grid-cols-1 gap-4  my-4">
                 <TransactionGraph />
                 <ExpensesByCategory />
                 {/* <TransactionGraph /> */}

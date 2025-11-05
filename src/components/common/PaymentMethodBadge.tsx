@@ -5,8 +5,12 @@ import type { ReactElement } from "react";
 
 interface PaymentMethodBadgeProps {
   method: TPaymentMethod;
+  size?: "sm" | "lg";
 }
-export function PaymentMethodBadge({ method }: PaymentMethodBadgeProps) {
+export function PaymentMethodBadge({
+  method,
+  size = "lg",
+}: PaymentMethodBadgeProps) {
   const Config: Record<
     TPaymentMethod,
     { Icon: ReactElement; className: string }
@@ -26,7 +30,7 @@ export function PaymentMethodBadge({ method }: PaymentMethodBadgeProps) {
     <Badge className={className}>
       <div className="flex items-center gap-2">
         {Icon}
-        <span>{method}</span>
+        {size === "lg" ? <span>{method}</span> : null}
       </div>
     </Badge>
   );
