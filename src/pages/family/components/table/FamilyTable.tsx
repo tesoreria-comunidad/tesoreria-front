@@ -49,5 +49,5 @@ export function FamilyTable({ families }: { families: TFamily[] }) {
     },
   ];
 
-  return <RootTable columns={columns} data={families} tableHeader />;
+  return <RootTable columns={columns} data={families} />;
 }

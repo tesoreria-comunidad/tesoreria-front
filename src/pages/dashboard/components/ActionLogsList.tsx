@@ -153,7 +153,7 @@ export function ActionLogsList({
   const { data: logs, isLoading } = useLogsQuery();
 
   return (
-    <Card>
+    <Card className="size-full">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div>
@@ -173,7 +173,7 @@ export function ActionLogsList({
         </div>
       </CardHeader>
 
-      <CardContent className="pt-0">
+      <CardContent className="pt-0 h-full ">
         {isLoading && (
           <div className="space-y-2">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -190,7 +190,7 @@ export function ActionLogsList({
         )}
 
         {!isLoading && !!logs?.length && (
-          <div className="max-h-[420px] overflow-auto">
+          <div className="max-h-[90%] overflow-auto">
             <div className="divide-y">
               {logs
                 .slice()

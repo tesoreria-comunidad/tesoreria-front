@@ -14,7 +14,7 @@ export function CreateTransactionAside() {
       <SheetTrigger>
         <Button>
           <Plus />
-          Movimiento
+          Crear Transaccion
         </Button>
       </SheetTrigger>
       <SheetContent>

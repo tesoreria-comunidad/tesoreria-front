@@ -12,7 +12,10 @@ export function CreateCuotaAside() {
   return (
     <Sheet>
       <SheetTrigger>
-        <Button variant={"secondary"}>
+        <Button
+          variant={"secondary"}
+          className="max-md:flex max-md:flex-col max-md:gap-2"
+        >
           <Plus />
           Nueva Cuota
         </Button>

@@ -8,6 +8,7 @@ import {
   ActionTargetTable,
 } from "@/models/logs.schema";
 import { ActionLogsTable } from "./components/table/ActionLogsTable";
+import { Button } from "@/components/ui/button";
 
 export default function ActionLogsPage() {
   const { isLoading, data } = useLogsQuery();
@@ -90,11 +91,16 @@ export default function ActionLogsPage() {
       });
   }, [data, actionType, status, targetTable, targetId, userId, q, from, to]);
 
-  if (isLoading) return <PageLoader />;
+  if (isLoading)
+    return (
+      <div className="h-[80vh] overflow-hidden">
+        <PageLoader />;
+      </div>
+    );
 
   return (
-    <div className="p-6 space-y-6 bg-white  size-full rounded-lg ">
-      <header className="flex items-center justify-between">
+    <div className="p-6 space-y-6   size-full rounded-lg ">
+      <header className="flex items-center justify-between ">
         <h1 className="text-xl font-semibold">Registros de acciones</h1>
         <div className="text-sm text-muted-foreground">
           {filtered.length} resultados
@@ -102,119 +108,117 @@ export default function ActionLogsPage() {
       </header>
 
       {/* Filtros */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        <div>
-          <label className="block text-xs font-medium mb-1">
-            Tipo de acción
-          </label>
-          <select
-            value={actionType}
-            onChange={(e) => setActionType(e.target.value as any)}
-            className="w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-sm"
-          >
-            <option value="">Todas</option>
-            {Object.keys(ActionType).map((k) => (
-              <option key={k} value={k}>
-                {k}
-              </option>
-            ))}
-          </select>
-        </div>
+      <section className="bg-white p-4 rounded-md space-y-4">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 ">
+          <div>
+            <label className="block text-xs font-medium mb-1">
+              Tipo de acción
+            </label>
+            <select
+              value={actionType}
+              onChange={(e) => setActionType(e.target.value as any)}
+              className="w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-sm"
+            >
+              <option value="">Todas</option>
+              {Object.keys(ActionType).map((k) => (
+                <option key={k} value={k}>
+                  {k}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div>
-          <label className="block text-xs font-medium mb-1">Estado</label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as any)}
-            className="w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-sm"
-          >
-            <option value="">Todos</option>
-            {Object.keys(ActionStatus).map((k) => (
-              <option key={k} value={k}>
-                {k}
-              </option>
-            ))}
-          </select>
-        </div>
+          <div>
+            <label className="block text-xs font-medium mb-1">Estado</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as any)}
+              className="w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-sm"
+            >
+              <option value="">Todos</option>
+              {Object.keys(ActionStatus).map((k) => (
+                <option key={k} value={k}>
+                  {k}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div>
-          <label className="block text-xs font-medium mb-1">
-            Tabla objetivo
-          </label>
-          <select
-            value={targetTable}
-            onChange={(e) => setTargetTable(e.target.value as any)}
-            className="w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-sm"
-          >
-            <option value="">Todas</option>
-            {Object.keys(ActionTargetTable).map((k) => (
-              <option key={k} value={k}>
-                {k}
-              </option>
-            ))}
-          </select>
-        </div>
+          <div>
+            <label className="block text-xs font-medium mb-1">
+              Tabla objetivo
+            </label>
+            <select
+              value={targetTable}
+              onChange={(e) => setTargetTable(e.target.value as any)}
+              className="w-full rounded-md border border-gray-300 bg-white px-2 py-2 text-sm"
+            >
+              <option value="">Todas</option>
+              {Object.keys(ActionTargetTable).map((k) => (
+                <option key={k} value={k}>
+                  {k}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div>
-          <label className="block text-xs font-medium mb-1">Target ID</label>
-          <input
-            value={targetId}
-            onChange={(e) => setTargetId(e.target.value)}
-            placeholder="transactionId / familyId…"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
-        </div>
+          <div>
+            <label className="block text-xs font-medium mb-1">Target ID</label>
+            <input
+              value={targetId}
+              onChange={(e) => setTargetId(e.target.value)}
+              placeholder="transactionId / familyId…"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            />
+          </div>
 
-        <div>
-          <label className="block text-xs font-medium mb-1">User ID</label>
-          <input
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            placeholder="uuid del actor…"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
-        </div>
+          <div>
+            <label className="block text-xs font-medium mb-1">User ID</label>
+            <input
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+              placeholder="uuid del actor…"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            />
+          </div>
 
-        <div>
-          <label className="block text-xs font-medium mb-1">Desde</label>
-          <input
-            type="date"
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium mb-1">Hasta</label>
-          <input
-            type="date"
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
-        </div>
+          <div>
+            <label className="block text-xs font-medium mb-1">Desde</label>
+            <input
+              type="date"
+              value={from}
+              onChange={(e) => setFrom(e.target.value)}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium mb-1">Hasta</label>
+            <input
+              type="date"
+              value={to}
+              onChange={(e) => setTo(e.target.value)}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            />
+          </div>
 
-        <div>
-          <label className="block text-xs font-medium mb-1">
-            Buscar en mensaje / requestId / IP / UA
-          </label>
-          <input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="texto libre…"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
+          <div>
+            <label className="block text-xs font-medium mb-1">
+              Buscar en mensaje / requestId / IP / UA
+            </label>
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="texto libre…"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            />
+          </div>
+        </section>
+        <div className="flex items-center justify-end">
+          <Button onClick={resetFilters} variant={"secondary"}>
+            Limpiar filtros
+          </Button>
         </div>
       </section>
-
-      <div className="flex items-center justify-between">
-        <button
-          onClick={resetFilters}
-          className="text-sm rounded-md px-3 py-2 border border-gray-300 hover:bg-gray-50"
-        >
-          Limpiar filtros
-        </button>
-      </div>
 
       {/* Tabla */}
       <ActionLogsTable logs={filtered} />

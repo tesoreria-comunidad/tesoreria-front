@@ -166,7 +166,6 @@ export function UsersTable({ usersInput, ramaId }: UsersTableProps) {
       <RootTable
         columns={columns}
         data={sortedUsers}
-        tableHeader
         rowSelection={rowSelection} // 👈 le pasamos el estado
         onRowSelectionChange={setRowSelection} // 👈 y el updater
         enableRowSelection

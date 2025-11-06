@@ -29,7 +29,10 @@ export function CuotasPorHermanoAside() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant={"secondary"}>
+                <Button
+                  variant={"secondary"}
+                  className="max-md:flex max-md:flex-col max-md:gap-2 "
+                >
                   <Calculator />
                   <Users />
                 </Button>

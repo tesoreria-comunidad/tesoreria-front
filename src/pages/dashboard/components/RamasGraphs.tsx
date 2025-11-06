@@ -41,13 +41,13 @@ export function RamasGraphs() {
     bajas: rama.users.filter((user) => !user.is_active).length,
   }));
   return (
-    <Card className="size-full ">
+    <Card>
       <CardHeader>
         <CardTitle>Beneficiarios por rama</CardTitle>
         <CardDescription>{new Date().getFullYear()}</CardDescription>
       </CardHeader>
-      <CardContent className="flex-1">
-        <ChartContainer config={chartConfig} className="h-full w-full">
+      <CardContent>
+        <ChartContainer config={chartConfig} className=" w-[90%] mx-auto">
           <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
             <XAxis
