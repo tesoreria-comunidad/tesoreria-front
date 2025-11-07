@@ -13,7 +13,7 @@ export function DashboardPage() {
   return (
     <div className="  overflow-hidden flex flex-col gap-4  ">
       <Label className=" text-2xl tracking-tighter py-2">
-        Bienvenido/a, {user?.name} {user?.last_name}👋
+        {user?.gender === "MUJER" ? "Bienvenida" : "Bienvenido"}, {user?.name} {user?.last_name} 👋
       </Label>
 
       <section className="flex  max-md:flex-col   gap-4">

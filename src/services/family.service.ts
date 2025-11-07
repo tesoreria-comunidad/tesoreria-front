@@ -19,4 +19,10 @@ export class FamilyServices {
     return res.data;
   }
   static async delete() {}
+
+  static async getByIdRama(id_rama: string): Promise<TApiFamily[]> {
+    const res = await axiosInstance.get(`${BASE_URL}/family/by-rama/${id_rama}`);
+    return res.data;
+  }
+  
 }
