@@ -34,4 +34,9 @@ export class UserServices {
     const res = await axiosInstance.post(url, { users });
     return res.data;
   }
+
+   static async getByRama(id_rama: string): Promise<TApiUser[]> {
+    const res = await axiosInstance.get(`${BASE_URL}/user/by-rama/${id_rama}`);
+    return res.data;
+  }
 }

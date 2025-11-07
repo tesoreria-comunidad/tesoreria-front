@@ -17,6 +17,7 @@ import {
   HomeIcon,
   LayoutDashboard,
   Logs,
+  Settings,
   Trees,
   UserCog2Icon,
   Users,
@@ -207,7 +208,7 @@ export const groupedRoutes: {
   },
   {
     title: "Configuracion",
-    icon: <CircleDollarSign className="size-5" />,
+    icon: <Settings className="size-5" />,
     routes: [
       {
         path: "/logs",

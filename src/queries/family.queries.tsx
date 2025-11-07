@@ -1,17 +1,23 @@
 import { familyAdapter } from "@/adapters";
 import { setAuthInterceptor } from "@/config/axios.config";
-import type { TCreateFamily, TFamily } from "@/models";
+import type { TCreateFamily, TFamily, TUser } from "@/models";
 import { FamilyServices } from "@/services/family.service";
+import { useAppSelector } from "@/store/hooks";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 /* ============================
  * Fetchers
  * ============================ */
 
-export const fetchFamilies = async () => {
+export const fetchFamilies = async (user: TUser): Promise<TFamily[]> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
-  const res = await FamilyServices.getAll();
-  return res.map((apiFamily) => familyAdapter(apiFamily));
+  if (user.role === "MASTER") {
+    const res = await FamilyServices.getAll();
+    return res.map((apiFamily) => familyAdapter(apiFamily));
+  } else {
+    const res = await FamilyServices.getByIdRama(user.id_rama!);
+    return res.map((apiFamily) => familyAdapter(apiFamily));
+  }
 };
 export const fetchFamilyById = async (id: string) => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
@@ -33,9 +39,10 @@ export const editFamily = async (id: string, body: Partial<TFamily>) => {
  * ============================ */
 
 export function useFamiliesQuery() {
+  const { user } = useAppSelector((s) => s.session);
   return useQuery({
     queryKey: ["families"],
-    queryFn: fetchFamilies,
+    queryFn: () => fetchFamilies(user!),
   });
 }
 export function useFamilyByIdQuery(id: string) {

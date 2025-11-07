@@ -3,16 +3,22 @@ import { setAuthInterceptor } from "@/config/axios.config";
 import type { TCreateUser, TUser } from "@/models";
 import { AuthServices } from "@/services/auth.service";
 import { UserServices } from "@/services/user.service";
+import { useAppSelector } from "@/store/hooks";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 /* ============================
  * Fetchers
  * ============================ */
-export const fetchUsers = async (): Promise<TUser[]> => {
+export const fetchUsers = async (user: TUser): Promise<TUser[]> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
+  if (user.role === "MASTER") {
   const apiUserResponse = await UserServices.getAll();
   return apiUserResponse.map((apiUser) => userAdapter(apiUser));
+  } else {
+    const apiUserResponse = await UserServices.getByRama(user.id_rama!);
+    return apiUserResponse.map((apiUser) => userAdapter(apiUser));
+  }
 };
 export const fetchUserById = async (id: string): Promise<TUser> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
@@ -41,9 +47,10 @@ export const editUser = async (
  * Queries
  * ============================ */
 export function useUsersQuery() {
+  const { user } = useAppSelector((s) => s.session);
   return useQuery({
     queryKey: ["users"],
-    queryFn: fetchUsers,
+    queryFn: () => fetchUsers(user!),
   });
 }
 export function useUserQueryById(id: string) {

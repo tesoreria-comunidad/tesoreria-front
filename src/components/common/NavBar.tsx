@@ -21,7 +21,7 @@ export default function NavBar() {
   return (
     <div className=" ">
       <nav className=" bg-primary/5 p-4    md:h-20 w-full fixed  z-20 border-b backdrop-blur-xl">
-        <section className="container mx-auto  flex  items-center justify-between    ">
+        <section className="container mx-auto px-8 flex  items-center justify-between    ">
           <Logo />
 
           <section className="flex items-center  gap-4 max-md:hidden">
@@ -50,7 +50,7 @@ export default function NavBar() {
         </section>
       </nav>
 
-      <div className=" container mx-auto  flex justify-center  gap-4 items-center   mt-20 p-2  max-md:hidden">
+      <div className=" container mx-auto px-8 flex justify-center  gap-4 items-center   mt-20 p-2  max-md:hidden">
         {subRoutes.map((route) =>
           user?.role &&
           route.rolesAccess?.includes(user?.role) &&

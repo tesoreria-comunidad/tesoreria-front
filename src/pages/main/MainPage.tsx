@@ -12,7 +12,7 @@ export function MainPage() {
         <div className="flex flex-col  bg-accent min-h-screen text-foreground transition-colors duration-300 relative">
           <NavBar />
           <main
-            className={` container mx-auto    h-[100vh] flex-1 max-md:py-24 md:pb-24 max-md:px-4  text-foreground transition-colors duration-300 w-full `}
+            className={` container mx-auto px-8   h-[100vh] flex-1 max-md:py-24 md:pb-24 max-md:px-4  text-foreground transition-colors duration-300 w-full `}
           >
             <section className="  h-full w-full    ">
               <section
