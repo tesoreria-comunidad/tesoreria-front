@@ -70,7 +70,16 @@ export function UserEditInformationDialog({ user }: { user: TUser }) {
   };
 
   return (
-    <DialogContent className="max-h-screen sm:max-h-[90vh] overflow-y-auto rounded-xl sm:rounded-2xl px-4 py-6 sm:px-6 sm:py-4">
+    <DialogContent
+      className="
+        max-h-screen sm:max-h-[90vh]
+        overflow-y-auto
+        rounded-xl sm:rounded-2xl
+        px-4 py-6 sm:px-6 sm:py-4
+        pt-[max(env(safe-area-inset-top),1.5rem)]
+        pb-[max(env(safe-area-inset-bottom),1rem)]
+      "
+    >
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
           <Edit /> Editar información
