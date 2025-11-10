@@ -13,7 +13,7 @@ export function MobileNavbar() {
   const { user } = useAppSelector((s) => s.session);
   const { pathname } = useLocation();
   return (
-    <section className="flex  justify-around md:hidden items-center z-10  max-md:fixed max-md:bottom-0 max-md:w-full  bg-white py-4">
+  <section className="flex  justify-around md:hidden items-center z-10  max-md:fixed max-md:bottom-0 max-md:w-full  bg-[var(--color-background)] py-4">
       {routes.slice(0, 4).map((route) =>
         user?.role &&
         route.rolesAccess?.includes(user?.role) &&
@@ -22,8 +22,8 @@ export function MobileNavbar() {
             <div
               className={`flex flex-col items-center gap-2 text-xs  transition-all duration-300 h-10   rounded-md ${
                 pathname === route.path
-                  ? "font-semibold  bg-white "
-                  : " hover:bg-muted "
+                  ? "font-semibold bg-[var(--color-sidebar-accent)] text-[var(--color-sidebar-accent-foreground)]"
+                  : " hover:bg-background "
               }`}
             >
               <div>{route.icon}</div>
@@ -48,8 +48,8 @@ export function MobileNavbar() {
                   <div
                     className={`flex  items-center gap-2 text-xs  transition-all duration-300 h-10   rounded-md ${
                       pathname === route.path
-                        ? "font-semibold  bg-white "
-                        : " hover:bg-muted "
+                        ? "font-semibold bg-[var(--color-sidebar-accent)] text-[var(--color-sidebar-accent-foreground)]"
+                        : " hover:bg-background "
                     }`}
                   >
                     <div>{route.icon}</div>

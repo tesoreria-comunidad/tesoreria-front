@@ -40,9 +40,11 @@ export default function RamasDetailPage() {
           <CardContent>
             <section>
               {dirigentes?.length ? (
-                <section className="grid grid-cols-4 max-md:grid-cols-2  gap-2 ">
+                <section className="flex gap-2 overflow-x-auto md:grid md:grid-cols-4 md:gap-2 md:overflow-visible py-2">
                   {dirigentes?.map((u) => (
-                    <UserCard user={u} />
+                    <div key={u.id} className="flex-shrink-0 w-72 md:w-auto snap-start">
+                      <UserCard user={u} />
+                    </div>
                   ))}
                 </section>
               ) : (
