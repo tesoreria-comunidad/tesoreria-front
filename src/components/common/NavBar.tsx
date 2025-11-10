@@ -21,7 +21,7 @@ export default function NavBar() {
   return (
     <div className=" ">
       <nav className=" bg-primary/5 p-4    md:h-20 w-full fixed  z-20 border-b backdrop-blur-xl">
-        <section className="container mx-auto  flex  items-center justify-between    ">
+        <section className="container mx-auto px-8 flex  items-center justify-between    ">
           <Logo />
 
           <section className="flex items-center  gap-4 max-md:hidden">
@@ -34,7 +34,7 @@ export default function NavBar() {
                 <div
                   className={`flex items-center gap-2  transition-all duration-300 h-10 px-3 rounded-2xl ${
                     groupedRoute.routes.map((r) => r.path).includes(pathname)
-                      ? "font-semibold  bg-white px-4"
+                      ? "font-semibold px-4 bg-[var(--color-sidebar-accent)] text-[var(--color-sidebar-accent-foreground)]"
                       : " hover:bg-background opacity-50 "
                   }`}
                 >
@@ -50,7 +50,7 @@ export default function NavBar() {
         </section>
       </nav>
 
-      <div className=" container mx-auto  flex justify-center  gap-4 items-center   mt-20 p-2  max-md:hidden">
+      <div className=" container mx-auto px-8 flex justify-center  gap-4 items-center   mt-20 p-2  max-md:hidden">
         {subRoutes.map((route) =>
           user?.role &&
           route.rolesAccess?.includes(user?.role) &&
@@ -59,7 +59,7 @@ export default function NavBar() {
               <div
                 className={`flex items-center gap-2  transition-all duration-300 h-10 p-4 rounded-md ${
                   pathname === route.path
-                    ? "font-semibold  bg-black/10 "
+                    ? "font-semibold bg-[var(--color-sidebar-accent)] text-[var(--color-sidebar-accent-foreground)]"
                     : " hover:bg-background opacity-50 "
                 }`}
               >
