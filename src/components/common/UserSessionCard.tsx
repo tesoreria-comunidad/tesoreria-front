@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Moon, Palette, Settings, Sun } from "lucide-react";
+import { LogOut, Moon, Settings, Sun } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 export default function UserSessionCard() {
@@ -45,9 +45,6 @@ export default function UserSessionCard() {
           <DropdownMenuItem className="hover:bg-muted">
             <Settings /> Perfil
           </DropdownMenuItem>
-          <DropdownMenuItem className="hover:bg-muted">
-            <Palette /> Preferencias
-          </DropdownMenuItem>
 
           <DropdownMenuItem
             onClick={toggleTheme}
@@ -58,6 +55,7 @@ export default function UserSessionCard() {
             ) : (
               <Sun className="w-4 h-4 text-yellow-400" />
             )}
+          <p>Modo</p>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator className="bg-border" />
@@ -66,8 +64,8 @@ export default function UserSessionCard() {
             onClick={handleLogout}
             className=" hover:text-destructive-foreground flex items-center gap-2"
           >
-            <p>Salir</p>
             <LogOut className="w-4 h-4" />
+            <p>Salir</p>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

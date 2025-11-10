@@ -1,7 +1,11 @@
+import { Link } from "react-router";
+
 export function Logo() {
   return (
-    <h2 className="font-semibold tracking-tighter text-2xl max-md:text-lg">
-      Mi Pelicano.
-    </h2>
+    <Link to="/dashboard" aria-label="Ir al panel">
+      <h2 className="font-semibold tracking-tighter text-2xl max-md:text-lg cursor-pointer">
+        Mi Pelicano.
+      </h2>
+    </Link>
   );
 }
