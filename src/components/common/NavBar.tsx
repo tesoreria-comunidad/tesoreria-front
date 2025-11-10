@@ -34,7 +34,7 @@ export default function NavBar() {
                 <div
                   className={`flex items-center gap-2  transition-all duration-300 h-10 px-3 rounded-2xl ${
                     groupedRoute.routes.map((r) => r.path).includes(pathname)
-                      ? "font-semibold  bg-white px-4"
+                      ? "font-semibold px-4 bg-[var(--color-sidebar-accent)] text-[var(--color-sidebar-accent-foreground)]"
                       : " hover:bg-background opacity-50 "
                   }`}
                 >
@@ -59,7 +59,7 @@ export default function NavBar() {
               <div
                 className={`flex items-center gap-2  transition-all duration-300 h-10 p-4 rounded-md ${
                   pathname === route.path
-                    ? "font-semibold  bg-black/10 "
+                    ? "font-semibold bg-[var(--color-sidebar-accent)] text-[var(--color-sidebar-accent-foreground)]"
                     : " hover:bg-background opacity-50 "
                 }`}
               >
