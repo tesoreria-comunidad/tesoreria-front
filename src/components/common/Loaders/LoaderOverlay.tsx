@@ -9,7 +9,7 @@ type Props = {
 };
 
 export function LoaderOverlay({
-  text = "Mi Pelicano",
+  text = "Mi Pelícano",
   showCheck = false,
   onCheckDone,
 }: Props) {

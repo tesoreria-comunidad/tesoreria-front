@@ -154,7 +154,7 @@ export const groupedRoutes: {
     ],
   },
   {
-    title: "Nomina",
+    title: "Nómina",
     icon: <UsersRound className="size-5" />,
     routes: [
       {
@@ -185,7 +185,7 @@ export const groupedRoutes: {
   },
 
   {
-    title: "Fianzas",
+    title: "Finanzas",
     icon: <CircleDollarSign className="size-5" />,
     routes: [
       {

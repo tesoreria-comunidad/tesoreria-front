@@ -9,10 +9,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Moon, Settings, Sun } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
+import { useState } from "react";
+import { Dialog } from "@/components/ui/dialog";
+import { UserEditInformationDialog } from "@/pages/users/components/table/components/UserEditInformationDialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 export default function UserSessionCard() {
   const { user } = useAppSelector((s) => s.session);
   const { theme, toggleTheme } = useTheme();
+  const [openDialog, setOpenDialog] = useState(false);
 
   if (!user) return null;
 
@@ -42,7 +46,7 @@ export default function UserSessionCard() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-border" />
 
-          <DropdownMenuItem className="hover:bg-muted">
+          <DropdownMenuItem className="hover:bg-muted" onClick={() => setOpenDialog(true)}>
             <Settings /> Perfil
           </DropdownMenuItem>
 
@@ -69,6 +73,10 @@ export default function UserSessionCard() {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <UserEditInformationDialog user={user} />
+      </Dialog>
     </div>
   );
 }
