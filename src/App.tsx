@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="h-screen overflow-x-hidden  ">
+  <div className="min-h-screen overflow-x-hidden  ">
         <Routes>
           <Route
             path="/*"
