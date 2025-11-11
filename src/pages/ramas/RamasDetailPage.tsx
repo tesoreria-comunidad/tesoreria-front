@@ -23,8 +23,8 @@ export default function RamasDetailPage() {
     ?.filter((user) => user.id_rama === rama.id)
     .filter((u) => u.role === "DIRIGENTE");
   return (
-    <div className="size-full   overflow-y-auto flex flex-col gap-4">
-      <section className="flex items-center justify-between  h-[5%]">
+    <div className="w-full h-full flex flex-col gap-4">
+      <section className="flex items-center justify-between flex-none">
         <Label className="text-xl">{rama.name}</Label>
         {rama.users.length === 0 ? (
           <UserBulkUploader id_rama={rama.id} />
@@ -32,7 +32,7 @@ export default function RamasDetailPage() {
           <AddUserAside rama={rama} />
         )}
       </section>
-      <section className=" h-[95%]">
+      <section className="flex-1 overflow-auto">
         <Card>
           <CardHeader>
             <CardTitle>Dirigentes</CardTitle>
