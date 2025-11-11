@@ -7,12 +7,12 @@ import NavBar from "@/components/common/NavBar";
 export function MainPage() {
   const { user } = useAppSelector((s) => s.session);
   return (
-    <div className=" h-screen w-screen   ">
+  <div className=" min-h-screen w-screen   ">
       <DataProvider>
         <div className="flex flex-col  bg-accent min-h-screen text-foreground transition-colors duration-300 relative">
           <NavBar />
           <main
-            className={` container mx-auto px-8   h-[100vh] flex-1 max-md:py-24 md:pb-24 max-md:px-4  text-foreground transition-colors duration-300 w-full `}
+            className={` container mx-auto px-8 flex-1 max-md:py-24 md:pb-24 max-md:px-4  text-foreground transition-colors duration-300 w-full `}
           >
             <section className="  h-full w-full    ">
               <section
