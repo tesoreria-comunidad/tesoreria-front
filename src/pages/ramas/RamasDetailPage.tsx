@@ -21,7 +21,7 @@ export default function RamasDetailPage() {
   const userRama = users?.filter((user) => user.id_rama === rama.id);
   const dirigentes = userRama
     ?.filter((user) => user.id_rama === rama.id)
-    .filter((u) => u.role === "DIRIGENTE");
+    .filter((u) => u.role === "DIRIGENTE" || u.role === "MASTER" );
   return (
     <div className="size-full   overflow-y-auto flex flex-col gap-4">
       <section className="flex items-center justify-between  h-[5%]">
