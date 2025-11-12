@@ -2,22 +2,29 @@ import type { TMonthlyStat } from "@/adapters/api_models/transaction.schema";
 import { transactionAdapter } from "@/adapters/transaction.adapter";
 import { setAuthInterceptor } from "@/config/axios.config";
 import { useAlert } from "@/context/AlertContext";
-import type { TFamily } from "@/models";
+import type { TFamily, TUser } from "@/models";
 import type {
   TCreateTransaction,
   TTransaction,
 } from "@/models/transaction.schema";
 import { TransactionService } from "@/services/transaction.service";
+import { useAppSelector } from "@/store/hooks";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 /* ============================
  * Fetchers (API + adapter)
  * ============================ */
 
-export const fetchTransactions = async (): Promise<TTransaction[]> => {
+export const fetchTransactions = async (user: TUser): Promise<TTransaction[]> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
-  const apiRes = await TransactionService.getAll();
-  return apiRes.map((apiData) => transactionAdapter(apiData));
+  if (user.role === "MASTER") {
+    const apiRes = await TransactionService.getAll();
+    return apiRes.map((apiData) => transactionAdapter(apiData));
+  } else {
+    const apiRes = await TransactionService.getTransactionsByRama(user.id_rama!);
+    return apiRes.map((apiData) => transactionAdapter(apiData));
+  }
+  
 };
 export const fetchTransactionsCategories = async (): Promise<string[]> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
@@ -80,9 +87,10 @@ export const editTransction = async (
  * ============================ */
 
 export function useTransactionsQuery() {
+  const { user } = useAppSelector((s) => s.session);
   return useQuery({
     queryKey: ["transactions"],
-    queryFn: fetchTransactions,
+    queryFn: () => fetchTransactions(user!),
   });
 }
 
