@@ -121,7 +121,7 @@ export const routes: TRoute[] = [
     name: "Movimientos",
     icon: <ChartArea className="size-5" />,
     element: <TransactionsPage />,
-    rolesAccess: ["MASTER"],
+    rolesAccess: ["MASTER", "DIRIGENTE"],
     sidebarContent: true,
   },
   {
@@ -193,7 +193,7 @@ export const groupedRoutes: {
         name: "Transacciones",
         icon: <ArrowLeftRight className="size-5" />,
         element: <TransactionsPage />,
-        rolesAccess: ["MASTER"],
+        rolesAccess: ["MASTER", "DIRIGENTE"],
         sidebarContent: true,
       },
       {
