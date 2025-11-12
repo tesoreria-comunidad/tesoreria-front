@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { ChartAreaIcon, ChevronsUpDown } from "lucide-react";
+import BulkCreateTransactionsPage from "./components/BulkCreateTransactionsPage";
 
 export function TransactionsPage() {
   const transaccitionsQuery = useTransactionsQuery();
@@ -59,6 +60,8 @@ export function TransactionsPage() {
         <TransactionsTable
           transactions={transaccitionsQuery.data as TTransaction[]}
         />
+
+        <BulkCreateTransactionsPage />
       </div>
     </div>
   );
