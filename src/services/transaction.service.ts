@@ -64,4 +64,8 @@ export class TransactionService {
     );
     return res.data;
   }
+  static async getTransactionsByRama(id_rama: string): Promise<TApiTransaction[]> {
+    const res = await axiosInstance.get(`${BASE_URL}/transactions/by-rama/${id_rama}`);
+    return res.data;
+  }
 }
