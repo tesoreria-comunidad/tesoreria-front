@@ -18,6 +18,7 @@ export default function NavBar() {
 
     setSubRoutes(defaultRoutes?.routes || []);
   }, [pathname]);
+
   return (
     <div className=" ">
       <nav className=" bg-primary/5 p-4    md:h-20 w-full fixed  z-20 border-b backdrop-blur-xl">
@@ -25,24 +26,30 @@ export default function NavBar() {
           <Logo />
 
           <section className="flex items-center  gap-4 max-md:hidden">
-            {groupedRoutes.map((groupedRoute) => (
-              <Link
-                to={groupedRoute.routes[0].path}
-                key={groupedRoute.title}
-                onClick={() => setSubRoutes(groupedRoute.routes)}
-              >
-                <div
-                  className={`flex items-center gap-2  transition-all duration-300 h-10 px-3 rounded-2xl ${
-                    groupedRoute.routes.map((r) => r.path).includes(pathname)
-                      ? "font-semibold px-4 bg-[var(--color-sidebar-accent)] text-[var(--color-sidebar-accent-foreground)]"
-                      : " hover:bg-background opacity-50 "
-                  }`}
-                >
-                  {groupedRoute.icon}
-                  {groupedRoute.title}
-                </div>
-              </Link>
-            ))}
+            {groupedRoutes.map(
+              (groupedRoute) =>
+                user?.role &&
+                groupedRoute.rolesAccess?.includes(user?.role) && (
+                  <Link
+                    to={groupedRoute.routes[0].path}
+                    key={groupedRoute.title}
+                    onClick={() => setSubRoutes(groupedRoute.routes)}
+                  >
+                    <div
+                      className={`flex items-center gap-2  transition-all duration-300 h-10 px-3 rounded-2xl ${
+                        groupedRoute.routes
+                          .map((r) => r.path)
+                          .includes(pathname)
+                          ? "font-semibold px-4 bg-[var(--color-sidebar-accent)] text-[var(--color-sidebar-accent-foreground)]"
+                          : " hover:bg-background opacity-50 "
+                      }`}
+                    >
+                      {groupedRoute.icon}
+                      {groupedRoute.title}
+                    </div>
+                  </Link>
+                )
+            )}
           </section>
           <div>
             <UserSessionCard />
