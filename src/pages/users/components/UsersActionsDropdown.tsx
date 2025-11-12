@@ -23,6 +23,8 @@ import { UserStatusUpdateDialog } from "./table/components/UserStatusUpdateDialo
 import { UserGrantUpdateDialog } from "./table/components/UserGrantUpdateDialog";
 import { UserEditFamilyDialog } from "./table/components/UserEditFamilyDialog";
 import { UserEditInformationDialog } from "./table/components/UserEditInformationDialog";
+import { useAppSelector } from "@/store/hooks";
+import { hasPermission } from "@/utils";
 
 interface UsersActionsDropdownProps {
   user: TUser;
@@ -35,9 +37,11 @@ export default function UsersActionsDropdown({
 }: UsersActionsDropdownProps) {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [dialogType, setDialogType] = useState<"grant" | "status" | "family" | "edit">(
-    "status"
-  );
+  const [dialogType, setDialogType] = useState<
+    "grant" | "status" | "family" | "edit"
+  >("status");
+
+  const { user: userLogged } = useAppSelector((s) => s.session);
 
   const handleOpenDialog = (type: "grant" | "status" | "family" | "edit") => {
     setDialogType(type);
@@ -45,6 +49,10 @@ export default function UsersActionsDropdown({
     setOpenDialog(true); // abrimos el dialog
   };
 
+  if (!hasPermission(userLogged!, user.id_rama!)) {
+    // Este es el caso en el que un dirigente esta logueado y está viendo un usuario que no es de su rama.
+    return null;
+  }
   return (
     <>
       <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
@@ -82,10 +90,10 @@ export default function UsersActionsDropdown({
               </>
             )}
           </DropdownMenuItem>
-      
+
           <DropdownMenuItem
             onSelect={(e) => {
-              e.preventDefault(); 
+              e.preventDefault();
               handleOpenDialog("grant");
             }}
           >
@@ -102,19 +110,20 @@ export default function UsersActionsDropdown({
             )}
           </DropdownMenuItem>
 
-          <DropdownMenuItem 
+          <DropdownMenuItem
             onSelect={(e) => {
               e.preventDefault(); // prevenimos que se cierre antes
               handleOpenDialog("edit"); // no sacar el <Coffee /> xq me gusta
-            }}>  
-            <Coffee />   
-            Editar 
+            }}
+          >
+            <Coffee />
+            Editar
           </DropdownMenuItem>
 
           {showFamilyOptions && (
             <DropdownMenuItem
               onSelect={(e) => {
-                e.preventDefault(); 
+                e.preventDefault();
                 handleOpenDialog("family");
               }}
             >

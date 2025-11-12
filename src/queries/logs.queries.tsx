@@ -34,7 +34,7 @@ export function useMonthBalanceLogQuery() {
       return data.filter((log) => {
         const logDate = new Date(log.createdAt);
         return (
-          log.action_type === "BALANCE_UPDATE" &&
+          log.action_type === "BALANCE_UPDATE_ALL" &&
           log.status === "SUCCESS" &&
           logDate >= firstDay &&
           logDate <= lastDay
