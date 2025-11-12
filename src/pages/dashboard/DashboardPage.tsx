@@ -13,7 +13,8 @@ export function DashboardPage() {
   return (
     <div className="  overflow-hidden flex flex-col gap-4  ">
       <Label className=" text-2xl tracking-tighter py-2">
-        {user?.gender === "MUJER" ? "Bienvenida" : "Bienvenido"}, {user?.name} {user?.last_name} 👋
+        {user?.gender === "MUJER" ? "Bienvenida" : "Bienvenido"}, {user?.name}{" "}
+        {user?.last_name} 👋
       </Label>
 
       <section className="flex  max-md:flex-col   gap-4">
@@ -29,12 +30,12 @@ export function DashboardPage() {
 
             <TransactionGraph />
           </div>
-          <section className="flex max-md:flex-col gap-4  md:h-[70vh]  ">
-            <div className="md:w-1/2 md:h-full grid md:grid-rows-2 gap-4">
+          <section className="flex max-md:flex-col gap-4  md:min-h-[70vh]  ">
+            <div className="md:w-1/2 flex flex-col gap-4">
               <ExpensesByCategory />
               {!isMobile && <RamasGraphs />}
             </div>
-            <div className="h-full bg-red-50 md:w-1/2">
+            <div className=" bg-red-50 md:w-1/2 h-[70vh]">
               <ActionLogsList />
             </div>
           </section>

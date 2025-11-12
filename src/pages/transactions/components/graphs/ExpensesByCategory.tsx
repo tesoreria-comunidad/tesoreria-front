@@ -64,7 +64,7 @@ export function ExpensesByCategory() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className=" w-[90%] mx-auto">
+        <ChartContainer config={chartConfig} className=" w-[70%] mx-auto">
           <BarChart
             accessibilityLayer
             data={chartData}
