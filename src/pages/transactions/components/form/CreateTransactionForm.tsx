@@ -37,7 +37,7 @@ import { DatePickerField } from "@/components/common/DatePickerField";
 import { useCreateTransactionMutation } from "@/queries/transactions.queries";
 import { useFamiliesQuery } from "@/queries/family.queries";
 import { useRef, useState } from "react";
-import { Newspaper, Paperclip, XIcon } from "lucide-react";
+import { Newspaper, XIcon } from "lucide-react";
 import { FileServices } from "@/services/file.service";
 
 export function CreateTransactionForm() {
