@@ -36,8 +36,14 @@ import { useAlert } from "@/context/AlertContext";
 import { DatePickerField } from "@/components/common/DatePickerField";
 import { useCreateTransactionMutation } from "@/queries/transactions.queries";
 import { useFamiliesQuery } from "@/queries/family.queries";
+import { useRef, useState } from "react";
+import { Newspaper, Paperclip, XIcon } from "lucide-react";
+import { FileServices } from "@/services/file.service";
 
 export function CreateTransactionForm() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const { data: families } = useFamiliesQuery();
 
   const form = useForm<TCreateTransaction>({
@@ -57,37 +63,68 @@ export function CreateTransactionForm() {
   const { showAlert } = useAlert();
   const createTransactionMutation = useCreateTransactionMutation();
 
-  function onSubmit(values: TCreateTransaction) {
-    createTransactionMutation.mutate(
-      {
-        ...values,
-        payment_date: values.payment_date
-          ? new Date(values.payment_date).toISOString()
-          : new Date().toISOString(),
-      },
-      {
-        onSuccess: () => {
-          showAlert({
-            title: "Movimiento cargado",
-            description: "",
-            type: "success",
-          });
-          form.reset(); // limpiar form después de crear
-        },
-        onError: () => {
-          showAlert({
-            title: "Error al cargar nuevo movimiento",
-            description: "Por favor revisar los datos cargados",
-            type: "error",
-          });
-        },
+  const onSubmit = async (values: TCreateTransaction) => {
+    let fileKey;
+    try {
+      if (file) {
+        const fileRes = await FileServices.upload(file);
+        fileKey = fileRes.fileKey;
       }
-    );
-  }
+      createTransactionMutation.mutate(
+        {
+          ...values,
+          attachment: fileKey ? fileKey : "",
+          payment_date: values.payment_date
+            ? new Date(values.payment_date).toISOString()
+            : new Date().toISOString(),
+        },
+        {
+          onSuccess: () => {
+            showAlert({
+              title: "Movimiento cargado",
+              description: "",
+              type: "success",
+            });
+            form.reset(); // limpiar form después de crear
+          },
+          onError: () => {
+            showAlert({
+              title: "Error al cargar nuevo movimiento",
+              description: "Por favor revisar los datos cargados",
+              type: "error",
+            });
+          },
+        }
+      );
+    } catch (error) {}
+  };
 
   const handleInputChange = (name: keyof TCreateTransaction, value: string) => {
     if (isNaN(Number(value))) return;
     form.setValue(name, Number(value));
+  };
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0] || null;
+
+    setFile(selectedFile);
+    if (selectedFile) {
+      const fileReader = new FileReader();
+      fileReader.onload = () => setPreview(fileReader.result as string);
+      fileReader.readAsDataURL(selectedFile); // Convierte la imagen a Base64 para previsualización
+    } else {
+      setPreview(null);
+    }
+  };
+
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleResetImageFile = () => {
+    setPreview(null);
+    setFile(null);
   };
 
   return (
@@ -96,7 +133,44 @@ export function CreateTransactionForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="pt-8 flex flex-col justify-between h-full"
       >
-        <section className="space-y-8">
+        <section className="space-y-8 ">
+          {preview && (
+            <img
+              src={preview}
+              className=" aspect-square object-cover w-1/2 mx-auto"
+            />
+          )}
+          <div className="flex flex-col">
+            {!preview && (
+              <Button
+                onClick={handleButtonClick}
+                variant={"ghost"}
+                type="button"
+                className=" flex flex-col items-center border-4 text-gray-500 border-dashed h-[250px]"
+              >
+                <Newspaper className="size-16 " />
+
+                <span>Cargar Comporbante</span>
+              </Button>
+            )}
+            <Input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+            {preview && (
+              <Button
+                variant={"secondary"}
+                type="button"
+                size={"sm"}
+                onClick={handleResetImageFile}
+              >
+                <span>Borrar </span>
+                <XIcon className="size-4" />
+              </Button>
+            )}
+          </div>
           <div className="flex items-start gap-2">
             <FormField
               control={form.control}
