@@ -12,6 +12,7 @@ export const TransactionSchema = BaseSchema.extend({
   payment_date: z.string(), // string ISO
   concept: z.string().optional(),
   description: z.string().optional(),
+  attachment: z.string().optional(),
 });
 
 export type TApiTransaction = z.infer<typeof TransactionSchema>;
