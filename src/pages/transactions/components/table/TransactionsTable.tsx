@@ -37,6 +37,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useMobile } from "@/context/MobileContext";
+import { AttachementDialog } from "@/components/common/AttachementDialog";
 
 // Opcional: para mostrar el select de familias
 type FamilyOption = { id: string; name: string };
@@ -177,23 +178,32 @@ export function TransactionsTable({
         const id_family = row.original.id_family;
 
         const direction = row.original.direction;
+        const attachment = row.original.attachment;
         return (
-          <div className="flex  gap-2 items-start">
-            <div>
-              {direction === "EXPENSE" ? (
-                <div className="bg-expense/25 text-expense rounded-full p-1">
-                  <BanknoteArrowDown className="size" />
-                </div>
-              ) : (
-                <div className="bg-income/25 text-income rounded-full p-1">
-                  <BanknoteArrowUp className="size" />
-                </div>
-              )}
+          <div className="flex items-center justify-between">
+            <div className="flex  gap-2 items-start">
+              <div>
+                {direction === "EXPENSE" ? (
+                  <div className="bg-expense/25 text-expense rounded-full p-1">
+                    <BanknoteArrowDown className="size" />
+                  </div>
+                ) : (
+                  <div className="bg-income/25 text-income rounded-full p-1">
+                    <BanknoteArrowUp className="size" />
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col">
+                <p>{getValue<string>()}</p>
+                {id_family ? <FamilyCell id_family={id_family} /> : <>-</>}
+              </div>
             </div>
-            <div className="flex flex-col">
-              <p>{getValue<string>()}</p>
-              {id_family ? <FamilyCell id_family={id_family} /> : <>-</>}
-            </div>
+
+            {attachment && (
+              <div>
+                <AttachementDialog attachmentUrl={attachment} />
+              </div>
+            )}
           </div>
         );
       },

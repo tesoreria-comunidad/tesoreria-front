@@ -137,7 +137,7 @@ export function CreateTransactionForm() {
           {preview && (
             <img
               src={preview}
-              className=" aspect-square object-cover w-1/2 mx-auto"
+              className=" aspect-square object-contain w-1/2 mx-auto"
             />
           )}
           <div className="flex flex-col">
