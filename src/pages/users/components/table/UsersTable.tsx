@@ -17,6 +17,7 @@ interface UsersTableProps {
 export function UsersTable({ usersInput, ramaId }: UsersTableProps) {
   const { data: users } = useUsersQuery();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
   const columns: TColumnDef<TUser>[] = [
     {
       accessorKey: "is_active",

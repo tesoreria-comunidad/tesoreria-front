@@ -138,10 +138,12 @@ export const groupedRoutes: {
   title: string;
   icon: JSX.Element;
   routes: TRoute[];
+  rolesAccess?: TRole[];
 }[] = [
   {
     title: "Home",
     icon: <Home className="size-5" />,
+    rolesAccess: ["MASTER", "DIRIGENTE"],
     routes: [
       {
         path: "/",
@@ -156,6 +158,7 @@ export const groupedRoutes: {
   {
     title: "Nómina",
     icon: <UsersRound className="size-5" />,
+    rolesAccess: ["MASTER", "DIRIGENTE"],
     routes: [
       {
         path: "/users",
@@ -187,6 +190,7 @@ export const groupedRoutes: {
   {
     title: "Finanzas",
     icon: <CircleDollarSign className="size-5" />,
+    rolesAccess: ["MASTER", "DIRIGENTE"],
     routes: [
       {
         path: "/transactions",
@@ -209,6 +213,7 @@ export const groupedRoutes: {
   {
     title: "Configuracion",
     icon: <Settings className="size-5" />,
+    rolesAccess: ["MASTER"],
     routes: [
       {
         path: "/logs",

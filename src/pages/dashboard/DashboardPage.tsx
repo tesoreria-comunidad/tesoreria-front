@@ -7,13 +7,18 @@ import { ActionLogsList } from "./components/ActionLogsList";
 import { useMobile } from "@/context/MobileContext";
 import { Label } from "@/components/ui/label";
 import { useAppSelector } from "@/store/hooks";
+import { RoleGuardWrapper } from "@/components/guards/RoleGuardWrapper";
+import { UsersTable } from "../users/components/table/UsersTable";
+import { useUsersQuery } from "@/queries/user.queries";
 export function DashboardPage() {
   const { isMobile } = useMobile();
   const { user } = useAppSelector((s) => s.session);
+  const { data: users } = useUsersQuery();
   return (
     <div className="  overflow-hidden flex flex-col gap-4  ">
       <Label className=" text-2xl tracking-tighter py-2">
-        {user?.gender === "MUJER" ? "Bienvenida" : "Bienvenido"}, {user?.name} {user?.last_name} 👋
+        {user?.gender === "MUJER" ? "Bienvenida" : "Bienvenido"}, {user?.name}{" "}
+        {user?.last_name} 👋
       </Label>
 
       <section className="flex  max-md:flex-col   gap-4">
@@ -26,18 +31,31 @@ export function DashboardPage() {
         <section className="flex flex-col gap-4">
           <div className=" grid grid-cols-2 max-md:grid-cols-1  gap-4   ">
             <UsersGraphs />
-
-            <TransactionGraph />
+            <RoleGuardWrapper roles={["MASTER"]}>
+              <TransactionGraph />
+            </RoleGuardWrapper>
           </div>
-          <section className="flex max-md:flex-col gap-4  md:h-[70vh]  ">
-            <div className="md:w-1/2 md:h-full grid md:grid-rows-2 gap-4">
-              <ExpensesByCategory />
-              {!isMobile && <RamasGraphs />}
-            </div>
-            <div className="h-full bg-red-50 md:w-1/2">
-              <ActionLogsList />
-            </div>
-          </section>
+          <RoleGuardWrapper roles={["MASTER"]}>
+            <section className="flex max-md:flex-col gap-4  md:min-h-[70vh]  ">
+              <div className="md:w-1/2 flex flex-col gap-4">
+                <ExpensesByCategory />
+                {!isMobile && <RamasGraphs />}
+              </div>
+              <div className=" bg-red-50 md:w-1/2 h-[70vh]">
+                <ActionLogsList />
+              </div>
+            </section>
+          </RoleGuardWrapper>
+          <RoleGuardWrapper roles={["DIRIGENTE"]}>
+            <section className="">
+              {user?.id_rama && (
+                <UsersTable
+                  ramaId={user?.id_rama}
+                  usersInput={users?.filter((u) => u.id_rama === user.id_rama)}
+                />
+              )}
+            </section>
+          </RoleGuardWrapper>
         </section>
       </section>
     </div>
