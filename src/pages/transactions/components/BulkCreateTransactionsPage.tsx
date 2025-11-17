@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { X, Plus, UploadCloud, Send, Trash2 } from "lucide-react";
+import { useFamiliesQuery } from "@/queries/family.queries";
 
 // ---------- Schema array ----------
 const RowSchema = CreateTransactionSchema;
@@ -125,10 +126,10 @@ function formatIssue(issue: ZodIssue) {
 }
 
 // ---------- Component ----------
-export default function BulkCreateTransactionsPage() {
+export function BulkCreateTransactionsPage() {
   const [submitting, setSubmitting] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
-
+  const { data: families } = useFamiliesQuery();
   const form = useForm<TBulkForm>({
     resolver: zodResolver(BulkSchema),
     defaultValues: { rows: [emptyRow] },
@@ -280,8 +281,7 @@ export default function BulkCreateTransactionsPage() {
   return (
     <div className="p-4 sm:p-6">
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-xl font-semibold">Bulk create — Transactions</h1>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex justify-end w-full items-center gap-2">
           <Button
             variant="secondary"
             size="sm"
@@ -334,14 +334,14 @@ export default function BulkCreateTransactionsPage() {
         </div>
       </div>
 
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden rounded-none shadow-none  p-0">
         <CardContent className="p-0">
           <div className="w-full overflow-auto">
             {/* Tabla editable */}
             <table className="min-w-[1200px] w-full text-sm">
               <thead className="sticky top-0 bg-muted">
                 <tr className="[&>th]:px-3 [&>th]:py-2 [&>th]:text-left [&>th]:font-medium [&>th]:border-b">
-                  <th style={{ width: 110 }}>Amount</th>
+                  <th style={{ width: 150 }}>Amount</th>
                   <th style={{ width: 180 }}>Family (id)</th>
                   <th style={{ width: 150 }}>Payment method</th>
                   <th style={{ width: 130 }}>Direction</th>
@@ -398,20 +398,24 @@ export default function BulkCreateTransactionsPage() {
                         control={form.control}
                         name={`rows.${idx}.id_family`}
                         render={({ field }) => (
-                          <Input
-                            placeholder="uuid o vacío"
-                            value={field.value ?? ""}
-                            onChange={(e) =>
-                              field.onChange(
-                                e.target.value === "" ? null : e.target.value
-                              )
-                            }
-                            className={
-                              form.formState.errors?.rows?.[idx]?.id_family
-                                ? "border-destructive"
-                                : ""
-                            }
-                          />
+                          <Select
+                            value={field.value as string}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger
+                              className="w-full"
+                              value={field.value as string}
+                            >
+                              <SelectValue placeholder="Familia " />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {families?.map((family) => (
+                                <SelectItem key={family.id} value={family.id}>
+                                  {family.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         )}
                       />
                       <FieldError form={form} idx={idx} name="id_family" />
@@ -564,7 +568,7 @@ export default function BulkCreateTransactionsPage() {
 
               {/* Footer con totales */}
               <tfoot>
-                <tr className="[&>td]:px-3 [&>td]:py-2 bg-muted/40 font-medium">
+                <tr className="[&>td]:px-3 [&>td]:py-2 bg-muted/40 font-medium p-4">
                   <td colSpan={2}>
                     <div className="text-xs text-muted-foreground">
                       Filas: {fields.length} — Pegá desde Excel/Sheets con
