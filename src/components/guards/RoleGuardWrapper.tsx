@@ -9,7 +9,7 @@ interface RoleWrapperInterface extends PropsWithChildren {
 export function RoleGuardWrapper({ children, roles }: RoleWrapperInterface) {
   const { user } = useAppSelector((s) => s.session);
   if (user?.role && roles.includes(user?.role)) {
-    return <div>{children}</div>;
+    return <>{children}</>;
   }
 
   return null;

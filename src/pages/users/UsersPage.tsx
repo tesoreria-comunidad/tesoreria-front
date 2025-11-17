@@ -5,13 +5,19 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useUsersQuery } from "@/queries/user.queries";
 import { Label } from "@/components/ui/label";
+import { useAppSelector } from "@/store/hooks";
 
 export function UsersPage() {
   const { data: users } = useUsersQuery();
   const [search, setSearch] = useState("");
+  const { user: userLogged } = useAppSelector((s) => s.session);
 
   const filteredUsers =
-    users?.filter(
+    userLogged?.role === "MASTER"
+      ? users
+      : users?.filter((user) => user.id_rama === userLogged?.id_rama);
+  const renderedUsers =
+    filteredUsers?.filter(
       (user) =>
         user.name.toLowerCase().includes(search.toLowerCase()) ||
         user.last_name.toLowerCase().includes(search.toLowerCase())
@@ -37,11 +43,11 @@ export function UsersPage() {
           </div>
 
           <span className="text-gray-600 text-sm">
-            ({filteredUsers.length} resultados)
+            ({renderedUsers.length} resultados)
           </span>
         </div>
       </section>
-      <UsersTable usersInput={filteredUsers} />
+      <UsersTable usersInput={renderedUsers} />
     </div>
   );
 }
