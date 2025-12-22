@@ -47,10 +47,11 @@ export function useUsersQuery() {
   });
 }
 export function useUserQueryById(id: string) {
+  const uuidRE = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
   return useQuery({
     queryKey: ["users", id],
     queryFn: () => fetchUserById(id),
-    enabled: !!id,
+    enabled: !!id && uuidRE.test(id),
   });
 }
 
