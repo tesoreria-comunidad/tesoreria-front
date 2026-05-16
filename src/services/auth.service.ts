@@ -21,4 +21,22 @@ export class AuthServices {
     const res = await axiosInstance.post(`${BASE_URL}/auth/me`);
     return res.data;
   }
+
+  static async forgotPassword(body: { email: string }): Promise<void> {
+    await axiosInstance.post(`${BASE_URL}/auth/forgot-password`, body);
+  }
+
+  static async resetPassword(body: {
+    token: string;
+    newPassword: string;
+  }): Promise<void> {
+    await axiosInstance.post(`${BASE_URL}/auth/reset-password`, body);
+  }
+
+  static async validateResetToken(token: string): Promise<{ valid: boolean }> {
+    const res = await axiosInstance.get(
+      `${BASE_URL}/auth/reset-password/validate?token=${encodeURIComponent(token)}`
+    );
+    return res.data;
+  }
 }
