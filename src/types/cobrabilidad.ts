@@ -21,3 +21,13 @@ export const CobrabilidadSchema = z.object({
 });
 
 export type TCobrabilidad = z.infer<typeof CobrabilidadSchema>;
+
+export const CobrabilidadResumenSchema = z.object({
+  totalEsperado: z.number(),
+  totalCobrado: z.number(),
+  cobrabilidad: z.number(),
+  mes: z.number(),
+  anio: z.number(),
+});
+
+export type TCobrabilidadResumen = z.infer<typeof CobrabilidadResumenSchema>;
