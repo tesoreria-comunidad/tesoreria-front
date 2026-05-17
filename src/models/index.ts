@@ -1,4 +1,5 @@
 export * from "./balance.schema";
+export * from "./balance-history.schema";
 export * from "./baseEntity.schema";
 export * from "./cuota.schema";
 export * from "./family.schema";
