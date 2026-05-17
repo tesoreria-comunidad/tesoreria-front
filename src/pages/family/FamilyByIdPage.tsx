@@ -10,6 +10,9 @@ import { AddMemberAside } from "./components/aside/AddMemberAside";
 import { useRamasQuery } from "@/queries/ramas.queries";
 import { useFamiliesQuery } from "@/queries/family.queries";
 import { BalanceDetailsCard } from "./components/BalanceDetailsCard";
+import { useBalanceHistoryQuery } from "@/queries/balance.queries";
+import { BalanceHistoryTable } from "./components/table/BalanceHistoryTable";
+import { LoaderSpinner } from "@/components/common/LoaderSpinner";
 
 export default function FamilyByIdPage() {
   const { familyId } = useParams();
@@ -17,6 +20,10 @@ export default function FamilyByIdPage() {
   const { data: ramas } = useRamasQuery();
   const familyTransactionsQuery = useTransactionsByFamilyIdQuery(familyId!);
   const family = families?.find((f) => f.id === familyId);
+
+  const balanceHistoryQuery = useBalanceHistoryQuery(
+    family?.id_balance ?? "",
+  );
 
   if (familyTransactionsQuery.isLoading) {
     return <PageLoader />;
@@ -47,9 +54,23 @@ export default function FamilyByIdPage() {
           <FamilyUsersTable users={users} />
         )}
       </section>
+
       <section className="w-full flex flex-col gap-4">
         <Label>Transacciones</Label>
         <FamilyTransactionsTable transactions={familyTransactionsQuery.data} />
+      </section>
+
+      <section className="w-full flex flex-col gap-4">
+        <Label>Historial de Balance</Label>
+        {balanceHistoryQuery.isLoading ? (
+          <div className="flex justify-center py-6">
+            <LoaderSpinner />
+          </div>
+        ) : (
+          <BalanceHistoryTable
+            history={balanceHistoryQuery.data ?? []}
+          />
+        )}
       </section>
     </div>
   );

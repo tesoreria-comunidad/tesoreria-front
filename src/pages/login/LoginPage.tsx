@@ -19,7 +19,7 @@ function LeftHero() {
         <h1 className="text-3xl md:text-5xl font-semibold leading-tight text-black/90 ">
           Gestioná las cuotas de manera
           <span className="bg-primary text-white px-2 -rotate-1 inline-block">
-            secilla
+            sencilla
           </span>{" "}
           y con{" "}
           <span className="bg-primary text-white px-2 rotate-1 inline-block">

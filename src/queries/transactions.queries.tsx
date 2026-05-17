@@ -15,16 +15,19 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
  * Fetchers (API + adapter)
  * ============================ */
 
-export const fetchTransactions = async (user: TUser): Promise<TTransaction[]> => {
+export const fetchTransactions = async (
+  user: TUser,
+): Promise<TTransaction[]> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
   if (user.role === "MASTER") {
     const apiRes = await TransactionService.getAll();
     return apiRes.map((apiData) => transactionAdapter(apiData));
   } else {
-    const apiRes = await TransactionService.getTransactionsByRama(user.id_rama!);
+    const apiRes = await TransactionService.getTransactionsByRama(
+      user.id_rama!,
+    );
     return apiRes.map((apiData) => transactionAdapter(apiData));
   }
-  
 };
 export const fetchTransactionsCategories = async (): Promise<string[]> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
@@ -38,28 +41,28 @@ export const fetchTransactionsStats = async (): Promise<TMonthlyStat[]> => {
 };
 
 export const fetchFamilyTransactions = async (
-  familyId: string
+  familyId: string,
 ): Promise<TTransaction[]> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
   const apiRes = await TransactionService.getFamilyTransactions(familyId);
   return apiRes.map((apiData) => transactionAdapter(apiData));
 };
 export const fetchTransactionsById = async (
-  id: string
+  id: string,
 ): Promise<TTransaction> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
   const apiRes = await TransactionService.getById(id);
   return transactionAdapter(apiRes);
 };
 export const fetchDeleteTransaction = async (
-  id: string
+  id: string,
 ): Promise<TTransaction> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
   return await TransactionService.delete(id);
 };
 
 export const createTransaction = async (
-  body: TCreateTransaction
+  body: TCreateTransaction,
 ): Promise<TTransaction> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
   const newTransaction = await TransactionService.create(body);
@@ -67,7 +70,7 @@ export const createTransaction = async (
 };
 
 export const createTransactionCuotaFamily = async (
-  body: TCreateTransaction
+  body: TCreateTransaction,
 ): Promise<TTransaction> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
   const newTransaction = await TransactionService.familyCuota(body);
@@ -76,7 +79,7 @@ export const createTransactionCuotaFamily = async (
 
 export const editTransction = async (
   id: string,
-  body: Partial<TTransaction>
+  body: Partial<TTransaction>,
 ) => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
   const editedTransaction = await TransactionService.edit(id, body);
@@ -155,13 +158,14 @@ export function useCreateTransactionCuotaFamilyMutation() {
         });
       }
 
-      if (familyData.manage_by) {
+      if (familyData && familyData.manage_by) {
         queryClient.invalidateQueries({
           queryKey: ["cobrabilidad", familyData.manage_by],
         });
       }
       queryClient.invalidateQueries({ queryKey: ["transactions_stats"] });
       queryClient.invalidateQueries({ queryKey: ["balances"] });
+      queryClient.invalidateQueries({ queryKey: ["balance_history"] });
     },
   });
 }

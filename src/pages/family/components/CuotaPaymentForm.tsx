@@ -85,14 +85,15 @@ export function CuotaPaymentForm({
           form.reset();
           onSuccess?.();
         },
-        onError: () => {
+        onError: (err) => {
+          console.error("Error al cargar movimiento de cuota:", err);
           showAlert({
             title: "Error al cargar nuevo movimiento",
             description: "Por favor revisar los datos cargados",
             type: "error",
           });
         },
-      }
+      },
     );
   }
 
@@ -175,7 +176,7 @@ export function CuotaPaymentForm({
                         onValueChange={(value) =>
                           form.setValue(
                             "payment_method",
-                            value as TPaymentMethod
+                            value as TPaymentMethod,
                           )
                         }
                         value={field.value}

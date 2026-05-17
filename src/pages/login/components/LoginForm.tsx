@@ -19,6 +19,7 @@ import { Logo as PelicanoLogo } from "@/components/common/Logo";
 import { useAppDispatch } from "@/store/hooks";
 import { setSession } from "@/store/features";
 import { useAlert } from "@/context/AlertContext";
+import { ForgotPasswordModal } from "./ForgotPasswordModal";
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -40,6 +41,7 @@ export function LoginForm({
   onLoginError,
 }: LoginFormProps) {
   const [loading, setLoading] = useState(false);
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -145,11 +147,20 @@ export function LoginForm({
             Iniciar sesión
           </Button>
 
-          <a rel="stylesheet" href="#" className="underline mx-auto text-sm">
+          <button
+            type="button"
+            className="underline mx-auto text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            onClick={() => setForgotPasswordOpen(true)}
+          >
             Olvidé mi Contraseña
-          </a>
+          </button>
         </form>
       </Form>
+
+      <ForgotPasswordModal
+        open={forgotPasswordOpen}
+        onOpenChange={setForgotPasswordOpen}
+      />
     </div>
   );
 }
