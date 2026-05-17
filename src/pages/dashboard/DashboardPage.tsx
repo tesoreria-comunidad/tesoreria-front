@@ -1,4 +1,5 @@
 import { DashboardCard } from "./components/DashboardCard";
+import { CobrabilidadCard } from "./components/CobrabilidadCard";
 import { UsersGraphs } from "./components/UsersGraphs";
 import { RamasGraphs } from "./components/RamasGraphs";
 import { ExpensesByCategory } from "../transactions/components/graphs/ExpensesByCategory";
@@ -10,6 +11,11 @@ import { useAppSelector } from "@/store/hooks";
 import { RoleGuardWrapper } from "@/components/guards/RoleGuardWrapper";
 import { UsersTable } from "../users/components/table/UsersTable";
 import { useUsersQuery } from "@/queries/user.queries";
+
+const now = new Date();
+const CURRENT_MONTH = now.getMonth() + 1;
+const CURRENT_YEAR = now.getFullYear();
+
 export function DashboardPage() {
   const { isMobile } = useMobile();
   const { user } = useAppSelector((s) => s.session);
@@ -25,6 +31,9 @@ export function DashboardPage() {
         <DashboardCard type="users" />
         <DashboardCard type="family" />
         <DashboardCard type="cuota" />
+        <RoleGuardWrapper roles={["MASTER", "DIRIGENTE"]}>
+          <CobrabilidadCard month={CURRENT_MONTH} year={CURRENT_YEAR} />
+        </RoleGuardWrapper>
       </section>
 
       <section className="">

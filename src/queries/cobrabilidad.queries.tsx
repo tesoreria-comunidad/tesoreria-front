@@ -14,6 +14,14 @@ export const fetchCobrabilidad = async ({ month, year }: TQueryParams) => {
   return CobrabilidadServices.get(month, year);
 };
 
+export const fetchCobrabilidadResumen = async (
+  month: number,
+  year: number
+) => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  return CobrabilidadServices.getResumen(month, year);
+};
+
 /* ============================
  * Queries
  * ============================ */
@@ -34,5 +42,13 @@ export function useCobrabilidadByRamaQuery(
     queryFn: () => fetchCobrabilidad(params),
     enabled: !!params,
     select: (data) => data.filter((item) => item.id_rama === ramaId)[0],
+  });
+}
+
+export function useCobrabilidadResumenQuery(month: number, year: number) {
+  return useQuery({
+    queryKey: ["cobrabilidad", "resumen", month, year],
+    queryFn: () => fetchCobrabilidadResumen(month, year),
+    enabled: !!month && !!year,
   });
 }
