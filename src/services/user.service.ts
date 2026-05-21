@@ -1,6 +1,17 @@
 import type { TApiUser } from "@/adapters/api_models";
 import { axiosInstance, BASE_URL } from "@/config/axios.config";
 import type { TCreateUser, TUser } from "@/models";
+
+export interface TBulkUpdateRamaBody {
+  user_ids: string[];
+  id_rama_destino: string;
+}
+
+export interface TBulkUpdateRamaResponse {
+  updated_count: number;
+  users: { id: string; name: string; id_rama: string }[];
+}
+
 export class UserServices {
   static async getAll(): Promise<TApiUser[]> {
     const res = await axiosInstance.get(`${BASE_URL}/user`);
@@ -35,8 +46,25 @@ export class UserServices {
     return res.data;
   }
 
-   static async getByRama(id_rama: string): Promise<TApiUser[]> {
+  static async getByRama(id_rama: string): Promise<TApiUser[]> {
     const res = await axiosInstance.get(`${BASE_URL}/user/by-rama/${id_rama}`);
+    return res.data;
+  }
+
+  static async bulkUpdateRama(
+    body: TBulkUpdateRamaBody
+  ): Promise<TBulkUpdateRamaResponse> {
+    const res = await axiosInstance.patch(`${BASE_URL}/user/bulk-rama`, body);
+    return res.data;
+  }
+
+  static async patchUserRama(
+    userId: string,
+    id_rama: string
+  ): Promise<TApiUser> {
+    const res = await axiosInstance.patch(`${BASE_URL}/user/${userId}/rama`, {
+      id_rama,
+    });
     return res.data;
   }
 }

@@ -209,12 +209,13 @@ export function RootTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <Fragment key={row.id}>
                   <TableRow
-                    className="
-                      text-left text-sm
-                      even:bg-muted/30
-                      hover:bg-muted/40
-                      transition-colors
-                    "
+                    className={`
+                      text-left text-sm transition-colors
+                      ${row.getIsSelected()
+                        ? "bg-primary/10 border-l-2 border-l-primary hover:bg-primary/15"
+                        : "even:bg-muted/30 hover:bg-muted/40"
+                      }
+                    `}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell

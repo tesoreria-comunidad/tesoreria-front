@@ -14,6 +14,7 @@ import type { TUser } from "@/models";
 import {
   ArrowBigDown,
   ArrowBigUp,
+  ArrowRightLeft,
   Coffee,
   EllipsisVertical,
   HeartHandshake,
@@ -23,8 +24,10 @@ import { UserStatusUpdateDialog } from "./table/components/UserStatusUpdateDialo
 import { UserGrantUpdateDialog } from "./table/components/UserGrantUpdateDialog";
 import { UserEditFamilyDialog } from "./table/components/UserEditFamilyDialog";
 import { UserEditInformationDialog } from "./table/components/UserEditInformationDialog";
+import { UserRamaTransferDialog } from "./table/components/UserRamaTransferDialog";
 import { useAppSelector } from "@/store/hooks";
 import { hasPermission } from "@/utils";
+import { RoleGuardWrapper } from "@/components/guards/RoleGuardWrapper";
 
 interface UsersActionsDropdownProps {
   user: TUser;
@@ -38,12 +41,12 @@ export default function UsersActionsDropdown({
   const [openDropdown, setOpenDropdown] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogType, setDialogType] = useState<
-    "grant" | "status" | "family" | "edit"
+    "grant" | "status" | "family" | "edit" | "transfer"
   >("status");
 
   const { user: userLogged } = useAppSelector((s) => s.session);
 
-  const handleOpenDialog = (type: "grant" | "status" | "family" | "edit") => {
+  const handleOpenDialog = (type: "grant" | "status" | "family" | "edit" | "transfer") => {
     setDialogType(type);
     setOpenDropdown(false); // cerramos el dropdown
     setOpenDialog(true); // abrimos el dialog
@@ -131,6 +134,20 @@ export default function UsersActionsDropdown({
               Modifcar Familia
             </DropdownMenuItem>
           )}
+
+          <RoleGuardWrapper roles={["MASTER", "DIRIGENTE"]}>
+            {user.id_rama && (
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  handleOpenDialog("transfer");
+                }}
+              >
+                <ArrowRightLeft />
+                Traspasar
+              </DropdownMenuItem>
+            )}
+          </RoleGuardWrapper>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -139,6 +156,7 @@ export default function UsersActionsDropdown({
         {dialogType === "status" && <UserStatusUpdateDialog user={user} />}
         {dialogType === "family" && <UserEditFamilyDialog user={user} />}
         {dialogType === "edit" && <UserEditInformationDialog user={user} />}
+        {dialogType === "transfer" && <UserRamaTransferDialog user={user} />}
       </Dialog>
     </>
   );
