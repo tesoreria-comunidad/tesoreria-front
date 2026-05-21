@@ -1,6 +1,6 @@
 import type { TApiRama } from "@/adapters/api_models";
 import { axiosInstance, BASE_URL } from "@/config/axios.config";
-import type { TCreateRama } from "@/models";
+import type { TCreateRama, TUpdateRama } from "@/models";
 
 export class RamaServices {
   static async getAllRamas(): Promise<TApiRama[]> {
@@ -14,6 +14,11 @@ export class RamaServices {
 
   static async createRama(body: TCreateRama): Promise<TApiRama> {
     const res = await axiosInstance.post(`${BASE_URL}/rama`, body);
+    return res.data;
+  }
+
+  static async updateRama(id: string, body: TUpdateRama): Promise<TApiRama> {
+    const res = await axiosInstance.patch(`${BASE_URL}/rama/${id}`, body);
     return res.data;
   }
 }

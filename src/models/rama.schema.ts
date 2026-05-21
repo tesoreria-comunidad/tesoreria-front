@@ -20,5 +20,13 @@ export const CreateRamaSchema = RamaSchema.omit({
   id: true,
   updatedAt: true,
 });
+
+export const UpdateRamaSchema = z.object({
+  name: z.string().min(2, "Mínimo 2 caracteres").max(100, "Máximo 100 caracteres"),
+  edad_min: z.number().int().min(0).optional(),
+  edad_max: z.number().int().min(0).optional(),
+});
+
 export type TRama = z.infer<typeof RamaSchema>;
 export type TCreateRama = z.infer<typeof CreateRamaSchema>;
+export type TUpdateRama = z.infer<typeof UpdateRamaSchema>;

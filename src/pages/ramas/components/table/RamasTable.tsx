@@ -7,6 +7,7 @@ import { UserBulkUploader } from "../UsersBulkUploader";
 import { CobrabilidadCell } from "./components/CobrabilidadCell";
 import { TooltipComponent } from "@/components/common/TooltipComponent";
 import { useRamasQuery } from "@/queries/ramas.queries";
+import { EditRamaDialog } from "../EditRamaDialog";
 
 export function RamasTable() {
   const ramaQuery = useRamasQuery();
@@ -60,6 +61,7 @@ export function RamasTable() {
       size: 10,
       cell: ({ row }) => (
         <div className="flex justify-center gap-2">
+          <EditRamaDialog rama={row.original} />
           <AddUserAside rama={row.original} />
           <UserBulkUploader id_rama={row.original.id} size="sm" />
         </div>
