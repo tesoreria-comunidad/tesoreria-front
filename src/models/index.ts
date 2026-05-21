@@ -4,6 +4,7 @@ export * from "./baseEntity.schema";
 export * from "./cuota.schema";
 export * from "./family.schema";
 export * from "./folder.schema";
+export * from "./health-check.schema";
 export * from "./payment.schema";
 export * from "./person.schema";
 export * from "./rama.schema";

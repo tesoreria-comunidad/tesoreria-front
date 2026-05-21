@@ -1,5 +1,6 @@
 import { DashboardCard } from "./components/DashboardCard";
 import { CobrabilidadCard } from "./components/CobrabilidadCard";
+import { HealthCheckTrigger } from "./components/HealthCheckPanel";
 import { UsersGraphs } from "./components/UsersGraphs";
 import { RamasGraphs } from "./components/RamasGraphs";
 import { ExpensesByCategory } from "../transactions/components/graphs/ExpensesByCategory";
@@ -22,10 +23,15 @@ export function DashboardPage() {
   const { data: users } = useUsersQuery();
   return (
     <div className="  overflow-hidden flex flex-col gap-4  ">
-      <Label className=" text-2xl tracking-tighter py-2">
-        {user?.gender === "MUJER" ? "Bienvenida" : "Bienvenido"}, {user?.name}{" "}
-        {user?.last_name} 👋
-      </Label>
+      <div className="flex items-center justify-between p-2">
+        <Label className="text-2xl tracking-tighter">
+          {user?.gender === "MUJER" ? "Bienvenida" : "Bienvenido"}, {user?.name}{" "}
+          {user?.last_name} 👋
+        </Label>
+        <RoleGuardWrapper roles={["MASTER", "DIRIGENTE"]}>
+          <HealthCheckTrigger />
+        </RoleGuardWrapper>
+      </div>
 
       <section className="flex  max-md:flex-col   gap-4">
         <DashboardCard type="users" />
