@@ -1,5 +1,6 @@
 import type { TRole } from "@/constants/role.constants";
 import ActionLogsPage from "@/pages/action-logs/ActionLogsPage";
+import { MonitoringPage } from "@/pages/monitoring/MonitoringPage";
 import { BeneficiarioPage } from "@/pages/beneficiario/BeneficiarioPage";
 import { CuotasPage } from "@/pages/cuotas/CuotasPage";
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
@@ -18,6 +19,7 @@ import {
   LayoutDashboard,
   Logs,
   Settings,
+  ShieldAlert,
   Trees,
   UserCog2Icon,
   Users,
@@ -131,6 +133,14 @@ export const routes: TRoute[] = [
     element: <ActionLogsPage />,
     rolesAccess: ["MASTER"],
     sidebarContent: true,
+  },
+  {
+    path: "/monitoring",
+    name: "Sistema",
+    icon: <ShieldAlert className="size-5" />,
+    element: <MonitoringPage />,
+    rolesAccess: ["MASTER", "DIRIGENTE"],
+    sidebarContent: false,
   },
 ];
 

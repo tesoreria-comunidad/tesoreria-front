@@ -2,7 +2,11 @@ import { userAdapter } from "@/adapters";
 import { setAuthInterceptor } from "@/config/axios.config";
 import type { TCreateUser, TUser } from "@/models";
 import { AuthServices } from "@/services/auth.service";
-import { UserServices } from "@/services/user.service";
+import {
+  UserServices,
+  type TBulkUpdateRamaBody,
+  type TBulkUpdateRamaResponse,
+} from "@/services/user.service";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 /* ============================
@@ -96,6 +100,40 @@ export function useBulkEditUserMutation() {
     onSuccess: () => {
       // Refresca la lista de usuarios después de un bulk edit
       queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
+}
+
+export function useBulkUpdateRamaMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation<TBulkUpdateRamaResponse, Error, TBulkUpdateRamaBody>({
+    mutationFn: async (body: TBulkUpdateRamaBody) => {
+      await setAuthInterceptor(localStorage.getItem("accessToken"));
+      return UserServices.bulkUpdateRama(body);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
+}
+
+export function useUpdateUserRamaMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    TUser,
+    Error,
+    { userId: string; id_rama: string }
+  >({
+    mutationFn: async ({ userId, id_rama }) => {
+      await setAuthInterceptor(localStorage.getItem("accessToken"));
+      const apiUser = await UserServices.patchUserRama(userId, id_rama);
+      return userAdapter(apiUser);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["ramas"] });
     },
   });
 }

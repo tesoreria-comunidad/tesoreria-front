@@ -7,8 +7,9 @@ import { UserBalanceCell } from "./UserBalanceCell";
 import UsersActionsDropdown from "../UsersActionsDropdown";
 import type { RowSelectionState } from "@tanstack/react-table";
 import { useState } from "react";
-import { SelectUsersAction } from "./components/SelectUsersAction";
+import { BulkUpdateRamaDialog } from "./components/BulkUpdateRamaDialog";
 import { useUsersQuery } from "@/queries/user.queries";
+import { RoleGuardWrapper } from "@/components/guards/RoleGuardWrapper";
 
 interface UsersTableProps {
   usersInput?: TUser[];
@@ -151,24 +152,33 @@ export function UsersTable({ usersInput, ramaId }: UsersTableProps) {
         : a.name.localeCompare(b.name);
     }
   );
-  const selectedUsers = Object.keys(rowSelection).map(
-    (key) => sortedUsers[parseInt(key, 10)]
-  );
+  const selectedUsers = sortedUsers.filter((u) => rowSelection[u.id]);
+
+  const handleBulkRamaSuccess = () => {
+    setRowSelection({});
+  };
+
   return (
-    <div className="pt-2 relative">
-      {/* Panel de acciones sobre seleccionados */}
-      {Object.keys(rowSelection).length > 0 && (
-        <div className="flex items-center justify-between p-2 gap-2 rounded absolute top-0 ">
-          <span>{selectedUsers.length} seleccionados</span>
-          <SelectUsersAction users={selectedUsers} />
-        </div>
-      )}
+    <div className="flex flex-col gap-2 pt-2">
+      <RoleGuardWrapper roles={["MASTER", "DIRIGENTE"]}>
+        {Object.keys(rowSelection).length > 0 && (
+          <div className="flex items-center gap-3 px-1 py-1.5 rounded-lg border bg-muted/40">
+            <span className="text-sm text-muted-foreground flex-1">
+              {selectedUsers.length} seleccionado{selectedUsers.length !== 1 ? "s" : ""}
+            </span>
+            <BulkUpdateRamaDialog
+              users={selectedUsers}
+              onSuccess={handleBulkRamaSuccess}
+            />
+          </div>
+        )}
+      </RoleGuardWrapper>
 
       <RootTable
         columns={columns}
         data={sortedUsers}
-        rowSelection={rowSelection} // 👈 le pasamos el estado
-        onRowSelectionChange={setRowSelection} // 👈 y el updater
+        rowSelection={rowSelection}
+        onRowSelectionChange={setRowSelection}
         enableRowSelection
       />
     </div>

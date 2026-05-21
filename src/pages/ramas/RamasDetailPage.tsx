@@ -9,6 +9,9 @@ import { useUsersQuery } from "@/queries/user.queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserCard } from "./components/UserCard";
 import { EmptyData } from "@/components/common/EmptyData";
+import { EditRamaDialog } from "./components/EditRamaDialog";
+import { Badge } from "@/components/ui/badge";
+import { GRUPO_LABELS } from "@/config/ramas.config";
 
 export default function RamasDetailPage() {
   const { ramaId } = useParams();
@@ -24,13 +27,25 @@ export default function RamasDetailPage() {
     .filter((u) => u.role === "DIRIGENTE" || u.role === "MASTER" );
   return (
     <div className="w-full h-full flex flex-col gap-4">
-      <section className="flex items-center justify-between flex-none">
-        <Label className="text-xl">{rama.name}</Label>
-        {rama.users.length === 0 ? (
-          <UserBulkUploader id_rama={rama.id} />
-        ) : (
-          <AddUserAside rama={rama} />
-        )}
+      <section className="flex items-center justify-between flex-none flex-wrap gap-2">
+        <div className="flex items-center gap-3 flex-wrap">
+          <Label className="text-xl">{rama.name}</Label>
+          <Badge variant="secondary">{GRUPO_LABELS[rama.grupo]}</Badge>
+          <Badge variant="outline">Pos. {rama.orden}</Badge>
+          {(rama.edad_min != null || rama.edad_max != null) && (
+            <span className="text-sm text-muted-foreground">
+              {rama.edad_min ?? "?"}&ndash;{rama.edad_max ?? "?"} años
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <EditRamaDialog rama={rama} />
+          {rama.users.length === 0 ? (
+            <UserBulkUploader id_rama={rama.id} />
+          ) : (
+            <AddUserAside rama={rama} />
+          )}
+        </div>
       </section>
       <section className="flex-1 overflow-auto">
         <Card>
