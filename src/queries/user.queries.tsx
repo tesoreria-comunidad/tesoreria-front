@@ -41,6 +41,11 @@ export const editUser = async (
   return userAdapter(updatedUser);
 };
 
+export const deleteUser = async (id: string): Promise<void> => {
+  await setAuthInterceptor(localStorage.getItem("accessToken"));
+  await UserServices.delete(id);
+};
+
 /* ============================
  * Queries
  * ============================ */
@@ -112,6 +117,17 @@ export function useBulkUpdateRamaMutation() {
       await setAuthInterceptor(localStorage.getItem("accessToken"));
       return UserServices.bulkUpdateRama(body);
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
+}
+
+export function useDeleteUserMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, string>({
+    mutationFn: (id: string) => deleteUser(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },

@@ -18,6 +18,7 @@ import {
   Coffee,
   EllipsisVertical,
   HeartHandshake,
+  Trash2,
   Users,
 } from "lucide-react";
 import { UserStatusUpdateDialog } from "./table/components/UserStatusUpdateDialog";
@@ -25,6 +26,7 @@ import { UserGrantUpdateDialog } from "./table/components/UserGrantUpdateDialog"
 import { UserEditFamilyDialog } from "./table/components/UserEditFamilyDialog";
 import { UserEditInformationDialog } from "./table/components/UserEditInformationDialog";
 import { UserRamaTransferDialog } from "./table/components/UserRamaTransferDialog";
+import { UserDeleteDialog } from "./table/components/UserDeleteDialog";
 import { useAppSelector } from "@/store/hooks";
 import { hasPermission } from "@/utils";
 import { RoleGuardWrapper } from "@/components/guards/RoleGuardWrapper";
@@ -41,18 +43,18 @@ export default function UsersActionsDropdown({
   const [openDropdown, setOpenDropdown] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogType, setDialogType] = useState<
-    "grant" | "status" | "family" | "edit" | "transfer"
+    "grant" | "status" | "family" | "edit" | "transfer" | "delete"
   >("status");
 
   const { user: userLogged } = useAppSelector((s) => s.session);
 
-  const handleOpenDialog = (type: "grant" | "status" | "family" | "edit" | "transfer") => {
+  const handleOpenDialog = (type: "grant" | "status" | "family" | "edit" | "transfer" | "delete") => {
     setDialogType(type);
     setOpenDropdown(false); // cerramos el dropdown
     setOpenDialog(true); // abrimos el dialog
   };
 
-  if (!hasPermission(userLogged!, user.id_rama!)) {
+  if (!userLogged || !hasPermission(userLogged, user.id_rama ?? "")) {
     // Este es el caso en el que un dirigente esta logueado y está viendo un usuario que no es de su rama.
     return null;
   }
@@ -147,6 +149,17 @@ export default function UsersActionsDropdown({
                 Traspasar
               </DropdownMenuItem>
             )}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault();
+                handleOpenDialog("delete");
+              }}
+              className="text-destructive focus:text-destructive focus:bg-destructive/10"
+            >
+              <Trash2 />
+              Eliminar
+            </DropdownMenuItem>
           </RoleGuardWrapper>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -157,6 +170,9 @@ export default function UsersActionsDropdown({
         {dialogType === "family" && <UserEditFamilyDialog user={user} />}
         {dialogType === "edit" && <UserEditInformationDialog user={user} />}
         {dialogType === "transfer" && <UserRamaTransferDialog user={user} />}
+        {dialogType === "delete" && (
+          <UserDeleteDialog user={user} onClose={() => setOpenDialog(false)} />
+        )}
       </Dialog>
     </>
   );

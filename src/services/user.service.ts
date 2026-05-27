@@ -29,7 +29,9 @@ export class UserServices {
     const res = await axiosInstance.patch(`${BASE_URL}/user/${id}`, body);
     return res.data;
   }
-  static async delete() {}
+  static async delete(id: string): Promise<void> {
+    await axiosInstance.delete(`${BASE_URL}/user/${id}`);
+  }
 
   static async bulkCreate({
     users,
