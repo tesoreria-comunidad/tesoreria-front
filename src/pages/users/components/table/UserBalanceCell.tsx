@@ -3,7 +3,7 @@ import { TooltipComponent } from "@/components/common/TooltipComponent";
 import { Badge } from "@/components/ui/badge";
 import type { TUser } from "@/models";
 import BalanceCell from "@/pages/family/components/table/BalanceCell";
-import { useFamilyByIdQuery } from "@/queries/family.queries";
+import { useFamiliesQuery, useFamilyByIdQuery } from "@/queries/family.queries";
 import { useRamasQuery } from "@/queries/ramas.queries";
 
 export function UserBalanceCell({
@@ -14,13 +14,27 @@ export function UserBalanceCell({
   ramaId?: string;
 }) {
   const { data: ramas } = useRamasQuery();
-  const { data: family, isLoading: loading } = useFamilyByIdQuery(
-    user.id_family!
+  // La lista de familias ya está cacheada (la usa también FamilyCell): se reusa
+  // para resolver la familia sin disparar una request por cada fila.
+  const { data: families, isLoading: loadingFamilies } = useFamiliesQuery();
+  const familyFromList = user.id_family
+    ? families?.find((f) => f.id === user.id_family)
+    : undefined;
+
+  // Fallback: sólo se busca individualmente si la familia no está en el listado
+  // (caso borde: familia administrada por otra rama, fuera del listado del DIRIGENTE).
+  const needsIndividualFetch = !!user.id_family && !familyFromList;
+  const { data: fetchedFamily, isLoading: loadingFamily } = useFamilyByIdQuery(
+    user.id_family ?? "",
+    needsIndividualFetch
   );
+
+  const family = familyFromList ?? fetchedFamily;
 
   if (!user.id_family) return "-";
 
-  if (loading) return <LoaderSpinner />;
+  if (loadingFamilies || (needsIndividualFetch && loadingFamily))
+    return <LoaderSpinner />;
 
   if (ramaId && family?.manage_by !== ramaId) {
     const rama = ramas?.find((r) => r.id === family?.manage_by);

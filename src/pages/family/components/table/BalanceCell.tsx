@@ -13,9 +13,14 @@ interface BalanceCellProps {
   family: TFamily;
 }
 export default function BalanceCell({ family }: BalanceCellProps) {
-  const { data: balance, isLoading: loading } = useBalanceByIdQuery(
-    family.id_balance
+  // Si la familia ya trae el balance embebido (endpoints que lo incluyen),
+  // se evita el fetch adicional por familia.
+  const embeddedBalance = family.balance;
+  const { data: fetchedBalance, isLoading: loading } = useBalanceByIdQuery(
+    family.id_balance,
+    !embeddedBalance
   );
+  const balance = embeddedBalance ?? fetchedBalance;
 
   const { user: user } = useAppSelector((s) => s.session);
   const userRole = user?.role;

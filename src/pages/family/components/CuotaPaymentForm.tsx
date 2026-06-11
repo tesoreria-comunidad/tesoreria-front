@@ -98,9 +98,16 @@ export function CuotaPaymentForm({
       {
         ...values,
         ...(fileKey ? { attachment: fileKey } : {}),
-        payment_date: values.payment_date
-          ? new Date(values.payment_date).toISOString()
-          : new Date().toISOString(),
+        payment_date: (() => {
+          const raw = values.payment_date ?? new Date().toISOString();
+          // Si es solo-fecha "YYYY-MM-DD", construir como medianoche local para
+          // evitar que new Date() lo interprete como UTC y reste un día en UTC-X.
+          if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+            const [y, m, d] = raw.split("-").map(Number);
+            return new Date(y, m - 1, d).toISOString();
+          }
+          return new Date(raw).toISOString();
+        })(),
       },
       {
         onSuccess: () => {

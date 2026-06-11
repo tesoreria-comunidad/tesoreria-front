@@ -2,7 +2,7 @@ import type { TMonthlyStat } from "@/adapters/api_models/transaction.schema";
 import { transactionAdapter } from "@/adapters/transaction.adapter";
 import { setAuthInterceptor } from "@/config/axios.config";
 import { useAlert } from "@/context/AlertContext";
-import type { TFamily, TUser } from "@/models";
+import type { TUser } from "@/models";
 import type {
   TCreateTransaction,
   TTransaction,
@@ -147,22 +147,19 @@ export function useCreateTransactionCuotaFamilyMutation() {
   return useMutation({
     mutationFn: createTransactionCuotaFamily,
     onSuccess: (_, variables) => {
-      const familyData = queryClient.getQueryData([
-        "families",
-        (variables as any).id_family,
-      ]) as TFamily;
+      const idFamily = (variables as any).id_family as string | undefined;
 
-      if ((variables as any).id_family) {
+      if (idFamily) {
         queryClient.invalidateQueries({
-          queryKey: ["transactions", (variables as any).id_family],
+          queryKey: ["transactions", idFamily],
         });
       }
 
-      if (familyData && familyData.manage_by) {
-        queryClient.invalidateQueries({
-          queryKey: ["cobrabilidad", familyData.manage_by],
-        });
-      }
+      // El balance se muestra desde family.balance embebido en ["families"],
+      // por lo que hay que invalidar también ese listado (y la query individual).
+      queryClient.invalidateQueries({ queryKey: ["families"] });
+      // Un pago de cuota siempre impacta la cobrabilidad del mes.
+      queryClient.invalidateQueries({ queryKey: ["cobrabilidad"] });
       queryClient.invalidateQueries({ queryKey: ["transactions_stats"] });
       queryClient.invalidateQueries({ queryKey: ["balances"] });
       queryClient.invalidateQueries({ queryKey: ["balance_history"] });
@@ -192,22 +189,14 @@ export function useDeleteTransactionMutation() {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["transactions_stats"] });
       queryClient.invalidateQueries({ queryKey: ["balances"] });
+      // El balance se muestra desde family.balance embebido en ["families"].
+      queryClient.invalidateQueries({ queryKey: ["families"] });
+      queryClient.invalidateQueries({ queryKey: ["cobrabilidad"] });
 
       if (deleted?.id_family) {
         queryClient.invalidateQueries({
           queryKey: ["transactions", deleted.id_family],
         });
-
-        const familyData = queryClient.getQueryData([
-          "families",
-          deleted.id_family,
-        ]) as TFamily | undefined;
-
-        if (familyData?.manage_by) {
-          queryClient.invalidateQueries({
-            queryKey: ["cobrabilidad", familyData.manage_by],
-          });
-        }
       }
 
       const parts: string[] = [];

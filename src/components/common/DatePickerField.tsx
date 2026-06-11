@@ -26,10 +26,15 @@ type DatePickerFieldProps<T extends FieldValues> = {
 };
 
 const formatToYMD = (value: string) => {
+  if (!value) return "";
+  // Si ya viene como "YYYY-MM-DD" (solo-fecha, hora local), se devuelve tal cual.
+  // Parsearlo con `new Date()` lo interpretaría como medianoche UTC y, en zonas
+  // con offset negativo (ej. UTC-3), restaría un día al leerlo en hora local.
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
   const date = new Date(value);
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = (date.getDate()).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
 export function DatePickerField<T extends FieldValues>({
