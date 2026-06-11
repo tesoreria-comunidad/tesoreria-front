@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router";
 import { routes } from "@/routes";
 import { useAppSelector } from "@/store/hooks";
 import NavBar from "@/components/common/NavBar";
+import { AgentChat } from "@/components/agent/AgentChat";
 
 export function MainPage() {
   const { user } = useAppSelector((s) => s.session);
@@ -37,6 +38,7 @@ export function MainPage() {
           </main>
         </div>
       </DataProvider>
+      <AgentChat />
     </div>
   );
 }
