@@ -8,8 +8,14 @@ import type {
   TTransaction,
 } from "@/models/transaction.schema";
 import { TransactionService } from "@/services/transaction.service";
+import type { TPaymentReceipt } from "@/services/payment-receipt.service";
 import { useAppSelector } from "@/store/hooks";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+export interface TCreateCuotaFamilyResult {
+  transaction: TTransaction;
+  paymentReceipt: TPaymentReceipt | null;
+}
 
 /* ============================
  * Fetchers (API + adapter)
@@ -71,10 +77,13 @@ export const createTransaction = async (
 
 export const createTransactionCuotaFamily = async (
   body: TCreateTransaction,
-): Promise<TTransaction> => {
+): Promise<TCreateCuotaFamilyResult> => {
   await setAuthInterceptor(localStorage.getItem("accessToken"));
-  const newTransaction = await TransactionService.familyCuota(body);
-  return transactionAdapter(newTransaction);
+  const res = await TransactionService.familyCuota(body);
+  return {
+    transaction: transactionAdapter(res.transaction),
+    paymentReceipt: res.paymentReceipt ?? null,
+  };
 };
 
 export const editTransction = async (
@@ -147,7 +156,7 @@ export function useCreateTransactionCuotaFamilyMutation() {
   return useMutation({
     mutationFn: createTransactionCuotaFamily,
     onSuccess: (_, variables) => {
-      const idFamily = (variables as any).id_family as string | undefined;
+      const idFamily = (variables as TCreateTransaction).id_family ?? undefined;
 
       if (idFamily) {
         queryClient.invalidateQueries({

@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useEditFamilyMutation } from "@/queries/family.queries";
+import { RoleGuardWrapper } from "@/components/guards/RoleGuardWrapper";
 import {
   useBalanceByIdQuery,
   useUpdateBalanceMutation,
@@ -52,6 +53,8 @@ export function UpdateFamilyDialog({
   const [isCustomCuota, setIsCustomCuota] = useState(balance?.is_custom_cuota);
   const [selectedRamaId, setSelectedRamaId] = useState(family.manage_by);
   const [familyName, setFamilyName] = useState(family.name);
+  const [familyEmail, setFamilyEmail] = useState(family.email ?? "");
+  const [emailError, setEmailError] = useState("");
   const [customCuotaValue, setCustomCuotaValue] = useState(
     balance?.custom_cuota ? balance.custom_cuota : 0
   );
@@ -94,7 +97,17 @@ export function UpdateFamilyDialog({
       );
     }
 
-    if (family.name === familyName && family.manage_by === selectedRamaId)
+    if (familyEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(familyEmail)) {
+      setEmailError("El formato del email es inválido");
+      return;
+    }
+    setEmailError("");
+
+    if (
+      family.name === familyName &&
+      family.manage_by === selectedRamaId &&
+      (family.email ?? "") === familyEmail
+    )
       return;
     editFamily(
       {
@@ -102,6 +115,7 @@ export function UpdateFamilyDialog({
           name: familyName,
           manage_by: selectedRamaId,
           phone: "+54",
+          email: familyEmail || null,
         },
         familyId: family.id,
       },
@@ -130,7 +144,8 @@ export function UpdateFamilyDialog({
     balance?.is_custom_cuota !== isCustomCuota ||
     balance?.custom_cuota !== customCuotaValue ||
     balance?.value !== balanceValue ||
-    family.manage_by !== selectedRamaId;
+    family.manage_by !== selectedRamaId ||
+    (family.email ?? "") !== familyEmail;
 
   const familyUsersIdRamas = family.users.map((u) => u.id_rama);
   const availableRamas = ramas.filter((rama) =>
@@ -193,6 +208,23 @@ export function UpdateFamilyDialog({
                     onChange={(e) => setFamilyName(e.target.value)}
                   />
                 </div>
+                <RoleGuardWrapper roles={["MASTER"]}>
+                  <div className="grid gap-3">
+                    <Label>Email de la familia</Label>
+                    <Input
+                      type="email"
+                      placeholder="email@ejemplo.com"
+                      value={familyEmail}
+                      onChange={(e) => {
+                        setFamilyEmail(e.target.value);
+                        setEmailError("");
+                      }}
+                    />
+                    {emailError && (
+                      <p className="text-sm text-destructive">{emailError}</p>
+                    )}
+                  </div>
+                </RoleGuardWrapper>
                 <div className="grid gap-3">
                   <Label>
                     Integrantes del grupo familiar ({family.users.length})

@@ -39,8 +39,10 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Newspaper, UnfoldVertical, XIcon } from "lucide-react";
+import { AlertTriangle, Newspaper, UnfoldVertical, XIcon } from "lucide-react";
 import { FileServices } from "@/services/file.service";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { RoleGuardWrapper } from "@/components/guards/RoleGuardWrapper";
 
 export function CuotaPaymentForm({
   family,
@@ -167,6 +169,16 @@ export function CuotaPaymentForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className={`p-4 flex flex-col gap-4 h-full`}
       >
+        <RoleGuardWrapper roles={["MASTER"]}>
+          {!family.email && (
+            <Alert variant="default" className="border-yellow-400 bg-yellow-50 dark:bg-yellow-950/20">
+              <AlertTriangle className="size-4 text-yellow-600" />
+              <AlertDescription className="text-yellow-700 dark:text-yellow-400">
+                Esta familia no tiene email registrado. El comprobante no será enviado.
+              </AlertDescription>
+            </Alert>
+          )}
+        </RoleGuardWrapper>
         <div
           className={`flex flex-col flex-1 ${
             isMobile ? "gap-4 " : "gap-4 max-h-[90%] overflow-auto"

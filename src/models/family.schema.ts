@@ -7,6 +7,7 @@ import { TransactionSchema } from "@/adapters/api_models/transaction.schema";
 export const FamilySchema = BaseSchema.extend({
   name: z.string(),
   phone: z.string(),
+  email: z.string().optional().nullable(),
   manage_by: z.string(),
   users: z.array(UserSchema),
   id_balance: z.string(),
