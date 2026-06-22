@@ -39,8 +39,10 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Newspaper, UnfoldVertical, XIcon } from "lucide-react";
+import { AlertTriangle, Newspaper, UnfoldVertical, XIcon } from "lucide-react";
 import { FileServices } from "@/services/file.service";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { RoleGuardWrapper } from "@/components/guards/RoleGuardWrapper";
 
 export function CuotaPaymentForm({
   family,
@@ -98,9 +100,16 @@ export function CuotaPaymentForm({
       {
         ...values,
         ...(fileKey ? { attachment: fileKey } : {}),
-        payment_date: values.payment_date
-          ? new Date(values.payment_date).toISOString()
-          : new Date().toISOString(),
+        payment_date: (() => {
+          const raw = values.payment_date ?? new Date().toISOString();
+          // Si es solo-fecha "YYYY-MM-DD", construir como medianoche local para
+          // evitar que new Date() lo interprete como UTC y reste un día en UTC-X.
+          if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+            const [y, m, d] = raw.split("-").map(Number);
+            return new Date(y, m - 1, d).toISOString();
+          }
+          return new Date(raw).toISOString();
+        })(),
       },
       {
         onSuccess: () => {
@@ -160,6 +169,16 @@ export function CuotaPaymentForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className={`p-4 flex flex-col gap-4 h-full`}
       >
+        <RoleGuardWrapper roles={["MASTER"]}>
+          {!family.email && (
+            <Alert variant="default" className="border-yellow-400 bg-yellow-50 dark:bg-yellow-950/20">
+              <AlertTriangle className="size-4 text-yellow-600" />
+              <AlertDescription className="text-yellow-700 dark:text-yellow-400">
+                Esta familia no tiene email registrado. El comprobante no será enviado.
+              </AlertDescription>
+            </Alert>
+          )}
+        </RoleGuardWrapper>
         <div
           className={`flex flex-col flex-1 ${
             isMobile ? "gap-4 " : "gap-4 max-h-[90%] overflow-auto"

@@ -54,11 +54,11 @@ export function useFamiliesQuery() {
     enabled: !!user && (user.role === "MASTER" || !!user.id_rama), // solo ejecutar si user existe y si es MASTER o tiene id_rama
   });
 }
-export function useFamilyByIdQuery(id: string) {
+export function useFamilyByIdQuery(id: string, enabled: boolean = true) {
   return useQuery({
     queryKey: ["families", id],
     queryFn: () => fetchFamilyById(id), // forzamos el tipo porque el query no se ejecuta si id es undefined
-    enabled: !!id, // solo ejecutar si id esta definido
+    enabled: !!id && enabled, // solo ejecutar si id esta definido y no se desactivó explícitamente
   });
 }
 

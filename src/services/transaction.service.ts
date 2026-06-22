@@ -7,6 +7,12 @@ import type {
   TCreateTransaction,
   TTransaction,
 } from "@/models/transaction.schema";
+import type { TPaymentReceipt } from "@/services/payment-receipt.service";
+
+export interface TFamilyCuotaResponse {
+  transaction: TApiTransaction;
+  paymentReceipt: TPaymentReceipt | null;
+}
 
 export class TransactionService {
   static async getAll(): Promise<TApiTransaction[]> {
@@ -57,11 +63,14 @@ export class TransactionService {
     );
     return res.data;
   }
-  static async familyCuota(body: TCreateTransaction): Promise<TApiTransaction> {
+  static async familyCuota(
+    body: TCreateTransaction
+  ): Promise<TFamilyCuotaResponse> {
     const res = await axiosInstance.post(
       `${BASE_URL}/transactions/family-cuota`,
       body
     );
+    // Backend returns { transaction, paymentReceipt }
     return res.data;
   }
   static async getTransactionsByRama(id_rama: string): Promise<TApiTransaction[]> {

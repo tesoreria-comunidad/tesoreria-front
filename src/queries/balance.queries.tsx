@@ -35,11 +35,14 @@ export function useBalancesQuery() {
   });
 }
 
-export function useBalanceByIdQuery(balanceId: string) {
+export function useBalanceByIdQuery(
+  balanceId: string,
+  enabled: boolean = true
+) {
   return useQuery({
     queryKey: ["balances", balanceId],
     queryFn: () => fetchBalanceById(balanceId),
-    enabled: !!balanceId, // evita ejecutar si balanceId es null/undefined
+    enabled: !!balanceId && enabled, // evita ejecutar si no hay id o si ya se dispone del balance embebido
   });
 }
 

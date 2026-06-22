@@ -57,7 +57,7 @@ export default function FamilyByIdPage() {
 
       <section className="w-full flex flex-col gap-4">
         <Label>Transacciones</Label>
-        <FamilyTransactionsTable transactions={familyTransactionsQuery.data} />
+        <FamilyTransactionsTable transactions={familyTransactionsQuery.data} familyId={familyId} />
       </section>
 
       <section className="w-full flex flex-col gap-4">

@@ -28,7 +28,7 @@ export const fetchCobrabilidadResumen = async (
 
 export function useCobrabilidadQuery(params: TQueryParams) {
   return useQuery({
-    queryKey: ["cobrabilidad"],
+    queryKey: ["cobrabilidad", params.month, params.year],
     queryFn: () => fetchCobrabilidad(params),
     enabled: !!params,
   });
@@ -38,7 +38,9 @@ export function useCobrabilidadByRamaQuery(
   ramaId: string
 ) {
   return useQuery({
-    queryKey: ["cobrabilidad", ramaId],
+    // Mismo queryKey que la lista completa: todas las filas reusan una sola
+    // petición cacheada y filtran la rama en cliente con `select`.
+    queryKey: ["cobrabilidad", params.month, params.year],
     queryFn: () => fetchCobrabilidad(params),
     enabled: !!params,
     select: (data) => data.filter((item) => item.id_rama === ramaId)[0],
