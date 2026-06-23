@@ -9,7 +9,9 @@ import type { RowSelectionState } from "@tanstack/react-table";
 import { useState } from "react";
 import { BulkUpdateRamaDialog } from "./components/BulkUpdateRamaDialog";
 import { useUsersQuery } from "@/queries/user.queries";
+import { useFamiliesQuery } from "@/queries/family.queries";
 import { RoleGuardWrapper } from "@/components/guards/RoleGuardWrapper";
+import { formatCurrency } from "@/utils";
 
 interface UsersTableProps {
   usersInput?: TUser[];
@@ -17,6 +19,7 @@ interface UsersTableProps {
 }
 export function UsersTable({ usersInput, ramaId }: UsersTableProps) {
   const { data: users } = useUsersQuery();
+  const { data: families } = useFamiliesQuery();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   const columns: TColumnDef<TUser>[] = [
@@ -150,9 +153,15 @@ export function UsersTable({ usersInput, ramaId }: UsersTableProps) {
       return lastNameComparison !== 0
         ? lastNameComparison
         : a.name.localeCompare(b.name);
-    }
+    },
   );
   const selectedUsers = sortedUsers.filter((u) => rowSelection[u.id]);
+
+  const selectedDebt = selectedUsers.reduce((sum, u) => {
+    const balance =
+      families?.find((f) => f.id === u.id_family)?.balance.value ?? 0;
+    return balance < 0 ? sum + balance : sum;
+  }, 0);
 
   const handleBulkRamaSuccess = () => {
     setRowSelection({});
@@ -162,10 +171,16 @@ export function UsersTable({ usersInput, ramaId }: UsersTableProps) {
     <div className="flex flex-col gap-2 pt-2">
       <RoleGuardWrapper roles={["MASTER", "DIRIGENTE"]}>
         {Object.keys(rowSelection).length > 0 && (
-          <div className="flex items-center gap-3 px-1 py-1.5 rounded-lg border bg-muted/40">
-            <span className="text-sm text-muted-foreground flex-1">
-              {selectedUsers.length} seleccionado{selectedUsers.length !== 1 ? "s" : ""}
+          <div className="flex items-center gap-3 px-4 py-1.5  border-t  mt-2  ">
+            <span className="text-sm text-muted-foreground flex-1 font-semibold">
+              {selectedUsers.length} seleccionado
+              {selectedUsers.length !== 1 ? "s" : ""}
             </span>
+            {selectedDebt < 0 && (
+              <span className="text-xs text-red-500 font-medium tabular-nums">
+                {formatCurrency(selectedDebt)}
+              </span>
+            )}
             <BulkUpdateRamaDialog
               users={selectedUsers}
               onSuccess={handleBulkRamaSuccess}
